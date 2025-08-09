@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Job {
+  id                String     @id @default(cuid())
+  title             String
+  address           String
+  initialDescription String    @map("initial_description")
+  fullDescription    String    @map("full_description")
+  status            JobStatus  @default(PENDING)
+  hirerId           String     @map("hirer_id")   // No relation
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+  payments          Payment[]
+
+  @@map("jobs")
+}
+
+model Payment {
+  id        String         @id @default(cuid())
+  amount    Float
+  status    PaymentStatus  @default(PENDING)
+  hirerId   String         @map("hirer_id")   // No relation
+  workerId  String         @map("worker_id")  // No relation
+  jobId     String         @map("job_id")
+  job       Job            @relation(fields: [jobId], references: [id])
+  stripePaymentId  String?        @map("stripe_payment_id") 
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  @@map("payments")
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
