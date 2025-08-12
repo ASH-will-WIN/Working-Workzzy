@@ -41,13 +41,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Restore session from localStorage
     const storedSession = localStorage.getItem("supabase.auth.token");
     if (storedSession) {
-      supabase.auth.setSession(JSON.parse(storedSession));
+      try {
+        const session = JSON.parse(storedSession);
+        // Only set session if it has the required structure
+        if (session?.access_token && session?.refresh_token) {
+          supabase.auth.setSession(session);
+        } else {
+          localStorage.removeItem("supabase.auth.token");
+        }
+      } catch (e) {
+        console.error("Error parsing session:", e);
+        localStorage.removeItem("supabase.auth.token");
+      }
     }
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_, session) => {
-      localStorage.setItem("supabase.auth.token", JSON.stringify(session));
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
+      if (session) {
+        localStorage.setItem("supabase.auth.token", JSON.stringify(session));
+      } else {
+        localStorage.removeItem("supabase.auth.token");
+      }
+
       setUser(
         session?.user
           ? {
@@ -60,46 +76,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     });
 
-    const checkSession = async () => {
-      try {
-        const {
-          data: { session },
-          error,
-        } = await supabase.auth.getSession();
-        if (error) throw error;
-        setUser(
-          session?.user
-            ? {
-                id: session.user.id,
-                email: session.user.email ?? undefined,
-                user_metadata: session.user.user_metadata,
-              }
-            : null
-        );
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to get session");
-      } finally {
-        setLoading(false);
-      }
-    };
+    // Don't try to get session here - let the auth state change handle it
+    setLoading(false);
 
-    checkSession();
     return () => subscription?.unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
-    localStorage.setItem(
-      "supabase.auth.token",
-      JSON.stringify(supabase.auth.getSession())
-    );
     try {
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
+
       setUser({
         id: data.user.id,
         email: data.user.email ?? undefined,
@@ -133,6 +125,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
       if (error) throw error;
+
       setUser(
         data.user
           ? {

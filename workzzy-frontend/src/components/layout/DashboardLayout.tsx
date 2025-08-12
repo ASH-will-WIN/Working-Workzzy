@@ -20,12 +20,6 @@ export default function DashboardLayout({
               >
                 Home
               </Link>
-              <Link
-                to="/profile"
-                className="text-gray-600 hover:text-gray-900 transition-colors"
-              >
-                Profile
-              </Link>
               <button
                 onClick={async () => {
                   await logout();
