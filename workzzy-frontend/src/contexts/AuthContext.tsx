@@ -6,13 +6,14 @@ import {
   type ReactNode,
 } from "react";
 import { supabase } from "../lib/supabaseClient";
+import { Role } from "../lib/types";
 
 interface User {
   id: string;
   email?: string;
   user_metadata: {
     name?: string;
-    role?: "hirer" | "worker";
+    role?: Role;
   };
 }
 

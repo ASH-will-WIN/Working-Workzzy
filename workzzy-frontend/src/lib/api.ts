@@ -1,5 +1,7 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
+import type { Job, Payment, JobApplication, JobImage } from "../lib/types";
+
 interface ApiOptions {
   method?: string;
   body?: any;
@@ -60,4 +62,15 @@ export const paymentApi = {
   getPayment: (id: string) => apiRequest(`/payments/${id}`),
   createPayment: (paymentData: any) =>
     apiRequest("/payments", { method: "POST", body: paymentData }),
+};
+
+export const applicationApi = {
+  getApplications: () => apiRequest("/applications"),
+  getApplication: (id: string) => apiRequest(`/applications/${id}`),
+  createApplication: (applicationData: any) =>
+    apiRequest("/applications", { method: "POST", body: applicationData }),
+  confirmApplicationPayment: (applicationId: string) =>
+    apiRequest(`/applications/confirm-payment/${applicationId}`, {
+      method: "PATCH",
+    }),
 };

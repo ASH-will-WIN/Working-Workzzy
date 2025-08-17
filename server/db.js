@@ -46,12 +46,19 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 const stripe = require("stripe");
 const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
 
-const { JobStatus, PaymentStatus } = require("@prisma/client");
+const {
+  JobStatus,
+  PaymentStatus,
+  ApplicationStatus,
+  DepositStatus,
+} = require("@prisma/client");
 
 module.exports = {
   prisma,
   supabase,
   stripeClient,
-  JobStatus, // Export enums
+  JobStatus,
   PaymentStatus,
+  ApplicationStatus, // Add this
+  DepositStatus, // Add this
 };

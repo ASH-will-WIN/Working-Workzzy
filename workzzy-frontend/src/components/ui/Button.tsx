@@ -17,10 +17,10 @@ export const Button: React.FC<ButtonProps> = ({
     "rounded-lg font-medium transition-all duration-200 hover:bg-primary/80 focus:outline-none focus:ring-2 focus:ring-primary/50";
 
   const variantClasses = {
-    primary: "bg-primary text-white",
-    secondary: "bg-secondary text-white",
+    primary: "bg-primary-500 text-white hover:bg-primary-600",
+    secondary: "bg-secondary-500 text-white hover:bg-secondary-600",
     outline:
-      "border-2 border-primary text-primary hover:bg-primary/10 focus:ring-primary/20",
+      "border-2 border-primary-500 text-primary-700 hover:bg-primary-50 focus:ring-primary-200",
   };
 
   const sizeClasses = {

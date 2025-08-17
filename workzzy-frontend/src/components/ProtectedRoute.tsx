@@ -1,32 +1,33 @@
-import { Navigate, useLocation } from "react-router-dom";
+import type { ReactNode } from "react";
+import { Role } from "../lib/types";
 import { useAuth } from "../contexts/AuthContext";
-import type { ReactElement } from "react";
 
 interface ProtectedRouteProps {
-  children: ReactElement;
-  allowedRoles?: ("hirer" | "worker")[];
+  children: ReactNode;
+  allowedRoles?: Role[];
 }
 
-export default function ProtectedRoute({
+export function ProtectedRoute({
   children,
   allowedRoles,
 }: ProtectedRouteProps) {
-  const { user, loading } = useAuth();
-  const location = useLocation();
+  const { user } = useAuth();
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
+  // Check if user is authenticated
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    // Redirect to login or show unauthorized
+    return <div>Redirecting to login...</div>;
   }
 
-  const userRole = user.user_metadata?.role;
-
-  if (allowedRoles && userRole && !allowedRoles.includes(userRole)) {
-    return <Navigate to="/unauthorized" replace />;
+  // Check role permissions if allowedRoles is provided
+  if (
+    allowedRoles &&
+    user.user_metadata?.role &&
+    !allowedRoles.includes(user.user_metadata.role)
+  ) {
+    // Redirect to unauthorized page
+    return <div>Redirecting to unauthorized...</div>;
   }
 
-  return children;
+  return <>{children}</>;
 }

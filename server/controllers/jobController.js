@@ -1,4 +1,10 @@
-const { prisma, JobStatus } = require("../db"); // Add JobStatus import
+const {
+  prisma,
+  JobStatus,
+  ApplicationStatus,
+  DepositStatus,
+  supabase,
+} = require("../db");
 
 async function createJob(req, res) {
   try {
@@ -130,7 +136,7 @@ async function acceptJob(req, res) {
     const job = await prisma.job.update({
       where: { id: jobId },
       data: {
-        status: JobStatus.IN_PROGRESS,
+        status: JobStatus.COMMITTED, // Changed from IN_PROGRESS
       },
     });
     res.json(job);
@@ -151,6 +157,177 @@ async function acceptJob(req, res) {
   }
 }
 
+async function addJobImage(req, res) {
+  try {
+    const { id } = req.params;
+    const { url, isPublic, caption } = req.body;
+
+    // Verify the job exists and the user is the hirer
+    const job = await prisma.job.findUnique({
+      where: { id },
+    });
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // In your current auth setup, req.user isn't populated
+    // We need to get the user from the session
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    if (job.hirerId !== user.id) {
+      return res
+        .status(403)
+        .json({ error: "Not authorized to add images to this job" });
+    }
+
+    const jobImage = await prisma.jobImage.create({
+      data: {
+        url: url.trim(),
+        isPublic,
+        caption,
+        jobId: id,
+      },
+    });
+
+    res.status(201).json(jobImage);
+  } catch (error) {
+    console.error("Add Job Image Error:", error.message);
+    res.status(500).json({
+      error: "job_image_creation_failed",
+      message: "Failed to add job image",
+      details: error.message,
+    });
+  }
+}
+
+async function getJobImages(req, res) {
+  try {
+    const { id } = req.params;
+
+    // Get the job to check if it exists
+    const job = await prisma.job.findUnique({
+      where: { id },
+    });
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // Check authentication
+    const authHeader = req.headers.authorization;
+    let canViewAllImages = false;
+
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const token = authHeader.split(" ")[1];
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser(token);
+
+      if (!error && user) {
+        // Check if user is hirer
+        if (job.hirerId === user.id) {
+          canViewAllImages = true;
+        } else {
+          // Check if user is a worker with an accepted application
+          const application = await prisma.jobApplication.findFirst({
+            where: {
+              jobId: id,
+              workerId: user.id,
+              status: "ACCEPTED",
+            },
+          });
+          canViewAllImages = !!application;
+        }
+      }
+    }
+
+    // Get images based on access level
+    const images = canViewAllImages
+      ? await prisma.jobImage.findMany({ where: { jobId: id } })
+      : await prisma.jobImage.findMany({
+          where: {
+            jobId: id,
+            isPublic: true,
+          },
+        });
+
+    res.json(images);
+  } catch (error) {
+    console.error("Get Job Images Error:", error.message);
+    res.status(500).json({
+      error: "job_images_retrieval_failed",
+      message: "Failed to retrieve job images",
+      details: error.message,
+    });
+  }
+}
+
+async function deleteJobImage(req, res) {
+  try {
+    const { imageId } = req.params;
+
+    // Get the image to check ownership
+    const jobImage = await prisma.jobImage.findUnique({
+      where: { id: imageId },
+      include: { job: true },
+    });
+
+    if (!jobImage) {
+      return res.status(404).json({ error: "Image not found" });
+    }
+
+    // Check authentication
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    if (jobImage.job.hirerId !== user.id) {
+      return res
+        .status(403)
+        .json({ error: "Not authorized to delete this image" });
+    }
+
+    await prisma.jobImage.delete({
+      where: { id: imageId },
+    });
+
+    res.json({ message: "Image deleted successfully" });
+  } catch (error) {
+    console.error("Delete Job Image Error:", error.message);
+    res.status(500).json({
+      error: "job_image_deletion_failed",
+      message: "Failed to delete job image",
+      details: error.message,
+    });
+  }
+}
+
 module.exports = {
   createJob,
   getJobs,
@@ -158,4 +335,7 @@ module.exports = {
   updateJob,
   deleteJob,
   acceptJob,
+  addJobImage,
+  getJobImages,
+  deleteJobImage,
 };

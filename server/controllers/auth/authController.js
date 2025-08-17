@@ -1,7 +1,7 @@
 const { supabase } = require("../../db");
 // Register a new user
 const registerUser = async (req, res) => {
-  const { email, password, name } = req.body;
+  const { email, password, name, role } = req.body;
 
   try {
     const { data, error } = await supabase.auth.signUp({
@@ -10,6 +10,7 @@ const registerUser = async (req, res) => {
       options: {
         data: {
           name,
+          role,
         },
       },
     });

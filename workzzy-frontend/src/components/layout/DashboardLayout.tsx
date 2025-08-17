@@ -6,7 +6,9 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { logout } = useAuth();
+  const { logout, user } = useAuth();
+  const userRole = user?.user_metadata?.role;
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-white shadow-sm">
@@ -20,6 +22,25 @@ export default function DashboardLayout({
               >
                 Home
               </Link>
+
+              {userRole === "hirer" && (
+                <Link
+                  to="/create-job"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Create Job
+                </Link>
+              )}
+
+              {userRole === "worker" && (
+                <Link
+                  to="/job-discovery"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                >
+                  Job Discovery
+                </Link>
+              )}
+
               <button
                 onClick={async () => {
                   await logout();

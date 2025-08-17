@@ -8,40 +8,81 @@ datasource db {
 }
 
 model Job {
-  id                String     @id @default(cuid())
+  id                String        @id @default(cuid())
   title             String
   address           String
-  initialDescription String    @map("initial_description")
-  fullDescription    String    @map("full_description")
-  status            JobStatus  @default(PENDING)
-  hirerId           String     @map("hirer_id")   // No relation
-  createdAt         DateTime   @default(now())
-  updatedAt         DateTime   @updatedAt
+  initialDescription String       @map("initial_description")
+  fullDescription    String       @map("full_description")
+  status            JobStatus     @default(PENDING)
+  hirerId           String        @map("hirer_id")
+  createdAt         DateTime      @default(now()) @map("createdAt")
+  updatedAt         DateTime      @updatedAt @map("updatedAt")
   payments          Payment[]
-
+  jobImages         JobImage[]
+  applications      JobApplication[]
   @@map("jobs")
 }
-
 model Payment {
-  id        String         @id @default(cuid())
-  amount    Float
-  status    PaymentStatus  @default(PENDING)
-  hirerId   String         @map("hirer_id")   // No relation
-  workerId  String         @map("worker_id")  // No relation
-  jobId     String         @map("job_id")
-  job       Job            @relation(fields: [jobId], references: [id])
-  stripePaymentId  String?        @map("stripe_payment_id") 
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-
+  id            String         @id @default(cuid())
+  amount        Float          // Total amount charged to hirer
+  platformFee   Float          // 10% fee kept by platform (required)
+  workerAmount  Float          // 90% sent to worker (required)
+  depositRefund Float?         // $5 deposit refund amount
+  status        PaymentStatus  @default(PENDING)
+  hirerId       String         @map("hirer_id")   // Supabase user ID
+  workerId      String         @map("worker_id")  // Supabase user ID
+  jobId         String         @map("job_id")
+  job           Job            @relation(fields: [jobId], references: [id])
+  stripePaymentId  String?        @map("stripe_payment_id")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
   @@map("payments")
+}
+
+model JobApplication {
+  id            String         @id @default(cuid())
+  jobId         String
+  job           Job            @relation(fields: [jobId], references: [id])
+  workerId      String         @map("worker_id")  // This is the Supabase user ID
+  message       String?
+  status        ApplicationStatus @default(APPLIED)
+  depositId     String?        @map("deposit_id")
+  depositStatus DepositStatus  @default(AUTHORIZED)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  @@map("job_applications")
+}
+
+model JobImage {
+  id        String   @id @default(cuid())
+  jobId     String
+  job       Job      @relation(fields: [jobId], references: [id])
+  url       String
+  isPublic  Boolean  @default(false)  // Controls visibility before deposit
+  caption   String?
+  createdAt DateTime @default(now())
+  @@map("job_images")
+}
+
+enum DepositStatus {
+  AUTHORIZED
+  CAPTURED
+  REFUNDED
 }
 
 enum JobStatus {
   PENDING
+  COMMITTED
   IN_PROGRESS
   COMPLETED
   CANCELLED
+}
+
+enum ApplicationStatus {
+  APPLIED
+  ACCEPTED
+  REJECTED
+  WITHDRAWN
 }
 
 enum PaymentStatus {

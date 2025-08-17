@@ -1,35 +1,33 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import TestStylingPage from "./pages/TestStylingPage";
-import { AuthProvider } from "./contexts/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { ProtectedRoute } from "./components/ProtectedRoute";
 import DashboardLayout from "./components/layout/DashboardLayout";
+import JobDiscovery from "./pages/JobDiscovery";
+import ApplicationStatusTracking from "./pages/ApplicationStatusTracking";
+import { Role } from "./lib/types";
 
-function App() {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/test-styling" element={<TestStylingPage />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
-      </AuthProvider>
-    </BrowserRouter>
-  );
-}
+// ... existing code ...
 
-export default App;
+<BrowserRouter>
+  <Routes>
+    <Route
+      path="/job-discovery"
+      element={
+        <ProtectedRoute allowedRoles={[Role.WORKER]}>
+          <DashboardLayout>
+            <JobDiscovery />
+          </DashboardLayout>
+        </ProtectedRoute>
+      }
+    />
+    <Route
+      path="/applications"
+      element={
+        <ProtectedRoute>
+          <DashboardLayout>
+            <ApplicationStatusTracking />
+          </DashboardLayout>
+        </ProtectedRoute>
+      }
+    />
+  </Routes>
+</BrowserRouter>;

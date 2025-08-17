@@ -2,9 +2,20 @@ const { prisma, stripeClient } = require("../db");
 
 async function createPayment(req, res) {
   let paymentIntent;
-
   try {
     const { job_id, amount, hirer_id, worker_id } = req.body;
+
+    // Validate input
+    if (!amount || amount <= 0) {
+      return res.status(400).json({
+        error: "invalid_amount",
+        message: "Amount must be a positive number",
+      });
+    }
+
+    // Calculate platform fee (10%) and worker amount (90%)
+    const platformFee = Math.round(amount * 0.1 * 100) / 100; // Round to 2 decimal places
+    const workerAmount = Math.round(amount * 0.9 * 100) / 100; // Round to 2 decimal places
 
     paymentIntent = await stripeClient.paymentIntents.create({
       amount: Math.round(amount * 100),
@@ -17,9 +28,11 @@ async function createPayment(req, res) {
       data: {
         jobId: job_id,
         amount,
+        platformFee, // Add this field
+        workerAmount, // Add this field
         hirerId: hirer_id,
         workerId: worker_id,
-        stripePaymentId: paymentIntent.id, // Updated field name
+        stripePaymentId: paymentIntent.id,
         status: "PENDING",
       },
     });
@@ -30,17 +43,31 @@ async function createPayment(req, res) {
     if (paymentIntent?.id) {
       await stripeClient.paymentIntents.cancel(paymentIntent.id);
     }
-    res.status(500).json({ error: "payment_failed", message: error.message });
+    res.status(500).json({
+      error: "payment_failed",
+      message: error.message,
+    });
   }
 }
 
 async function getPayments(req, res) {
   try {
     const payments = await prisma.payment.findMany();
-    res.json(payments);
+
+    // Add data validation to handle potential null values
+    const safePayments = payments.map((payment) => ({
+      ...payment,
+      platformFee: payment.platformFee !== null ? payment.platformFee : 0,
+      workerAmount: payment.workerAmount !== null ? payment.workerAmount : 0,
+    }));
+
+    res.json(safePayments);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error getting payments" });
+    console.error("Get Payments Error:", error.message);
+    res.status(500).json({
+      message: "Error getting payments",
+      details: error.message,
+    });
   }
 }
 
