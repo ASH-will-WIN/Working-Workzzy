@@ -1,6 +1,8 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
-import type { Job, Payment, JobApplication, JobImage } from "../lib/types";
+// Only import types that are actually used
+import type { JobApplication, Job } from "./types";
 
 interface ApiOptions {
   method?: string;
@@ -9,7 +11,6 @@ interface ApiOptions {
 
 export async function apiRequest(endpoint: string, options: ApiOptions = {}) {
   const { method = "GET", body } = options;
-
   const headers: HeadersInit = {
     "Content-Type": "application/json",
   };
@@ -51,26 +52,42 @@ export async function apiRequest(endpoint: string, options: ApiOptions = {}) {
 export const jobApi = {
   getJobs: () => apiRequest("/jobs"),
   getJob: (id: string) => apiRequest(`/jobs/${id}`),
-  createJob: (jobData: any) =>
-    apiRequest("/jobs", { method: "POST", body: jobData }),
-  acceptJob: (jobId: string) =>
-    apiRequest(`/jobs/accept/${jobId}`, { method: "PATCH" }),
-};
-
-export const paymentApi = {
-  getPayments: () => apiRequest("/payments"),
-  getPayment: (id: string) => apiRequest(`/payments/${id}`),
-  createPayment: (paymentData: any) =>
-    apiRequest("/payments", { method: "POST", body: paymentData }),
+  createJob: (jobData: {
+    title: string;
+    initialDescription: string;
+    fullDescription: string;
+    address: string;
+    hirerId: string;
+  }) => apiRequest("/jobs", { method: "POST", body: jobData }),
+  updateJob: (id: string, jobData: { status: string }) =>
+    apiRequest(`/jobs/${id}`, { method: "PATCH", body: jobData }),
+  getJobImages: (jobId: string) => apiRequest(`/jobs/${jobId}/images`),
+  addJobImage: (
+    jobId: string,
+    imageData: { url: string; isPublic: boolean; caption?: string }
+  ) => apiRequest(`/jobs/${jobId}/images`, { method: "POST", body: imageData }),
 };
 
 export const applicationApi = {
+  createApplication: (data: { jobId: string; message: string }) =>
+    apiRequest("/applications", { method: "POST", body: data }),
   getApplications: () => apiRequest("/applications"),
-  getApplication: (id: string) => apiRequest(`/applications/${id}`),
-  createApplication: (applicationData: any) =>
-    apiRequest("/applications", { method: "POST", body: applicationData }),
-  confirmApplicationPayment: (applicationId: string) =>
-    apiRequest(`/applications/confirm-payment/${applicationId}`, {
-      method: "PATCH",
-    }),
+  getJobApplications: (jobId: string) =>
+    apiRequest(`/applications/jobs/${jobId}`),
+  acceptApplication: (id: string) =>
+    apiRequest(`/applications/${id}/accept`, { method: "PATCH" }),
+  rejectApplication: (id: string) =>
+    apiRequest(`/applications/${id}/reject`, { method: "PATCH" }),
+  confirmApplicationPayment: (id: string) =>
+    apiRequest(`/applications/${id}/confirm`, { method: "POST" }),
+};
+
+export const paymentApi = {
+  createPayment: (paymentData: {
+    job_id: string;
+    amount: number;
+    hirer_id: string;
+    worker_id: string;
+  }) => apiRequest("/payments", { method: "POST", body: paymentData }),
+  getPayments: () => apiRequest("/payments"),
 };

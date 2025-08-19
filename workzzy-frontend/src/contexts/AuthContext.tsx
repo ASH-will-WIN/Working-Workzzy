@@ -1,19 +1,19 @@
 import {
   createContext,
   useState,
-  useContext,
   useEffect,
+  useContext,
   type ReactNode,
 } from "react";
 import { supabase } from "../lib/supabaseClient";
-import { Role } from "../lib/types";
 
 interface User {
   id: string;
-  email?: string;
+  email: string | undefined;
   user_metadata: {
+    role?: string;
     name?: string;
-    role?: Role;
+    [key: string]: any;
   };
 }
 
@@ -31,7 +31,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -39,65 +39,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // Restore session from localStorage
-    const storedSession = localStorage.getItem("supabase.auth.token");
-    if (storedSession) {
-      try {
-        const session = JSON.parse(storedSession);
-        // Only set session if it has the required structure
-        if (session?.access_token && session?.refresh_token) {
-          supabase.auth.setSession(session);
-        } else {
-          localStorage.removeItem("supabase.auth.token");
-        }
-      } catch (e) {
-        console.error("Error parsing session:", e);
-        localStorage.removeItem("supabase.auth.token");
-      }
-    }
-
+    // Check active sessions and set up listener
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        localStorage.setItem("supabase.auth.token", JSON.stringify(session));
+        const userData: User = {
+          id: session.user.id,
+          email: session.user.email ?? undefined,
+          user_metadata: {
+            ...session.user.user_metadata,
+            role: session.user.user_metadata?.role || "worker",
+          },
+        };
+        setUser(userData);
       } else {
-        localStorage.removeItem("supabase.auth.token");
+        setUser(null);
       }
-
-      setUser(
-        session?.user
-          ? {
-              id: session.user.id,
-              email: session.user.email ?? undefined,
-              user_metadata: session.user.user_metadata,
-            }
-          : null
-      );
       setLoading(false);
     });
 
-    // Don't try to get session here - let the auth state change handle it
-    setLoading(false);
+    // Check initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        const userData: User = {
+          id: session.user.id,
+          email: session.user.email ?? undefined,
+          user_metadata: {
+            ...session.user.user_metadata,
+            role: session.user.user_metadata?.role || "worker",
+          },
+        };
+        setUser(userData);
+      }
+      setLoading(false);
+    });
 
-    return () => subscription?.unsubscribe();
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const login = async (email: string, password: string) => {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
+      const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) throw error;
-
-      setUser({
-        id: data.user.id,
-        email: data.user.email ?? undefined,
-        user_metadata: data.user.user_metadata,
-      });
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
       throw err;
@@ -115,7 +106,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setLoading(true);
     setError(null);
     try {
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email,
         password,
         options: {
@@ -126,19 +117,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         },
       });
       if (error) throw error;
-
-      setUser(
-        data.user
-          ? {
-              id: data.user.id,
-              email: data.user.email ?? undefined,
-              user_metadata: {
-                ...data.user.user_metadata,
-                role: data.user.user_metadata?.role || "worker",
-              },
-            }
-          : null
-      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Registration failed");
       throw err;
@@ -153,7 +131,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-      setUser(null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Logout failed");
       throw err;
@@ -162,18 +139,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ user, loading, error, login, register, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  const value: AuthContextType = {
+    user,
+    loading,
+    error,
+    login,
+    register,
+    logout,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
+  if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;

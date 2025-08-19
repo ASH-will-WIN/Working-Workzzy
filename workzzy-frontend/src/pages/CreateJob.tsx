@@ -1,127 +1,128 @@
 import { useState } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Button, Input } from "../components/ui/index";
+import { jobApi } from "../lib/api";
+import { Button, Input } from "../components/ui";
 
-console.log("Before CreateJob component");
 export default function CreateJob() {
   const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
+  const [initialDescription, setInitialDescription] = useState("");
+  const [fullDescription, setFullDescription] = useState("");
   const [jobAddress, setJobAddress] = useState("");
-  const [hirerId, setHirerId] = useState("");
-  const [step, setStep] = useState(1);
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
+    if (!jobTitle || !initialDescription || !fullDescription || !jobAddress) {
+      setError("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch("/api/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title: jobTitle,
-          description: jobDescription,
-          address: jobAddress,
-          hirerId: hirerId,
-        }),
+      await jobApi.createJob({
+        title: jobTitle,
+        initialDescription,
+        fullDescription,
+        address: jobAddress,
+        hirerId: user?.id || "",
       });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
+      navigate("/dashboard");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Job creation failed");
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 p-4 space-y-6 transition-all duration-300 hover:shadow-xl">
-      <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 space-y-6 transition-all duration-300 hover:shadow-xl">
-        <div className="text-center">
-          <div className="mx-auto bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-8 w-8 text-primary"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <h1 className="text-2xl font-bold text-gray-800">Create Job</h1>
-          <p className="text-gray-500 mt-1">Create a new job</p>
+    <div className="max-w-3xl mx-auto">
+      <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="px-6 py-4 border-b border-gray-200">
+          <h2 className="text-xl font-bold text-gray-800">Create New Job</h2>
+          <p className="text-gray-600 mt-1">
+            Fill out the details for your job posting
+          </p>
         </div>
-        {step === 1 && (
-          <form onSubmit={handleSubmit}>
+
+        <form onSubmit={handleSubmit} className="px-6 py-4 space-y-6">
+          {error && (
+            <div
+              className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded relative"
+              role="alert"
+            >
+              <span className="block sm:inline">{error}</span>
+            </div>
+          )}
+
+          <div className="space-y-4">
             <Input
               label="Job Title"
               type="text"
-              placeholder="Enter job title"
               value={jobTitle}
               onChange={(e) => setJobTitle(e.target.value)}
+              required
+              placeholder="e.g., Web Developer Needed"
             />
+
             <Input
-              label="Job Description"
+              label="Public Description"
               type="text"
-              placeholder="Enter job description"
-              value={jobDescription}
-              onChange={(e) => setJobDescription(e.target.value)}
+              value={initialDescription}
+              onChange={(e) => setInitialDescription(e.target.value)}
+              required
+              placeholder="Brief job description visible to all"
             />
-            <Button
-              type="button"
-              variant="primary"
-              size="lg"
-              className="w-full mt-2"
-              onClick={() => setStep(2)}
-            >
-              Next
-            </Button>
-          </form>
-        )}
-        {step === 2 && (
-          <form onSubmit={handleSubmit}>
+
+            <div className="mb-4">
+              <label className="block text-gray-700 text-sm font-bold mb-2">
+                Full Description
+              </label>
+              <textarea
+                value={fullDescription}
+                onChange={(e) => setFullDescription(e.target.value)}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                placeholder="Detailed job description (requires deposit to view)"
+                rows={6}
+                required
+              />
+            </div>
+
             <Input
               label="Job Address"
               type="text"
-              placeholder="Enter job address"
               value={jobAddress}
               onChange={(e) => setJobAddress(e.target.value)}
+              required
+              placeholder="123 Main Street, City, State"
             />
-            <Input
-              label="Hirer ID"
-              type="text"
-              placeholder="Enter hirer ID"
-              value={hirerId}
-              onChange={(e) => setHirerId(e.target.value)}
-            />
+          </div>
+
+          <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">
             <Button
               type="button"
-              variant="primary"
-              size="lg"
-              className="w-full mt-2"
-              onClick={() => setStep(3)}
+              variant="outline"
+              onClick={() => navigate("/dashboard")}
             >
-              Next
+              Cancel
             </Button>
-          </form>
-        )}
-        {step === 3 && (
-          <form onSubmit={handleSubmit}>
             <Button
               type="submit"
               variant="primary"
-              size="lg"
-              className="w-full mt-2"
+              loading={loading}
+              disabled={loading}
             >
               Create Job
             </Button>
-          </form>
-        )}
+          </div>
+        </form>
       </div>
     </div>
   );
 }
-console.log("After CreateJob component");
