@@ -85,7 +85,10 @@ async function createApplication(req, res) {
       metadata: { applicationId: application.id },
     });
 
-    res.status(201).json(application);
+    res.status(201).json({
+      application,
+      clientSecret: depositIntent.client_secret, // <-- ADD THIS SECRET KEY
+    });
   } catch (error) {
     console.error("Application Creation Error:", error.message);
     res.status(500).json({
