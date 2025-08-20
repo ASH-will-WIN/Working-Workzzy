@@ -12,6 +12,8 @@
   "dependencies": {
     "@headlessui/react": "^2.2.7",
     "@heroicons/react": "^2.2.0",
+    "@stripe/react-stripe-js": "^3.9.1",
+    "@stripe/stripe-js": "^7.8.0",
     "@supabase/supabase-js": "^2.55.0",
     "axios": "^1.11.0",
     "react": "^19.1.1",

@@ -3,6 +3,7 @@ import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import type { ReactElement } from "react";
 import { Button, Input } from "../components/ui/index";
+import PaymentForm from "../components/ui/PaymentForm";
 
 interface Job {
   id: string;
@@ -37,25 +38,6 @@ export default function JobApplicationFlow() {
     setDepositAmount(Number(e.target.value));
   };
 
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    try {
-      const response = fetch("/api/payments", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: depositAmount,
-          jobId: job?.id,
-        }),
-      });
-      response.then((data) => console.log(data));
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-gray-100 p-4">
       <div className="w-full max-w-md bg-white rounded-xl shadow-lg p-8 space-y-6 transition-all duration-300 hover:shadow-xl">
@@ -86,15 +68,21 @@ export default function JobApplicationFlow() {
           value={depositAmount}
           onChange={handleDepositChange}
         />
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          className="w-full mt-2"
-          onClick={handleSubmit}
-        >
-          Submit Application
-        </Button>
+        {job && (
+          <PaymentForm
+            amount={depositAmount}
+            jobId={job.id}
+            hirerId={job.hirerId}
+            workerId={user?.id || ""}
+            onSuccess={(paymentIntent) => {
+              console.log("Payment successful:", paymentIntent);
+              navigate("/application-status");
+            }}
+            onError={(error) => {
+              console.error("Payment failed:", error);
+            }}
+          />
+        )}
       </div>
     </div>
   );
