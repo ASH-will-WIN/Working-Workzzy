@@ -38,39 +38,31 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  const handleError = (err: Error, errorMessage: string) => {
+    const error = err instanceof Error ? err.message : errorMessage;
+    setError(error);
+    console.error("Auth Error:", error);
+    return Promise.reject(error);
+  };
+
   useEffect(() => {
-    // Check active sessions and set up listener
+    // Set up auth state change listener
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
-        const userData: User = {
+        // Update user state with session data
+        setUser({
           id: session.user.id,
           email: session.user.email ?? undefined,
           user_metadata: {
             ...session.user.user_metadata,
-            role: session.user.user_metadata?.role || "worker",
+            role: (session.user.user_metadata?.role || "worker").toLowerCase(),
           },
-        };
-        setUser(userData);
+        });
       } else {
+        // Clear user state when signed out
         setUser(null);
-      }
-      setLoading(false);
-    });
-
-    // Check initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
-        const userData: User = {
-          id: session.user.id,
-          email: session.user.email ?? undefined,
-          user_metadata: {
-            ...session.user.user_metadata,
-            role: session.user.user_metadata?.role || "worker",
-          },
-        };
-        setUser(userData);
       }
       setLoading(false);
     });
@@ -88,6 +80,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         email,
         password,
       });
+      console.log("Login result:", { error }); // Debug logging
       if (error) throw error;
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
@@ -116,8 +109,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           },
         },
       });
+      console.log("Registration result:", { error }); // Debug logging
       if (error) throw error;
     } catch (err) {
+      console.log("AuthContext - Current user state:", user);
+      console.log("AuthContext - User metadata:", user?.user_metadata);
       setError(err instanceof Error ? err.message : "Registration failed");
       throw err;
     } finally {
@@ -131,11 +127,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       const { error } = await supabase.auth.signOut();
       if (error) throw error;
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Logout failed");
-      throw err;
-    } finally {
       setLoading(false);
+      return Promise.resolve();
+    } catch (err) {
+      return handleError(err as Error, "Logout failed");
     }
   };
 

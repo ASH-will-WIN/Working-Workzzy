@@ -3,6 +3,7 @@ const API_BASE_URL =
 
 // Only import types that are actually used
 import type { JobApplication, Job } from "./types";
+import { supabase } from "./supabaseClient";
 
 interface ApiOptions {
   method?: string;
@@ -15,15 +16,14 @@ export async function apiRequest(endpoint: string, options: ApiOptions = {}) {
     "Content-Type": "application/json",
   };
 
-  const storedSession = localStorage.getItem("supabase.auth.token");
-  if (storedSession) {
-    try {
-      const session = JSON.parse(storedSession);
-      if (session?.access_token) {
-        headers["Authorization"] = `Bearer ${session.access_token}`;
-      }
-    } catch (e) {
-      console.error("Error parsing session:", e);
+  // Use Supabase's built-in session management
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  console.log("API Request - Current session:", session);
+  if (session) {
+    if (session?.access_token) {
+      headers["Authorization"] = `Bearer ${session.access_token}`;
     }
   }
 
