@@ -12,4 +12,10 @@ router.get("/", authMiddleware, paymentController.getPayments); // ADD MIDDLEWAR
 router.get("/:id", authMiddleware, paymentController.getPayment); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, paymentController.updatePayment); // ADD MIDDLEWARE
 router.delete("/:id", authMiddleware, paymentController.deletePayment); // ADD MIDDLEWARE
+// Webhook endpoint for Stripe events
+router.post(
+  "/webhook",
+  require("../controllers/webhookController").handleWebhook
+);
+
 module.exports = router;
