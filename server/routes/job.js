@@ -9,6 +9,11 @@ router.get("/:id", authMiddleware, jobController.getJob); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, jobController.updateJob); // ADD THIS LINE
 router.patch("/accept/:jobId", authMiddleware, jobController.acceptJob); // ADD MIDDLEWARE
 
+// New job workflow routes
+router.patch("/:jobId/start", authMiddleware, jobController.startJob);
+router.patch("/:jobId/complete", authMiddleware, jobController.completeJob);
+router.get("/hirer/my-jobs", authMiddleware, jobController.getJobsByHirer);
+
 router.post("/:id/images", authMiddleware, jobController.addJobImage); // ADD MIDDLEWARE
 router.get("/:id/images", authMiddleware, jobController.getJobImages); // ADD MIDDLEWARE
 router.delete("/images/:imageId", authMiddleware, jobController.deleteJobImage); // ADD MIDDLEWARE

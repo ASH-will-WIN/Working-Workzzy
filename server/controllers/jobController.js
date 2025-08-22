@@ -328,6 +328,193 @@ async function deleteJobImage(req, res) {
   }
 }
 
+async function startJob(req, res) {
+  try {
+    const { jobId } = req.params;
+    
+    // Get the job and verify it's in COMMITTED status
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+      include: {
+        applications: {
+          where: { status: ApplicationStatus.ACCEPTED },
+          take: 1
+        }
+      }
+    });
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    if (job.status !== JobStatus.COMMITTED) {
+      return res.status(400).json({
+        error: "invalid_status",
+        message: "Job must be in COMMITTED status to start work"
+      });
+    }
+
+    if (job.applications.length === 0) {
+      return res.status(400).json({
+        error: "no_accepted_application",
+        message: "No accepted application found for this job"
+      });
+    }
+
+    // Verify that the requesting user is the accepted worker
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    if (job.applications[0].workerId !== user.id) {
+      return res.status(403).json({
+        error: "not_authorized_worker",
+        message: "Only the accepted worker can start this job"
+      });
+    }
+
+    // Update job status to IN_PROGRESS
+    const updatedJob = await prisma.job.update({
+      where: { id: jobId },
+      data: { status: JobStatus.IN_PROGRESS }
+    });
+
+    res.json(updatedJob);
+  } catch (error) {
+    console.error("Start Job Error:", error.message);
+    res.status(500).json({
+      error: "job_start_failed",
+      message: "Failed to start job",
+      details: error.message,
+    });
+  }
+}
+
+async function completeJob(req, res) {
+  try {
+    const { jobId } = req.params;
+    
+    // Get the job and verify it's in IN_PROGRESS status
+    const job = await prisma.job.findUnique({
+      where: { id: jobId },
+      include: {
+        applications: {
+          where: { status: ApplicationStatus.ACCEPTED },
+          take: 1
+        }
+      }
+    });
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    if (job.status !== JobStatus.IN_PROGRESS) {
+      return res.status(400).json({
+        error: "invalid_status",
+        message: "Job must be in IN_PROGRESS status to be completed"
+      });
+    }
+
+    if (job.applications.length === 0) {
+      return res.status(400).json({
+        error: "no_accepted_application",
+        message: "No accepted application found for this job"
+      });
+    }
+
+    // Verify that the requesting user is the accepted worker
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    if (job.applications[0].workerId !== user.id) {
+      return res.status(403).json({
+        error: "not_authorized_worker",
+        message: "Only the accepted worker can complete this job"
+      });
+    }
+
+    // Update job status to COMPLETED
+    const updatedJob = await prisma.job.update({
+      where: { id: jobId },
+      data: { status: JobStatus.COMPLETED }
+    });
+
+    res.json(updatedJob);
+  } catch (error) {
+    console.error("Complete Job Error:", error.message);
+    res.status(500).json({
+      error: "job_completion_failed",
+      message: "Failed to complete job",
+      details: error.message,
+    });
+  }
+}
+
+async function getJobsByHirer(req, res) {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token);
+
+    if (error || !user) {
+      return res.status(401).json({ error: "Invalid token" });
+    }
+
+    const jobs = await prisma.job.findMany({
+      where: { hirerId: user.id },
+      include: {
+        applications: {
+          include: {
+            job: true,
+          },
+        },
+        payments: true,
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    res.json(jobs);
+  } catch (error) {
+    console.error("Get Jobs By Hirer Error:", error.message);
+    res.status(500).json({
+      error: "hirer_jobs_retrieval_failed",
+      message: "Failed to retrieve hirer jobs",
+      details: error.message,
+    });
+  }
+}
+
 module.exports = {
   createJob,
   getJobs,
@@ -338,4 +525,7 @@ module.exports = {
   addJobImage,
   getJobImages,
   deleteJobImage,
+  startJob,
+  completeJob,
+  getJobsByHirer,
 };

@@ -118,28 +118,39 @@ try {
         Write-Host "ERROR: Job status should be COMMITTED, but is $($jobStatus.status)" -ForegroundColor Red
         throw "Job status verification failed"
     }
+
+    # 6.5 Verify job can be started (new workflow)
+    Write-Host "`n6.5 Verifying job can be started..." -ForegroundColor Yellow
+    if ($jobStatus.status -eq "COMMITTED") {
+        Write-Host "Job is ready to be started by worker" -ForegroundColor Green
+    } else {
+        Write-Host "ERROR: Job should be COMMITTED to be started" -ForegroundColor Red
+    }
     
     # 7. Completing job and processing payment...
     Write-Host "`n7. Completing job and processing payment..." -ForegroundColor Yellow
 
-    # Mark job as completed (USE THIS INSTEAD OF THE COMPLETE ENDPOINT)
-    $completedJob = Invoke-RestMethod "$API_BASE/api/jobs/$($job.id)" -Method Patch -Body (@{
-        status = "COMPLETED"
+    # Worker starts the job (new workflow)
+    Write-Host "`n7.1 Worker starting job..." -ForegroundColor Yellow
+    $startedJob = Invoke-RestMethod "$API_BASE/api/jobs/$($job.id)/start" -Method Patch -Headers @{
+        Authorization = "Bearer $($worker.session.access_token)"
+    }
+
+    # Worker completes the job (new workflow)
+    Write-Host "`n7.2 Worker completing job..." -ForegroundColor Yellow
+    $completedJob = Invoke-RestMethod "$API_BASE/api/jobs/$($job.id)/complete" -Method Patch -Headers @{
+        Authorization = "Bearer $($worker.session.access_token)"
+    }
+
+    # 7.5 Create final payment for the job (NEW STEP - using new endpoint)
+    Write-Host "`n7.5 Creating final payment for job..." -ForegroundColor Yellow
+    $finalPayment = Invoke-RestMethod "$API_BASE/api/payments/final" -Method Post -Body (@{
+        jobId = $job.id
+        amount = 100.00
     } | ConvertTo-Json) -ContentType "application/json" -Headers @{
         Authorization = "Bearer $($hirer.session.access_token)"
     }
 
-    # 7.5 Create payment for the job (NEW STEP)
-    Write-Host "`n7.5 Creating payment for job..." -ForegroundColor Yellow
-    $payment = Invoke-RestMethod "$API_BASE/api/payments" -Method Post -Body (@{
-        job_id = $job.id
-        amount = 100.00
-        hirer_id = $hirer.user.id
-        worker_id = $worker.user.id
-    } | ConvertTo-Json) -ContentType "application/json" -Headers @{
-        Authorization = "Bearer $($hirer.session.access_token)"
-    }
-    
     # 8. Verify payment details with platform fee
     Write-Host "`n8. Verifying payment details..." -ForegroundColor Yellow
     $payment = Invoke-RestMethod "$API_BASE/api/payments" -Headers @{
@@ -167,13 +178,23 @@ try {
     Write-Host "Application ID: $($application.id)" -ForegroundColor Green
     Write-Host "Application Status: $($acceptedApplication.status)" -ForegroundColor Green
     Write-Host "Deposit Status: $($acceptedApplication.depositStatus)" -ForegroundColor Green
-    
-    if ($payment) {
-        Write-Host "Payment ID: $($payment.id)" -ForegroundColor Green
-        Write-Host "Total Amount: `$($payment.amount)" -ForegroundColor Green
-        Write-Host "Platform Fee (10%): `$($payment.platformFee)" -ForegroundColor Green
-        Write-Host "Worker Amount: `$($payment.workerAmount)" -ForegroundColor Green
-        Write-Host "Deposit Refund: `$($payment.depositRefund)" -ForegroundColor Green
+
+    # Show job workflow statuses
+    if ($startedJob) {
+        Write-Host "Job Started: $($startedJob.status)" -ForegroundColor Green
+    }
+    if ($completedJob) {
+        Write-Host "Job Completed: $($completedJob.status)" -ForegroundColor Green
+    }
+
+    if ($finalPayment) {
+        Write-Host "Final Payment ID: $($finalPayment.id)" -ForegroundColor Green
+        Write-Host "Payment Amount: `$($finalPayment.amount)" -ForegroundColor Green
+        if ($finalPayment.clientSecret) {
+            Write-Host "Client Secret: Generated" -ForegroundColor Green
+        } else {
+            Write-Host "Client Secret: Not Generated" -ForegroundColor Yellow
+        }
     }
     
     Write-Host "`nTEST COMPLETED SUCCESSFULLY" -ForegroundColor Green

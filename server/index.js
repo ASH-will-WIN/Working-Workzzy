@@ -11,6 +11,7 @@ const jobRoutes = require("./routes/job");
 const authRoutes = require("./routes/auth");
 const paymentRoutes = require("./routes/payment");
 const applicationRoutes = require("./routes/application");
+const connectRoutes = require("./routes/connect");
 
 app.use(cors());
 app.use(express.json());
@@ -20,6 +21,7 @@ app.use("/api/jobs", jobRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/applications", applicationRoutes);
+app.use("/api/connect", connectRoutes);
 
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");

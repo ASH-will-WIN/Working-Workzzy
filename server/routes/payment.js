@@ -12,4 +12,13 @@ router.get("/", authMiddleware, paymentController.getPayments); // ADD MIDDLEWAR
 router.get("/:id", authMiddleware, paymentController.getPayment); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, paymentController.updatePayment); // ADD MIDDLEWARE
 router.delete("/:id", authMiddleware, paymentController.deletePayment); // ADD MIDDLEWARE
+
+// New final payment routes
+router.post("/final", authMiddleware, paymentController.createFinalPayment);
+router.patch(
+  "/:paymentId/confirm",
+  authMiddleware,
+  paymentController.confirmFinalPayment
+);
+
 module.exports = router;

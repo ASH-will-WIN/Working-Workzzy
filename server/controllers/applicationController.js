@@ -168,9 +168,12 @@ async function acceptApplication(req, res) {
   try {
     const { id } = req.params;
 
-    // Capture the $5 deposit
+    // Get the application and verify it's in APPLIED status
     const application = await prisma.jobApplication.findUnique({
       where: { id },
+      include: {
+        job: true
+      }
     });
 
     if (!application) {
@@ -184,7 +187,22 @@ async function acceptApplication(req, res) {
       });
     }
 
-    // Capture the deposit
+    // Check if the job already has an accepted application
+    const existingAcceptedApp = await prisma.jobApplication.findFirst({
+      where: {
+        jobId: application.jobId,
+        status: ApplicationStatus.ACCEPTED
+      }
+    });
+
+    if (existingAcceptedApp) {
+      return res.status(400).json({
+        error: "job_already_has_accepted_application",
+        message: "This job already has an accepted application",
+      });
+    }
+
+    // Capture the $5 deposit
     await stripeClient.paymentIntents.capture(application.depositId);
 
     // Update job status to COMMITTED
@@ -233,7 +251,7 @@ async function rejectApplication(req, res) {
       });
     }
 
-    // Cancel the deposit
+    // Cancel the deposit (refund the $5)
     await stripeClient.paymentIntents.cancel(application.depositId);
 
     // Update application status
