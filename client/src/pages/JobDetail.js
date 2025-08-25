@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { getJobById } from "../api/jobApi";
+import { getJobById, getJobImages } from "../api/jobApi";
 import {
   createApplication,
   getApplicationsForJob,
@@ -9,6 +9,7 @@ import {
 } from "../api/applicationApi";
 import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
+import ImageGallery from "../components/ImageGallery";
 // --- STRIPE IMPORTS ---
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -20,6 +21,8 @@ const JobDetail = () => {
   const { user } = useAuth();
   const [job, setJob] = useState(null);
   const [applications, setApplications] = useState([]);
+  const [images, setImages] = useState([]);
+  const [imagesLoading, setImagesLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   // --- NEW STATE FOR PAYMENT ---
@@ -35,10 +38,26 @@ const JobDetail = () => {
         const appData = await getApplicationsForJob(id);
         setApplications(appData);
       }
+      
+      // Fetch job images
+      await fetchJobImages(id);
     } catch (error) {
       console.error("Failed to fetch job details:", error);
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const fetchJobImages = async (jobId) => {
+    try {
+      setImagesLoading(true);
+      const imageData = await getJobImages(jobId);
+      setImages(imageData || []);
+    } catch (error) {
+      console.error("Failed to fetch job images:", error);
+      setImages([]); // Set empty array on error
+    } finally {
+      setImagesLoading(false);
     }
   };
   useEffect(() => {
@@ -134,6 +153,26 @@ const JobDetail = () => {
           <p className="text-gray-700 leading-relaxed text-lg">{job.fullDescription}</p>
         </div>
       </div>
+      
+      {/* Job Images Section */}
+      {(images.length > 0 || imagesLoading) && (
+        <div className="card mb-6">
+          <div className="card-header">
+            <h2 className="text-xl font-semibold text-gray-900">Job Images</h2>
+            {imagesLoading && (
+              <div className="flex items-center text-gray-500">
+                <svg className="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Loading images...
+              </div>
+            )}
+          </div>
+          
+          <ImageGallery images={images} className="mt-4" />
+        </div>
+      )}
       {isHirer ? (
         <div className="card">
           <h3 className="text-xl font-semibold text-gray-900 mb-6">

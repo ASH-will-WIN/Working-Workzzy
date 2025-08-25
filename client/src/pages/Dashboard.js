@@ -637,17 +637,16 @@ const Dashboard = () => {
                                       Application Accepted
                                     </p>
                                     <p className="text-sm text-green-800 mb-3">
-                                      Great! You've accepted this application. The job is now committed and waiting for the worker to start.
+                                      Great! You've accepted this application. The job is now committed and the worker will start when they're ready.
                                     </p>
-                                    <button
-                                      onClick={() => handleStartJob(job.id)}
-                                      className="btn btn-primary btn-sm"
-                                    >
-                                      <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1M4 16l4.586-4.586a2 2 0 012.828 0L16 16M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-                                      </svg>
-                                      Start Job (when worker is ready)
-                                    </button>
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                      <p className="text-sm text-blue-800 flex items-center">
+                                        <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        Only the worker can start the job. You'll be notified when work begins.
+                                      </p>
+                                    </div>
                                   </div>
                                 </div>
                               </div>

@@ -51,8 +51,16 @@ async function getJobs(req, res) {
         title: true,
         initialDescription: true,
         fullDescription: true,
+        address: true,
         status: true,
+        createdAt: true,
       },
+      where: {
+        status: {
+          in: [JobStatus.PENDING] // Only show jobs that are accepting applications
+        }
+      },
+      orderBy: { createdAt: 'desc' }
     });
     res.json(jobs);
   } catch (error) {

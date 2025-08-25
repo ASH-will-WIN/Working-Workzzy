@@ -18,7 +18,11 @@ const webhookRoutes = require("./routes/webhook");
 app.use("/api/webhooks", webhookRoutes);
 
 app.use(cors());
-app.use(express.json());
+// Increase payload size limit for Base64-encoded images
+// Base64 encoding increases size by ~33%, so 10MB images become ~13MB
+// Allow up to 50MB to handle multiple large images
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 // Routes
 app.use("/api/jobs", jobRoutes);
