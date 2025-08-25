@@ -12,6 +12,10 @@ const authRoutes = require("./routes/auth");
 const paymentRoutes = require("./routes/payment");
 const applicationRoutes = require("./routes/application");
 const connectRoutes = require("./routes/connect");
+const webhookRoutes = require("./routes/webhook");
+
+// Webhook routes (must be before express.json middleware)
+app.use("/api/webhooks", webhookRoutes);
 
 app.use(cors());
 app.use(express.json());

@@ -69,6 +69,7 @@ async function getPayments(req, res) {
       ...payment,
       platformFee: payment.platformFee !== null ? payment.platformFee : 0,
       workerAmount: payment.workerAmount !== null ? payment.workerAmount : 0,
+      depositRefund: payment.depositRefund !== null ? payment.depositRefund : 0, // ADD THIS
     }));
 
     res.json(safePayments);

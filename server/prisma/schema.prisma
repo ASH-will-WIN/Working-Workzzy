@@ -42,10 +42,13 @@ model Payment {
 model StripeAccount {
   id                String   @id @default(cuid())
   userId            String   @unique @map("user_id")
-  accountId         String   @map("account_id")
+  accountId         String   @unique @map("account_id")
   chargesEnabled    Boolean  @default(false) @map("charges_enabled")
   payoutsEnabled    Boolean  @default(false) @map("payouts_enabled")
   detailsSubmitted  Boolean  @default(false) @map("details_submitted")
+  requiresAction    Boolean  @default(false) @map("requires_action")
+  currentDeadline   DateTime? @map("current_deadline")
+  lastSyncAt        DateTime? @map("last_sync_at")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   @@map("stripe_accounts")

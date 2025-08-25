@@ -8,6 +8,9 @@ import JobsList from "./pages/JobsList";
 import JobDetail from "./pages/JobDetail";
 import CreateJob from "./pages/CreateJob";
 import Dashboard from "./pages/Dashboard";
+import Onboarding from "./pages/Onboarding.js";
+import ConnectReturn from "./pages/ConnectReturn";
+import ConnectRefresh from "./pages/ConnectRefresh";
 import "./App.css";
 
 function App() {
@@ -19,6 +22,9 @@ function App() {
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/onboarding" element={<Onboarding />} />
+          <Route path="/connect-return" element={<ConnectReturn />} />
+          <Route path="/connect-refresh" element={<ConnectRefresh />} />
 
           {/* Protected Routes */}
           <Route

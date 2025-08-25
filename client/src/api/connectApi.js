@@ -1,11 +1,23 @@
 import { apiClient } from "./apiClient";
 
-export const getMyConnectStatus = async () => {
-  const { data } = await apiClient.get("/connect/me");
-  return data;
+const getStripeAccount = async () => {
+  const response = await apiClient.get("/api/connect/status");
+  return response.data;
 };
 
-export const createOnboardingLink = async () => {
-  const { data } = await apiClient.post("/connect/onboarding");
-  return data;
+const createStripeAccountLink = async () => {
+  const response = await apiClient.post("/api/connect/account", {});
+  return response.data;
 };
+
+const refreshStripeStatus = async () => {
+  const response = await apiClient.post("/api/connect/refresh", {});
+  return response.data;
+};
+
+export const connectApi = {
+  getStripeAccount,
+  createStripeAccountLink,
+  refreshStripeStatus,
+};
+

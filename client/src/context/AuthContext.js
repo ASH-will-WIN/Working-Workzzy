@@ -31,6 +31,8 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
+    
+    // Note: Onboarding status will be checked on Dashboard load
   };
 
   const register = async (name, email, password, role) => {
@@ -47,6 +49,8 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
+    
+    // Note: Onboarding status will be checked on Dashboard load
   };
 
   const logout = () => {

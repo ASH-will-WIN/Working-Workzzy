@@ -10,12 +10,6 @@ const {
 async function createApplication(req, res) {
   try {
     const { jobId, message } = req.body;
-    console.log("Application Creation - Request User:", req.user);
-    console.log("Application Creation - User type:", typeof req.user);
-    console.log(
-      "Application Creation - User keys:",
-      Object.keys(req.user || {})
-    );
 
     // Use user_id from Supabase user object if available, fallback to id
     const workerId = req.user?.id;
@@ -66,7 +60,6 @@ async function createApplication(req, res) {
     });
 
     // Create application record
-    console.log("Creating job application with workerId:", workerId);
     const application = await prisma.jobApplication.create({
       data: {
         jobId,
@@ -77,7 +70,6 @@ async function createApplication(req, res) {
         status: ApplicationStatus.APPLIED,
       },
     });
-    console.log("Application Creation - Application Data:", application);
 
     // Update metadata with actual application ID
     // CRITICAL FIX: Use 'metadata' (not 'meta') for Stripe API
