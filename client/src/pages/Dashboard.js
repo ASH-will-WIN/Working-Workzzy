@@ -10,6 +10,7 @@ import { getPaymentsForJob } from "../api/paymentApi";
 import { connectApi } from "../api/connectApi";
 import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
+import PaymentStatusIndicator from "../components/PaymentStatusIndicator";
 import FinalPaymentForm from "../components/FinalPaymentForm";
 
 const Dashboard = () => {
@@ -168,17 +169,23 @@ const Dashboard = () => {
 
   if (loading || stripeLoading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/4 mb-8"></div>
-          <div className="space-y-6">
-            {[1, 2, 3].map((i) => (
-              <div key={i} className="card">
-                <div className="h-6 bg-gray-200 rounded w-1/3 mb-4"></div>
-                <div className="h-4 bg-gray-200 rounded w-1/2 mb-2"></div>
-                <div className="h-16 bg-gray-200 rounded mb-4"></div>
-              </div>
-            ))}
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/4 mb-8 animate-slide-up"></div>
+            <div className="space-y-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="card animate-fade-in" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-1/3 mb-4"></div>
+                  <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-1/2 mb-2"></div>
+                  <div className="h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded mb-4"></div>
+                  <div className="flex space-x-2">
+                    <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-20"></div>
+                    <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-24"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -197,27 +204,50 @@ const Dashboard = () => {
     );
 
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          My Accepted Jobs
-        </h1>
+      <div className="min-h-screen bg-gradient-to-br from-workzzy-50 via-blue-50 to-purple-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-workzzy-700 to-workzzy-900 bg-clip-text text-transparent">
+              My Accepted Jobs
+            </h1>
+            <p className="text-gray-600 mt-2">Track your job progress and payment status</p>
+          </div>
 
         {acceptedJobs.length === 0 ? (
           <div className="text-center py-16">
-            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
-            </svg>
-            <p className="text-gray-500 text-xl font-medium mb-2">
-              No accepted jobs yet
-            </p>
-            <p className="text-gray-400">
-              Once hirers accept your applications, they'll appear here
-            </p>
+            <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
+              <div className="w-20 h-20 bg-gradient-to-br from-workzzy-100 to-workzzy-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-workzzy-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
+                </svg>
+              </div>
+              <p className="text-gray-700 text-xl font-semibold mb-3">
+                No accepted jobs yet
+              </p>
+              <p className="text-gray-500 mb-6">
+                Once hirers accept your applications, they'll appear here with payment tracking
+              </p>
+              <button
+                onClick={() => window.location.href = '/'}
+                className="btn btn-primary btn-lg"
+              >
+                Browse Available Jobs
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
             {acceptedJobs.map((application) => (
-              <div key={application.id} className="card card-hover">
+              <div key={application.id} className="card card-hover bg-white border border-gray-200 shadow-lg">
+                {/* Prominent Payment Status Banner */}
+                <div className="mb-6 -m-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+                  <PaymentStatusIndicator 
+                    jobId={application.job.id} 
+                    userRole="worker" 
+                    className="w-full"
+                  />
+                </div>
+
                 <div className="card-header">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
@@ -332,29 +362,42 @@ const Dashboard = () => {
                           <p className="text-sm text-green-800 mb-4">
                             Great work! The hirer will process the final payment. You'll receive 90% of the payment amount plus your $5 deposit refund.
                           </p>
-                          <PaymentStatusDisplay jobId={application.job.id} />
+                          <div className="bg-white rounded-lg p-4 border border-green-200">
+                            <PaymentStatusIndicator 
+                              jobId={application.job.id} 
+                              userRole="worker" 
+                              className="w-full"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
                   )}
 
-                  <div className="grid grid-cols-2 gap-4 text-sm text-gray-500 bg-gray-50 p-3 rounded-lg">
-                    <div>
-                      <span className="font-medium text-gray-700">Deposit Status:</span>
-                      <div className="flex items-center mt-1">
-                        <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                          application.depositStatus === 'CAPTURED' ? 'bg-green-100 text-green-800' :
-                          application.depositStatus === 'REFUNDED' ? 'bg-blue-100 text-blue-800' :
-                          'bg-yellow-100 text-yellow-800'
+                  <div className="grid grid-cols-2 gap-4 text-sm bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border border-gray-200">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800 mb-1">💳 Deposit Status</span>
+                      <div className="flex items-center">
+                        <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                          application.depositStatus === 'CAPTURED' ? 'bg-success-100 text-success-800 border border-success-200' :
+                          application.depositStatus === 'REFUNDED' ? 'bg-blue-100 text-blue-800 border border-blue-200' :
+                          'bg-warning-100 text-warning-800 border border-warning-200'
                         }`}>
-                          {application.depositStatus}
+                          {application.depositStatus === 'CAPTURED' && '✅'}
+                          {application.depositStatus === 'REFUNDED' && '💰'}
+                          {application.depositStatus === 'PENDING' && '⏳'}
+                          <span className="ml-1">{application.depositStatus}</span>
                         </span>
                       </div>
                     </div>
-                    <div>
-                      <span className="font-medium text-gray-700">Applied:</span>
-                      <div className="mt-1">
-                        {new Date(application.createdAt).toLocaleDateString()}
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-gray-800 mb-1">📅 Applied Date</span>
+                      <div className="text-gray-600 font-medium">
+                        {new Date(application.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'short',
+                          day: 'numeric'
+                        })}
                       </div>
                     </div>
                   </div>
@@ -406,35 +449,61 @@ const Dashboard = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
     );
   } else {
     // Hirer Dashboard
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-8">
-          My Job Postings
-        </h1>
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-workzzy-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="mb-8">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-700 to-workzzy-700 bg-clip-text text-transparent">
+              My Job Postings
+            </h1>
+            <p className="text-gray-600 mt-2">Manage your job postings and process payments</p>
+          </div>
 
         {hirerJobs.length === 0 ? (
           <div className="text-center py-16">
-            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
-            </svg>
-            <p className="text-gray-500 text-xl font-medium mb-2">
-              No job postings yet
-            </p>
-            <p className="text-gray-400 mb-6">
-              Create your first job posting to start receiving applications
-            </p>
-            <button className="btn btn-primary">
-              Create First Job
-            </button>
+            <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
+              <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-workzzy-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
+                </svg>
+              </div>
+              <p className="text-gray-700 text-xl font-semibold mb-3">
+                No job postings yet
+              </p>
+              <p className="text-gray-500 mb-6">
+                Create your first job posting to start receiving applications and manage payments
+              </p>
+              <button 
+                onClick={() => window.location.href = '/jobs/new'}
+                className="btn btn-primary btn-lg"
+              >
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+                Create First Job
+              </button>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">
             {hirerJobs.map((job) => (
-              <div key={job.id} className="card card-hover">
+              <div key={job.id} className="card card-hover bg-white border border-gray-200 shadow-lg">
+                {/* Prominent Payment Status Banner for Completed Jobs */}
+                {job.status === "COMPLETED" && (
+                  <div className="-m-6 mb-6 p-4 bg-gradient-to-r from-success-50 to-green-50 border-b border-green-100">
+                    <PaymentStatusIndicator 
+                      jobId={job.id} 
+                      userRole="hirer" 
+                      className="w-full"
+                    />
+                  </div>
+                )}
+
                 <div className="card-header">
                   <div>
                     <h2 className="text-xl font-semibold text-gray-900">
@@ -622,15 +691,26 @@ const Dashboard = () => {
                           </div>
                         </div>
                         
-                        <div className="bg-white p-4 rounded-lg border mb-4">
-                          <h4 className="font-medium text-gray-900 mb-3">Process Final Payment</h4>
+                        <div className="bg-white p-6 rounded-xl border border-gray-200 mb-4">
+                          <h4 className="font-semibold text-gray-900 mb-4 flex items-center">
+                            <svg className="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v2a2 2 0 002 2z" />
+                            </svg>
+                            Process Final Payment
+                          </h4>
                           <FinalPaymentForm
                             jobId={job.id}
                             onPaymentComplete={() => fetchHirerData()}
                           />
                         </div>
                         
-                        <PaymentStatusDisplay jobId={job.id} />
+                        <div className="bg-gradient-to-r from-success-50 to-green-50 rounded-xl p-4 border border-success-200">
+                          <PaymentStatusIndicator 
+                            jobId={job.id} 
+                            userRole="hirer" 
+                            className="w-full"
+                          />
+                        </div>
                       </div>
                     )}
                   </div>
@@ -639,76 +719,13 @@ const Dashboard = () => {
             ))}
           </div>
         )}
+        </div>
       </div>
     );
   }
 };
 
 export default Dashboard;
-
-const PaymentStatusDisplay = ({ jobId }) => {
-  const [payment, setPayment] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchPayment = async () => {
-      try {
-        const paymentData = await getPaymentsForJob(jobId);
-        // Identify final payments by amount > $5 (deposits are exactly $5)
-        const finalPayment = paymentData.find((p) => p.amount > 5);
-        setPayment(finalPayment);
-      } catch (error) {
-        console.error("Failed to fetch payment:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPayment();
-  }, [jobId]);
-
-  if (loading)
-    return (
-      <div className="mt-3 text-sm text-gray-500">
-        Loading payment status...
-      </div>
-    );
-
-  if (!payment)
-    return (
-      <div className="mt-3 text-sm text-gray-500">
-        No final payment information available
-      </div>
-    );
-
-  return (
-    <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-      <h4 className="text-sm font-medium text-blue-900 mb-2">Payment Status</h4>
-      <div className="text-xs text-blue-800 space-y-1">
-        <p>
-          <strong>Status:</strong> {payment.status}
-        </p>
-        <p>
-          <strong>Amount:</strong> ${payment.amount}
-        </p>
-        <p>
-          <strong>Worker Receives:</strong> ${payment.workerAmount}
-        </p>
-        <p>
-          <strong>Platform Fee:</strong> ${payment.platformFee}
-        </p>
-        {payment.depositRefund && (
-          <p>
-            <strong>Deposit Refund:</strong> ${payment.depositRefund}
-          </p>
-        )}
-        {payment.status === "PAID" && (
-          <p className="text-green-600 font-medium">✓ Payment completed!</p>
-        )}
-      </div>
-    </div>
-  );
-};
 
 const StripeOnboardingCard = ({ stripeStatus }) => {
   const [loading, setLoading] = useState(false);
