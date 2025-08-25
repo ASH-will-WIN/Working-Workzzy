@@ -21,7 +21,7 @@ const Dashboard = () => {
   const [stripeStatus, setStripeStatus] = useState(null);
   const [stripeLoading, setStripeLoading] = useState(true);
   const isWorker = user?.user_metadata?.role === "WORKER";
-  const needsStripeSetup = user?.role === "worker" || user?.role === "hirer";
+  const needsStripeSetup = user?.user_metadata?.role === "WORKER" || user?.user_metadata?.role === "HIRER";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -204,7 +204,7 @@ const Dashboard = () => {
 
         {acceptedJobs.length === 0 ? (
           <div className="text-center py-16">
-            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
             </svg>
             <p className="text-gray-500 text-xl font-medium mb-2">
@@ -224,7 +224,7 @@ const Dashboard = () => {
                       {application.job.title}
                     </h2>
                     <div className="flex items-center text-gray-600 mt-1">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 mr-1" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -245,7 +245,7 @@ const Dashboard = () => {
                   {application.message && (
                     <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <div className="flex items-start">
-                        <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-5 h-5 text-blue-600 mt-0.5 mr-3" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                         </svg>
                         <div>
@@ -259,7 +259,7 @@ const Dashboard = () => {
 
                 <div className="card-footer">
                   <h3 className="font-medium text-gray-900 mb-4 flex items-center">
-                    <svg className="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-5 h-5 mr-2 text-gray-600" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 002 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2H5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2z" />
                     </svg>
                     Job Progress
@@ -268,7 +268,7 @@ const Dashboard = () => {
                   {application.job.status === "COMMITTED" && (
                     <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg mb-4">
                       <div className="flex items-start">
-                        <svg className="w-6 h-6 text-blue-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-blue-600 mt-1 mr-3" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
@@ -282,7 +282,7 @@ const Dashboard = () => {
                             onClick={() => handleStartJob(application.job.id)}
                             className="btn btn-primary"
                           >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1M4 16l4.586-4.586a2 2 0 012.828 0L16 16M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
                             </svg>
                             Start Job
@@ -295,7 +295,7 @@ const Dashboard = () => {
                   {application.job.status === "IN_PROGRESS" && (
                     <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg mb-4">
                       <div className="flex items-start">
-                        <svg className="w-6 h-6 text-orange-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-orange-600 mt-1 mr-3" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
@@ -309,7 +309,7 @@ const Dashboard = () => {
                             onClick={() => handleCompleteJob(application.job.id)}
                             className="btn btn-success"
                           >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             Mark as Complete
@@ -322,7 +322,7 @@ const Dashboard = () => {
                   {application.job.status === "COMPLETED" && (
                     <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
                       <div className="flex items-start">
-                        <svg className="w-6 h-6 text-green-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-6 h-6 text-green-600 mt-1 mr-3" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                         <div className="flex-1">
@@ -367,7 +367,7 @@ const Dashboard = () => {
         {applications.length > acceptedJobs.length && (
           <div className="mt-8">
             <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
-              <svg className="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 mr-2 text-gray-600" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               All Applications ({applications.length})
@@ -381,7 +381,7 @@ const Dashboard = () => {
                         {application.job.title}
                       </h3>
                       <div className="flex items-center text-gray-500 text-xs mt-1">
-                        <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-3 h-3 mr-1" width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         </svg>
                         {application.job.address}
@@ -418,7 +418,7 @@ const Dashboard = () => {
 
         {hirerJobs.length === 0 ? (
           <div className="text-center py-16">
-            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-12 h-12 text-gray-300 mx-auto mb-6" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
             </svg>
             <p className="text-gray-500 text-xl font-medium mb-2">
@@ -441,7 +441,7 @@ const Dashboard = () => {
                       {job.title}
                     </h2>
                     <div className="flex items-center text-gray-600 mt-1">
-                      <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-4 h-4 mr-1" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
@@ -462,14 +462,14 @@ const Dashboard = () => {
                   >
                     {selectedJob === job.id ? (
                       <>
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 mr-1" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
                         </svg>
                         Hide Details
                       </>
                     ) : (
                       <>
-                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4 mr-1" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                         View Details
@@ -485,7 +485,7 @@ const Dashboard = () => {
                 {selectedJob === job.id && (
                   <div className="card-footer">
                     <h3 className="font-medium text-gray-900 mb-4 flex items-center">
-                      <svg className="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg className="w-5 h-5 mr-2 text-gray-600" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                       </svg>
                       Applications ({job.applications.length})
@@ -493,7 +493,7 @@ const Dashboard = () => {
 
                     {job.applications.length === 0 ? (
                       <div className="text-center py-8 bg-gray-50 rounded-lg">
-                        <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-12 h-12 text-gray-300 mx-auto mb-3" width="48" height="48" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                         </svg>
                         <p className="text-gray-500">No applications yet</p>
@@ -506,7 +506,7 @@ const Dashboard = () => {
                             <div className="flex justify-between items-start mb-4">
                               <div className="flex items-start">
                                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-5 h-5 text-blue-600" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                   </svg>
                                 </div>
@@ -560,7 +560,7 @@ const Dashboard = () => {
                             {application.status === "ACCEPTED" && job.status === "COMMITTED" && (
                               <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
                                 <div className="flex items-start">
-                                  <svg className="w-5 h-5 text-green-600 mt-0.5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-5 h-5 text-green-600 mt-0.5 mr-3" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <div className="flex-1">
@@ -574,7 +574,7 @@ const Dashboard = () => {
                                       onClick={() => handleStartJob(job.id)}
                                       className="btn btn-primary btn-sm"
                                     >
-                                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1M4 16l4.586-4.586a2 2 0 012.828 0L16 16M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
                                       </svg>
                                       Start Job (when worker is ready)
@@ -587,7 +587,7 @@ const Dashboard = () => {
                             {application.status === "REJECTED" && (
                               <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
                                 <div className="flex items-center">
-                                  <svg className="w-5 h-5 text-red-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg className="w-5 h-5 text-red-600 mr-3" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <div>
@@ -609,7 +609,7 @@ const Dashboard = () => {
                     {job.status === "COMPLETED" && (
                       <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg">
                         <div className="flex items-start mb-4">
-                          <svg className="w-6 h-6 text-green-600 mt-1 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-6 h-6 text-green-600 mt-1 mr-3" width="24" height="24" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                           </svg>
                           <div className="flex-1">
