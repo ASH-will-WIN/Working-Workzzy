@@ -20,6 +20,7 @@ model Job {
   payments          Payment[]
   jobImages         JobImage[]
   applications      JobApplication[]
+  messages          Message[]
   @@map("jobs")
 }
 model Payment {
@@ -77,6 +78,20 @@ model JobImage {
   caption   String?
   createdAt DateTime @default(now())
   @@map("job_images")
+}
+
+model Message {
+  id             String   @id @default(cuid())
+  content        String
+  senderId       String   @map("sender_id")    // Supabase user ID
+  receiverId     String   @map("receiver_id")  // Supabase user ID
+  jobId          String?  @map("job_id")       // Optional: link to specific job
+  job            Job?     @relation(fields: [jobId], references: [id])
+  conversationId String   @map("conversation_id") // Group messages into conversations
+  isRead         Boolean  @default(false) @map("is_read")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  @@map("messages")
 }
 
 enum DepositStatus {

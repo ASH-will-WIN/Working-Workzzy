@@ -8,6 +8,7 @@ import JobsList from "./pages/JobsList";
 import JobDetail from "./pages/JobDetail";
 import CreateJob from "./pages/CreateJob";
 import Dashboard from "./pages/Dashboard";
+import Messages from "./pages/Messages";
 import Onboarding from "./pages/Onboarding.js";
 import ConnectReturn from "./pages/ConnectReturn";
 import ConnectRefresh from "./pages/ConnectRefresh";
@@ -56,6 +57,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/messages"
+            element={
+              <ProtectedRoute>
+                <Messages />
               </ProtectedRoute>
             }
           />

@@ -12,6 +12,7 @@ import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
 import PaymentStatusIndicator from "../components/PaymentStatusIndicator";
 import FinalPaymentForm from "../components/FinalPaymentForm";
+import StartConversation from "../components/StartConversation";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -308,15 +309,23 @@ const Dashboard = () => {
                           <p className="text-sm text-blue-800 mb-4">
                             Your application has been accepted! You can now start the job when you're ready.
                           </p>
-                          <button
-                            onClick={() => handleStartJob(application.job.id)}
-                            className="btn btn-primary"
-                          >
-                            <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1M4 16l4.586-4.586a2 2 0 012.828 0L16 16M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
-                            </svg>
-                            Start Job
-                          </button>
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => handleStartJob(application.job.id)}
+                              className="btn btn-primary"
+                            >
+                              <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h1m4 0h1m-6 4h1m4 0h1M4 16l4.586-4.586a2 2 0 012.828 0L16 16M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+                              </svg>
+                              Start Job
+                            </button>
+                            <StartConversation
+                              jobId={application.job.id}
+                              otherUserId={application.job.hirerId}
+                              otherUserRole="HIRER"
+                              className="btn-sm"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -335,15 +344,23 @@ const Dashboard = () => {
                           <p className="text-sm text-orange-800 mb-4">
                             You're currently working on this job. Mark it as complete when you're finished.
                           </p>
-                          <button
-                            onClick={() => handleCompleteJob(application.job.id)}
-                            className="btn btn-success"
-                          >
-                            <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            Mark as Complete
-                          </button>
+                          <div className="flex space-x-3">
+                            <button
+                              onClick={() => handleCompleteJob(application.job.id)}
+                              className="btn btn-success"
+                            >
+                              <svg className="w-4 h-4 mr-2" width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                              </svg>
+                              Mark as Complete
+                            </button>
+                            <StartConversation
+                              jobId={application.job.id}
+                              otherUserId={application.job.hirerId}
+                              otherUserRole="HIRER"
+                              className="btn-sm"
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -399,6 +416,22 @@ const Dashboard = () => {
                           day: 'numeric'
                         })}
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Contact Hirer Section */}
+                  <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium text-blue-900 mb-1">Need to contact the hirer?</h4>
+                        <p className="text-sm text-blue-800">Send a message about this job</p>
+                      </div>
+                      <StartConversation
+                        jobId={application.job.id}
+                        otherUserId={application.job.hirerId}
+                        otherUserRole="HIRER"
+                        className="btn-sm"
+                      />
                     </div>
                   </div>
                 </div>
@@ -622,6 +655,12 @@ const Dashboard = () => {
                                     </svg>
                                     Reject Application
                                   </button>
+                                  <StartConversation
+                                    jobId={job.id}
+                                    otherUserId={application.workerId}
+                                    otherUserRole="WORKER"
+                                    className="btn-sm"
+                                  />
                                 </div>
                               </div>
                             )}
@@ -639,7 +678,7 @@ const Dashboard = () => {
                                     <p className="text-sm text-green-800 mb-3">
                                       Great! You've accepted this application. The job is now committed and the worker will start when they're ready.
                                     </p>
-                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
                                       <p className="text-sm text-blue-800 flex items-center">
                                         <svg className="w-4 h-4 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -647,6 +686,12 @@ const Dashboard = () => {
                                         Only the worker can start the job. You'll be notified when work begins.
                                       </p>
                                     </div>
+                                    <StartConversation
+                                      jobId={job.id}
+                                      otherUserId={application.workerId}
+                                      otherUserRole="WORKER"
+                                      className="btn-sm"
+                                    />
                                   </div>
                                 </div>
                               </div>

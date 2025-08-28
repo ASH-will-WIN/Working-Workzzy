@@ -10,6 +10,7 @@ import {
 import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
 import ImageGallery from "../components/ImageGallery";
+import StartConversation from "../components/StartConversation";
 // --- STRIPE IMPORTS ---
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
@@ -229,18 +230,32 @@ const JobDetail = () => {
                       >
                         Reject Application
                       </button>
+                      <StartConversation
+                        jobId={job.id}
+                        otherUserId={app.workerId}
+                        otherUserRole="WORKER"
+                        className="btn-sm"
+                      />
                     </div>
                   )}
                   
                   {app.status === "ACCEPTED" && (
                     <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                      <div className="flex items-center">
-                        <svg className="w-5 h-5 text-green-600 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                        <p className="text-sm text-green-800 font-medium">
-                          Application accepted! Waiting for worker to start the job.
-                        </p>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center">
+                          <svg className="w-5 h-5 text-green-600 mr-2" width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <p className="text-sm text-green-800 font-medium">
+                            Application accepted! Waiting for worker to start the job.
+                          </p>
+                        </div>
+                        <StartConversation
+                          jobId={job.id}
+                          otherUserId={app.workerId}
+                          otherUserRole="WORKER"
+                          className="btn-sm"
+                        />
                       </div>
                     </div>
                   )}
@@ -272,6 +287,25 @@ const JobDetail = () => {
         </div>
       ) : (
         <>
+          {/* Add messaging button for workers to contact hirer */}
+          {!isHirer && (
+            <div className="card mb-6">
+              <div className="card-header">
+                <h3 className="text-lg font-semibold text-gray-900">Contact Job Hirer</h3>
+              </div>
+              <div className="card-body">
+                <p className="text-gray-600 mb-4">
+                  Have questions about this job? Message the hirer directly.
+                </p>
+                <StartConversation
+                  jobId={job.id}
+                  otherUserId={job.hirerId}
+                  otherUserRole="HIRER"
+                />
+              </div>
+            </div>
+          )}
+
           {job.status === "PENDING" && !showPaymentForm && (
             <div className="card">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">Apply for this Job</h3>
