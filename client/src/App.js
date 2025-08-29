@@ -12,6 +12,7 @@ import Messages from "./pages/Messages";
 import Onboarding from "./pages/Onboarding.js";
 import ConnectReturn from "./pages/ConnectReturn";
 import ConnectRefresh from "./pages/ConnectRefresh";
+import Terms from "./pages/Terms"; // Added import for Terms page
 import "./App.css";
 
 function App() {
@@ -26,7 +27,8 @@ function App() {
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/connect-return" element={<ConnectReturn />} />
           <Route path="/connect-refresh" element={<ConnectRefresh />} />
-
+          <Route path="/terms" element={<Terms />} />{" "}
+          {/* Added route for Terms and Conditions */}
           {/* Protected Routes */}
           <Route
             path="/"
