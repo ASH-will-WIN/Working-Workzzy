@@ -6,7 +6,7 @@ const {
   getConversationMessages,
   markMessageAsRead,
   markConversationAsRead,
-  getJobConversation
+  getJobConversation,
 } = require("../controllers/messageController");
 
 const router = express.Router();
@@ -29,7 +29,43 @@ router.put("/:messageId/read", markMessageAsRead);
 // Mark all messages in a conversation as read
 router.put("/conversation/:conversationId/read", markConversationAsRead);
 
-// Get or create conversation for a specific job
-router.get("/job/:jobId/conversation", getJobConversation);
+// Job-specific conversation route removed to simplify core messaging
+
+// Create a new conversation (simplified)
+router.post("/conversations", auth, async (req, res) => {
+  try {
+    const { otherUserId } = req.body;
+    const userId = req.user.id;
+
+    if (!otherUserId || otherUserId === userId) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    // Create consistent conversation ID
+    const conversationId = [userId, otherUserId].sort().join("-");
+
+    // Check if conversation already exists
+    let conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+    });
+
+    // Create if it doesn't exist
+    if (!conversation) {
+      conversation = await prisma.conversation.create({
+        data: {
+          id: conversationId,
+          participants: {
+            connect: [{ id: userId }, { id: otherUserId }],
+          },
+        },
+      });
+    }
+
+    res.json(conversation);
+  } catch (error) {
+    console.error("Create conversation error:", error);
+    res.status(500).json({ error: "Failed to create conversation" });
+  }
+});
 
 module.exports = router;

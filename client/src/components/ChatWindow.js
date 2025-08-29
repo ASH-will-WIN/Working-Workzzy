@@ -1,12 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { sendMessage, getConversationMessages } from '../api/messageApi';
-import { useAuth } from '../context/AuthContext';
-import MessageBubble from './MessageBubble';
-import MessageInput from './MessageInput';
+import React, { useState, useEffect, useRef } from "react";
+import { sendMessage, getConversationMessages } from "../api/messageApi";
+import { useAuth } from "../context/AuthContext";
+import MessageBubble from "./MessageBubble";
+import MessageInput from "./MessageInput";
 
 const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   const { user } = useAuth();
-  const [newMessage, setNewMessage] = useState('');
+  const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState(messages);
@@ -21,24 +21,30 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
     scrollToBottom();
   }, [localMessages]);
 
-  // Refresh messages periodically for real-time updates
+  // Load messages once when conversation is selected
   useEffect(() => {
     if (!conversation) return;
 
-    const interval = setInterval(async () => {
+    const loadMessages = async () => {
       try {
-        const messagesData = await getConversationMessages(conversation.conversationId);
+        setMessagesLoading(true);
+        const messagesData = await getConversationMessages(
+          conversation.conversationId
+        );
         setLocalMessages(messagesData.messages || []);
       } catch (error) {
-        console.error('Failed to refresh messages:', error);
+        console.error("Failed to load messages:", error);
+        alert("Failed to load messages. Please try again.");
+      } finally {
+        setMessagesLoading(false);
       }
-    }, 5000); // Refresh every 5 seconds
+    };
 
-    return () => clearInterval(interval);
+    loadMessages();
   }, [conversation]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleSendMessage = async (content) => {
@@ -49,20 +55,19 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       const messageData = {
         content: content.trim(),
         receiverId: conversation.otherParticipantId,
-        jobId: conversation.jobId || null
       };
 
       const sentMessage = await sendMessage(messageData);
-      
+
       // Add the new message to local state immediately
-      setLocalMessages(prev => [...prev, sentMessage]);
-      
+      setLocalMessages((prev) => [...prev, sentMessage]);
+
       // Notify parent component
       onMessageSent(sentMessage);
-      
-      setNewMessage('');
+
+      setNewMessage("");
     } catch (error) {
-      console.error('Failed to send message:', error);
+      console.error("Failed to send message:", error);
       // TODO: Show error toast
     } finally {
       setSending(false);
@@ -90,20 +95,11 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
               <h3 className="font-semibold text-gray-900">
                 User {conversation.otherParticipantId.substring(0, 8)}
               </h3>
-              {conversation.jobId && (
-                <p className="text-sm text-gray-600">Job conversation</p>
-              )}
+              {/* Job-specific features removed for core messaging simplification */}
             </div>
           </div>
-          
-          {conversation.jobId && (
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
-              <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                <path fillRule="evenodd" d="M6 6V5a3 3 0 013-3h2a3 3 0 013 3v1h2a2 2 0 012 2v3.57A22.952 22.952 0 0110 13a22.95 22.95 0 01-8-1.43V8a2 2 0 012-2h2zm2-1a1 1 0 011-1h2a1 1 0 011 1v1H8V5zm1 5a1 1 0 011-1h.01a1 1 0 110 2H10a1 1 0 01-1-1z" clipRule="evenodd" />
-              </svg>
-              Job Chat
-            </span>
-          )}
+
+          {/* Job-specific features removed for core messaging simplification */}
         </div>
       </div>
 
@@ -113,11 +109,20 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="w-16 h-16 text-gray-400 mb-4">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={1}
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">Start the conversation</h3>
-            <p className="text-gray-600">Send your first message to begin the conversation</p>
+            <h3 className="text-lg font-medium text-gray-900 mb-2">
+              Start the conversation
+            </h3>
+            <p className="text-gray-600">
+              Send your first message to begin the conversation
+            </p>
           </div>
         ) : (
           localMessages.map((message, index) => (
@@ -125,8 +130,11 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
               key={message.id}
               message={message}
               isOwn={message.senderId === user.id}
-              showTime={index === 0 || 
-                new Date(message.createdAt).getTime() - new Date(localMessages[index - 1].createdAt).getTime() > 300000
+              showTime={
+                index === 0 ||
+                new Date(message.createdAt).getTime() -
+                  new Date(localMessages[index - 1].createdAt).getTime() >
+                  300000
               }
             />
           ))

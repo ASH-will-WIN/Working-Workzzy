@@ -14,6 +14,7 @@ const applicationRoutes = require("./routes/application");
 const connectRoutes = require("./routes/connect");
 const webhookRoutes = require("./routes/webhook");
 const messageRoutes = require("./routes/message");
+const userRoutes = require("./routes/user"); // This was missing
 
 // Webhook routes (must be before express.json middleware)
 app.use("/api/webhooks", webhookRoutes);
@@ -22,8 +23,8 @@ app.use(cors());
 // Increase payload size limit for Base64-encoded images
 // Base64 encoding increases size by ~33%, so 10MB images become ~13MB
 // Allow up to 50MB to handle multiple large images
-app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
 // Routes
 app.use("/api/jobs", jobRoutes);
@@ -32,6 +33,8 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/connect", connectRoutes);
 app.use("/api/messages", messageRoutes);
+
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");

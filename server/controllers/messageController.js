@@ -1,4 +1,4 @@
-const db = require("../db");
+const { prisma } = require("../db");
 
 // Send a new message
 const sendMessage = async (req, res) => {
@@ -7,11 +7,14 @@ const sendMessage = async (req, res) => {
     const senderId = req.user.id;
 
     if (!content || !receiverId) {
-      return res.status(400).json({ error: "Content and receiver ID are required" });
+      return res
+        .status(400)
+        .json({ error: "Content and receiver ID are required" });
     }
 
     // Generate conversation ID (consistent regardless of who sends first)
-    const conversationId = [senderId, receiverId].sort().join('-') + (jobId ? `-job-${jobId}` : '');
+    const conversationId =
+      [senderId, receiverId].sort().join("-") + (jobId ? `-job-${jobId}` : "");
 
     // Validate that users can message each other (both must be involved in the job if jobId is provided)
     if (jobId) {
@@ -20,10 +23,10 @@ const sendMessage = async (req, res) => {
         include: {
           applications: {
             where: {
-              status: 'ACCEPTED'
-            }
-          }
-        }
+              status: "ACCEPTED",
+            },
+          },
+        },
       });
 
       if (!job) {
@@ -32,26 +35,37 @@ const sendMessage = async (req, res) => {
 
       // Check if the sender is either the hirer or an accepted worker
       const isHirer = job.hirerId === senderId;
-      const isAcceptedWorker = job.applications.some(app => app.workerId === senderId);
-      
+      const isAcceptedWorker = job.applications.some(
+        (app) => app.workerId === senderId
+      );
+
       // Check if the receiver is either the hirer or an accepted worker
       const isReceiverHirer = job.hirerId === receiverId;
-      const isReceiverAcceptedWorker = job.applications.some(app => app.workerId === receiverId);
+      const isReceiverAcceptedWorker = job.applications.some(
+        (app) => app.workerId === receiverId
+      );
 
-      if (!((isHirer || isAcceptedWorker) && (isReceiverHirer || isReceiverAcceptedWorker))) {
-        return res.status(403).json({ error: "Not authorized to message about this job" });
+      if (
+        !(
+          (isHirer || isAcceptedWorker) &&
+          (isReceiverHirer || isReceiverAcceptedWorker)
+        )
+      ) {
+        return res
+          .status(403)
+          .json({ error: "Not authorized to message about this job" });
       }
     }
 
-    const message = await db.message.create({
+    const message = await prisma.message.create({
       data: {
         content,
         senderId,
         receiverId,
         jobId: jobId || null,
         conversationId,
-        isRead: false
-      }
+        isRead: false,
+      },
     });
 
     res.status(201).json(message);
@@ -67,38 +81,37 @@ const getConversations = async (req, res) => {
     const userId = req.user.id;
 
     // Get all unique conversations for the user
-    const conversations = await db.message.findMany({
+    const conversations = await prisma.message.findMany({
       where: {
-        OR: [
-          { senderId: userId },
-          { receiverId: userId }
-        ]
+        OR: [{ senderId: userId }, { receiverId: userId }],
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
-      distinct: ['conversationId']
+      distinct: ["conversationId"],
     });
 
     // Get the latest message and unread count for each conversation
     const conversationDetails = await Promise.all(
       conversations.map(async (conv) => {
-        const latestMessage = await db.message.findFirst({
+        const latestMessage = await prisma.message.findFirst({
           where: { conversationId: conv.conversationId },
-          orderBy: { createdAt: 'desc' }
+          orderBy: { createdAt: "desc" },
         });
 
-        const unreadCount = await db.message.count({
+        const unreadCount = await prisma.message.count({
           where: {
             conversationId: conv.conversationId,
             receiverId: userId,
-            isRead: false
-          }
+            isRead: false,
+          },
         });
 
         // Get the other participant's ID
-        const otherParticipantId = latestMessage.senderId === userId ? 
-          latestMessage.receiverId : latestMessage.senderId;
+        const otherParticipantId =
+          latestMessage.senderId === userId
+            ? latestMessage.receiverId
+            : latestMessage.senderId;
 
         return {
           conversationId: conv.conversationId,
@@ -106,7 +119,7 @@ const getConversations = async (req, res) => {
           jobId: conv.jobId,
           latestMessage: latestMessage.content,
           latestMessageTime: latestMessage.createdAt,
-          unreadCount
+          unreadCount,
         };
       })
     );
@@ -128,29 +141,28 @@ const getConversationMessages = async (req, res) => {
     const offset = (page - 1) * limit;
 
     // Verify user is part of this conversation
-    const userInConversation = await db.message.findFirst({
+    const userInConversation = await prisma.message.findFirst({
       where: {
         conversationId,
-        OR: [
-          { senderId: userId },
-          { receiverId: userId }
-        ]
-      }
+        OR: [{ senderId: userId }, { receiverId: userId }],
+      },
     });
 
     if (!userInConversation) {
-      return res.status(403).json({ error: "Not authorized to view this conversation" });
+      return res
+        .status(403)
+        .json({ error: "Not authorized to view this conversation" });
     }
 
-    const messages = await db.message.findMany({
+    const messages = await prisma.message.findMany({
       where: { conversationId },
-      orderBy: { createdAt: 'asc' },
+      orderBy: { createdAt: "asc" },
       skip: offset,
-      take: limit
+      take: limit,
     });
 
-    const totalMessages = await db.message.count({
-      where: { conversationId }
+    const totalMessages = await prisma.message.count({
+      where: { conversationId },
     });
 
     res.json({
@@ -159,8 +171,8 @@ const getConversationMessages = async (req, res) => {
         page,
         limit,
         total: totalMessages,
-        hasMore: offset + limit < totalMessages
-      }
+        hasMore: offset + limit < totalMessages,
+      },
     });
   } catch (error) {
     console.error("Error getting conversation messages:", error);
@@ -175,8 +187,8 @@ const markMessageAsRead = async (req, res) => {
     const userId = req.user.id;
 
     // Verify the user is the receiver of this message
-    const message = await db.message.findUnique({
-      where: { id: messageId }
+    const message = await prisma.message.findUnique({
+      where: { id: messageId },
     });
 
     if (!message) {
@@ -184,12 +196,14 @@ const markMessageAsRead = async (req, res) => {
     }
 
     if (message.receiverId !== userId) {
-      return res.status(403).json({ error: "Not authorized to mark this message as read" });
+      return res
+        .status(403)
+        .json({ error: "Not authorized to mark this message as read" });
     }
 
-    const updatedMessage = await db.message.update({
+    const updatedMessage = await prisma.message.update({
       where: { id: messageId },
-      data: { isRead: true }
+      data: { isRead: true },
     });
 
     res.json(updatedMessage);
@@ -206,28 +220,27 @@ const markConversationAsRead = async (req, res) => {
     const userId = req.user.id;
 
     // Verify user is part of this conversation
-    const userInConversation = await db.message.findFirst({
+    const userInConversation = await prisma.message.findFirst({
       where: {
         conversationId,
-        OR: [
-          { senderId: userId },
-          { receiverId: userId }
-        ]
-      }
+        OR: [{ senderId: userId }, { receiverId: userId }],
+      },
     });
 
     if (!userInConversation) {
-      return res.status(403).json({ error: "Not authorized to access this conversation" });
+      return res
+        .status(403)
+        .json({ error: "Not authorized to access this conversation" });
     }
 
     // Mark all messages where the user is the receiver as read
-    await db.message.updateMany({
+    await prisma.message.updateMany({
       where: {
         conversationId,
         receiverId: userId,
-        isRead: false
+        isRead: false,
       },
-      data: { isRead: true }
+      data: { isRead: true },
     });
 
     res.json({ message: "Conversation marked as read" });
@@ -253,35 +266,40 @@ const getJobConversation = async (req, res) => {
       where: { id: jobId },
       include: {
         applications: {
-          where: { status: 'ACCEPTED' }
-        }
-      }
+          where: { status: "ACCEPTED" },
+        },
+      },
     });
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
     }
 
-    const isUserAuthorized = job.hirerId === userId || 
-      job.applications.some(app => app.workerId === userId);
-    const isOtherUserAuthorized = job.hirerId === otherUserId || 
-      job.applications.some(app => app.workerId === otherUserId);
+    const isUserAuthorized =
+      job.hirerId === userId ||
+      job.applications.some((app) => app.workerId === userId);
+    const isOtherUserAuthorized =
+      job.hirerId === otherUserId ||
+      job.applications.some((app) => app.workerId === otherUserId);
 
     if (!isUserAuthorized || !isOtherUserAuthorized) {
-      return res.status(403).json({ error: "Not authorized to create conversation for this job" });
+      return res
+        .status(403)
+        .json({ error: "Not authorized to create conversation for this job" });
     }
 
-    const conversationId = [userId, otherUserId].sort().join('-') + `-job-${jobId}`;
+    const conversationId =
+      [userId, otherUserId].sort().join("-") + `-job-${jobId}`;
 
     // Check if conversation already exists
-    const existingMessages = await db.message.findFirst({
-      where: { conversationId }
+    const existingMessages = await prisma.message.findFirst({
+      where: { conversationId },
     });
 
     res.json({
       conversationId,
       jobId,
-      exists: !!existingMessages
+      exists: !!existingMessages,
     });
   } catch (error) {
     console.error("Error getting job conversation:", error);
@@ -295,5 +313,5 @@ module.exports = {
   getConversationMessages,
   markMessageAsRead,
   markConversationAsRead,
-  getJobConversation
+  getJobConversation,
 };
