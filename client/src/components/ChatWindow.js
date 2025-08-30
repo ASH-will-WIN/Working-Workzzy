@@ -10,6 +10,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState(messages);
+  const [messagesLoading, setMessagesLoading] = useState(false);
 
   // Update local messages when props change
   useEffect(() => {
@@ -34,7 +35,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
         setLocalMessages(messagesData.messages || []);
       } catch (error) {
         console.error("Failed to load messages:", error);
-        alert("Failed to load messages. Please try again.");
+        // Don't show an alert for empty conversations
+        if (error.response?.status !== 404 && error.response?.status !== 403) {
+          alert("Failed to load messages. Please try again.");
+        }
       } finally {
         setMessagesLoading(false);
       }
@@ -74,7 +78,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
     }
   };
 
-  if (loading) {
+  if (loading || messagesLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-workzzy-500"></div>

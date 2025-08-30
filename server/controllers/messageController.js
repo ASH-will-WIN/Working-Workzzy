@@ -1,4 +1,4 @@
-const { prisma } = require("../db");
+const { prisma } = require("../db"); // Make sure to import prisma
 
 // Send a new message
 const sendMessage = async (req, res) => {
@@ -16,9 +16,9 @@ const sendMessage = async (req, res) => {
     const conversationId =
       [senderId, receiverId].sort().join("-") + (jobId ? `-job-${jobId}` : "");
 
-    // Validate that users can message each other (both must be involved in the job if jobId is provided)
+    // If jobId is provided, validate the users can message about this job
     if (jobId) {
-      const job = await db.job.findUnique({
+      const job = await prisma.job.findUnique({
         where: { id: jobId },
         include: {
           applications: {
@@ -33,27 +33,36 @@ const sendMessage = async (req, res) => {
         return res.status(404).json({ error: "Job not found" });
       }
 
-      // Check if the sender is either the hirer or an accepted worker
-      const isHirer = job.hirerId === senderId;
-      const isAcceptedWorker = job.applications.some(
-        (app) => app.workerId === senderId
-      );
+      // Allow messaging if:
+      // 1. The sender is the hirer and receiver is any user, OR
+      // 2. The receiver is the hirer and sender is any user (for pending jobs)
+      // 3. Both users are accepted workers on the job (for committed/in-progress jobs)
 
-      // Check if the receiver is either the hirer or an accepted worker
+      const isSenderHirer = job.hirerId === senderId;
       const isReceiverHirer = job.hirerId === receiverId;
-      const isReceiverAcceptedWorker = job.applications.some(
-        (app) => app.workerId === receiverId
-      );
 
-      if (
-        !(
-          (isHirer || isAcceptedWorker) &&
-          (isReceiverHirer || isReceiverAcceptedWorker)
-        )
-      ) {
-        return res
-          .status(403)
-          .json({ error: "Not authorized to message about this job" });
+      // For pending jobs, allow any user to message the hirer
+      if (job.status === "PENDING") {
+        if (!(isReceiverHirer || isSenderHirer)) {
+          return res.status(403).json({
+            error: "For pending jobs, you can only message the job hirer",
+          });
+        }
+      }
+      // For non-pending jobs, use the original logic
+      else {
+        const isSenderAuthorized =
+          isSenderHirer ||
+          job.applications.some((app) => app.workerId === senderId);
+        const isReceiverAuthorized =
+          isReceiverHirer ||
+          job.applications.some((app) => app.workerId === receiverId);
+
+        if (!isSenderAuthorized || !isReceiverAuthorized) {
+          return res.status(403).json({
+            error: "Not authorized to message about this job",
+          });
+        }
       }
     }
 
@@ -80,6 +89,7 @@ const getConversations = async (req, res) => {
   try {
     const userId = req.user.id;
 
+    // FIX: Use prisma instead of db
     // Get all unique conversations for the user
     const conversations = await prisma.message.findMany({
       where: {
@@ -94,11 +104,13 @@ const getConversations = async (req, res) => {
     // Get the latest message and unread count for each conversation
     const conversationDetails = await Promise.all(
       conversations.map(async (conv) => {
+        // FIX: Use prisma instead of db
         const latestMessage = await prisma.message.findFirst({
           where: { conversationId: conv.conversationId },
           orderBy: { createdAt: "desc" },
         });
 
+        // FIX: Use prisma instead of db
         const unreadCount = await prisma.message.count({
           where: {
             conversationId: conv.conversationId,
@@ -141,6 +153,7 @@ const getConversationMessages = async (req, res) => {
     const offset = (page - 1) * limit;
 
     // Verify user is part of this conversation
+    // FIX: Use prisma instead of db
     const userInConversation = await prisma.message.findFirst({
       where: {
         conversationId,
@@ -154,6 +167,7 @@ const getConversationMessages = async (req, res) => {
         .json({ error: "Not authorized to view this conversation" });
     }
 
+    // FIX: Use prisma instead of db
     const messages = await prisma.message.findMany({
       where: { conversationId },
       orderBy: { createdAt: "asc" },
@@ -161,6 +175,7 @@ const getConversationMessages = async (req, res) => {
       take: limit,
     });
 
+    // FIX: Use prisma instead of db
     const totalMessages = await prisma.message.count({
       where: { conversationId },
     });
@@ -187,6 +202,7 @@ const markMessageAsRead = async (req, res) => {
     const userId = req.user.id;
 
     // Verify the user is the receiver of this message
+    // FIX: Use prisma instead of db
     const message = await prisma.message.findUnique({
       where: { id: messageId },
     });
@@ -201,6 +217,7 @@ const markMessageAsRead = async (req, res) => {
         .json({ error: "Not authorized to mark this message as read" });
     }
 
+    // FIX: Use prisma instead of db
     const updatedMessage = await prisma.message.update({
       where: { id: messageId },
       data: { isRead: true },
@@ -220,6 +237,7 @@ const markConversationAsRead = async (req, res) => {
     const userId = req.user.id;
 
     // Verify user is part of this conversation
+    // FIX: Use prisma instead of db
     const userInConversation = await prisma.message.findFirst({
       where: {
         conversationId,
@@ -234,6 +252,7 @@ const markConversationAsRead = async (req, res) => {
     }
 
     // Mark all messages where the user is the receiver as read
+    // FIX: Use prisma instead of db
     await prisma.message.updateMany({
       where: {
         conversationId,
@@ -250,68 +269,10 @@ const markConversationAsRead = async (req, res) => {
   }
 };
 
-// Get or create conversation for a specific job
-const getJobConversation = async (req, res) => {
-  try {
-    const { jobId } = req.params;
-    const { otherUserId } = req.query;
-    const userId = req.user.id;
-
-    if (!otherUserId) {
-      return res.status(400).json({ error: "Other user ID is required" });
-    }
-
-    // Verify both users are authorized for this job
-    const job = await db.job.findUnique({
-      where: { id: jobId },
-      include: {
-        applications: {
-          where: { status: "ACCEPTED" },
-        },
-      },
-    });
-
-    if (!job) {
-      return res.status(404).json({ error: "Job not found" });
-    }
-
-    const isUserAuthorized =
-      job.hirerId === userId ||
-      job.applications.some((app) => app.workerId === userId);
-    const isOtherUserAuthorized =
-      job.hirerId === otherUserId ||
-      job.applications.some((app) => app.workerId === otherUserId);
-
-    if (!isUserAuthorized || !isOtherUserAuthorized) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to create conversation for this job" });
-    }
-
-    const conversationId =
-      [userId, otherUserId].sort().join("-") + `-job-${jobId}`;
-
-    // Check if conversation already exists
-    const existingMessages = await prisma.message.findFirst({
-      where: { conversationId },
-    });
-
-    res.json({
-      conversationId,
-      jobId,
-      exists: !!existingMessages,
-    });
-  } catch (error) {
-    console.error("Error getting job conversation:", error);
-    res.status(500).json({ error: "Failed to get job conversation" });
-  }
-};
-
 module.exports = {
   sendMessage,
   getConversations,
   getConversationMessages,
   markMessageAsRead,
   markConversationAsRead,
-  getJobConversation,
 };

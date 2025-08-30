@@ -8,6 +8,8 @@ import {
   rejectApplication,
 } from "../api/applicationApi";
 import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { sendMessage } from "../api/messageApi";
 import StatusBadge from "../components/StatusBadge";
 import ImageGallery from "../components/ImageGallery";
 // Removed job-specific StartConversation import
@@ -18,6 +20,7 @@ import CheckoutForm from "../components/CheckoutForm";
 // --- Load Stripe outside of the component to avoid re-creating on every render ---
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 const JobDetail = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const { user } = useAuth();
   const [job, setJob] = useState(null);
@@ -29,6 +32,41 @@ const JobDetail = () => {
   // --- NEW STATE FOR PAYMENT ---
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
+  const [startingChat, setStartingChat] = useState(false);
+  const [chatError, setChatError] = useState("");
+
+  const handleStartChat = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    setStartingChat(true);
+    setChatError("");
+
+    try {
+      // Send initial message with jobId and receiverId
+      const receiverId = job.hirerId;
+      const response = await sendMessage({
+        jobId: job.id,
+        receiverId,
+        content: "Started chat about job: " + job.title,
+      });
+
+      // Navigate to messages with conversation state
+      navigate("/messages", {
+        state: {
+          conversationId: response.conversationId,
+          focusNew: true,
+        },
+      });
+    } catch (error) {
+      setChatError("Failed to start chat. Please try again.");
+      console.error("Error starting chat:", error);
+    } finally {
+      setStartingChat(false);
+    }
+  };
   const isHirer = user?.id === job?.hirerId;
   const fetchJobAndApps = async () => {
     try {
@@ -386,7 +424,48 @@ const JobDetail = () => {
                 <p className="text-gray-600 mb-4">
                   Have questions about this job? Message the hirer directly.
                 </p>
-                {/* Removed job-specific conversation button */}
+                {/* Chat Button for non-hirers */}
+                {user &&
+                  user.id !== job?.hirerId &&
+                  job?.status === "PENDING" && (
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={handleStartChat}
+                        disabled={startingChat || !job}
+                        className="btn btn-primary flex items-center"
+                      >
+                        {startingChat ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            Starting Chat...
+                          </>
+                        ) : (
+                          <>
+                            <svg
+                              className="w-4 h-4 mr-2"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                              />
+                            </svg>
+                            Chat with Hirer
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
+
+                {chatError && (
+                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <p className="text-red-700 text-sm">{chatError}</p>
+                  </div>
+                )}
               </div>
             </div>
           )}

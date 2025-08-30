@@ -8,7 +8,7 @@ import {
 } from "../api/messageApi";
 import ConversationList from "./ConversationList";
 import ChatWindow from "./ChatWindow";
-import { searchUsers } from "../api/userApi";
+// Remove the import for searchUsers since it's no longer used
 
 const MessageCenter = () => {
   const location = useLocation();
@@ -17,8 +17,7 @@ const MessageCenter = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [messagesLoading, setMessagesLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
+  // Remove searchQuery and searchResults states
 
   // Fetch conversations on component mount
   useEffect(() => {
@@ -34,6 +33,14 @@ const MessageCenter = () => {
           );
           if (targetConversation) {
             handleSelectConversation(targetConversation);
+
+            // If this is a new conversation, focus the message input
+            if (location.state.focusNew) {
+              setTimeout(() => {
+                const messageInput = document.querySelector("textarea");
+                if (messageInput) messageInput.focus();
+              }, 500);
+            }
           }
         }
       } catch (error) {
@@ -46,14 +53,7 @@ const MessageCenter = () => {
     fetchConversations();
   }, [location.state]);
 
-  // Handle user search
-  useEffect(() => {
-    if (searchQuery.trim().length > 2) {
-      searchUsers(searchQuery).then((results) => setSearchResults(results));
-    } else {
-      setSearchResults([]);
-    }
-  }, [searchQuery]);
+  // Remove the useEffect for user search
 
   // Refresh conversations periodically for real-time updates
   useEffect(() => {
@@ -117,26 +117,7 @@ const MessageCenter = () => {
     );
   };
 
-  const handleStartConversation = async (userId) => {
-    try {
-      const existingConversation = conversations.find(
-        (c) => c.otherParticipant.userId === userId
-      );
-      if (existingConversation) {
-        handleSelectConversation(existingConversation);
-      } else {
-        const conversation = await createConversation(userId);
-        setConversations((prev) => [conversation, ...prev]);
-        setSelectedConversation(conversation);
-        setMessages([]);
-      }
-      // Clear search
-      setSearchQuery("");
-      setSearchResults([]);
-    } catch (error) {
-      alert(`Failed to start conversation: ${error.message}`);
-    }
-  };
+  // Remove the handleStartConversation function since it's not used anymore
 
   if (loading) {
     return (
@@ -207,61 +188,27 @@ const MessageCenter = () => {
                 />
               ) : (
                 <div className="flex-1 flex items-center justify-center bg-gray-50 p-4">
-                  <div className="w-full max-w-md">
-                    <h2 className="text-xl font-bold text-center mb-4">
-                      Messages
-                    </h2>
-                    <div className="bg-white rounded-lg shadow p-4">
-                      <h3 className="font-medium mb-3">
-                        Start a new conversation
-                      </h3>
-
-                      {/* Simple search input */}
-                      <div className="mb-4">
-                        <input
-                          type="text"
-                          placeholder="Search users..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-workzzy-500"
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                        />
-                      </div>
-
-                      {/* User results */}
-                      {searchResults.length > 0 ? (
-                        <div className="space-y-2 max-h-60 overflow-y-auto">
-                          {searchResults.map((user) => (
-                            <div
-                              key={user.id}
-                              className="flex items-center p-2 hover:bg-gray-50 rounded cursor-pointer"
-                              onClick={() => handleStartConversation(user.id)}
-                            >
-                              <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center mr-3">
-                                <span className="font-medium">
-                                  {user.name.charAt(0)}
-                                </span>
-                              </div>
-                              <div>
-                                <p className="font-medium">{user.name}</p>
-                                {user.role && (
-                                  <p className="text-xs text-gray-500">
-                                    {user.role}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : searchQuery && searchQuery.trim().length > 2 ? (
-                        <p className="text-center text-gray-500 py-4">
-                          No users found
-                        </p>
-                      ) : (
-                        <p className="text-center text-gray-500 py-4">
-                          Search for users to start a conversation
-                        </p>
-                      )}
-                    </div>
+                  <div className="text-center">
+                    <svg
+                      className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                      />
+                    </svg>
+                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                      No conversation selected
+                    </h3>
+                    <p className="text-gray-500">
+                      Select a conversation from the list or start one from a
+                      job application.
+                    </p>
                   </div>
                 </div>
               )}

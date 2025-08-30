@@ -12,10 +12,11 @@ import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
 import PaymentStatusIndicator from "../components/PaymentStatusIndicator";
 import FinalPaymentForm from "../components/FinalPaymentForm";
-// Removed job-specific StartConversation import
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [applications, setApplications] = useState([]);
   const [hirerJobs, setHirerJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -473,12 +474,25 @@ const Dashboard = () => {
                                 </svg>
                                 Mark as Complete
                               </button>
-                              <StartConversation
-                                jobId={application.job.id}
-                                otherUserId={application.job.hirerId}
-                                otherUserRole="HIRER"
-                                className="btn-sm"
-                              />
+                              <button
+                                onClick={() => navigate("/messages")}
+                                className="btn btn-primary btn-sm"
+                              >
+                                <svg
+                                  className="w-4 h-4 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                                  />
+                                </svg>
+                                Open Messages
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -576,12 +590,25 @@ const Dashboard = () => {
                             Send a message about this job
                           </p>
                         </div>
-                        <StartConversation
-                          jobId={application.job.id}
-                          otherUserId={application.job.hirerId}
-                          otherUserRole="HIRER"
-                          className="btn-sm"
-                        />
+                        <button
+                          onClick={() => navigate("/messages")}
+                          className="btn btn-primary btn-sm"
+                        >
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                            />
+                          </svg>
+                          Open Messages
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -1041,12 +1068,25 @@ const Dashboard = () => {
                                             You'll be notified when work begins.
                                           </p>
                                         </div>
-                                        <StartConversation
-                                          jobId={job.id}
-                                          otherUserId={application.workerId}
-                                          otherUserRole="WORKER"
-                                          className="btn-sm"
-                                        />
+                                        <button
+                                          onClick={() => navigate("/messages")}
+                                          className="btn btn-primary btn-sm"
+                                        >
+                                          <svg
+                                            className="w-4 h-4 mr-2"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            viewBox="0 0 24 24"
+                                          >
+                                            <path
+                                              strokeLinecap="round"
+                                              strokeLinejoin="round"
+                                              strokeWidth={2}
+                                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                                            />
+                                          </svg>
+                                          Open Messages
+                                        </button>
                                       </div>
                                     </div>
                                   </div>
