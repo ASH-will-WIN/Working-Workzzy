@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
@@ -81,6 +81,11 @@ const Register = () => {
           Register
         </button>
         {error && <p className="error mt-2">{error}</p>}
+        <div className="text-center mt-2">
+          <Link to="/" className="text-sm text-gray-600 hover:text-gray-500">
+            Back to Home
+          </Link>
+        </div>
       </form>
     </div>
   );

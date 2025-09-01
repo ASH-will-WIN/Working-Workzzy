@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
@@ -42,6 +42,20 @@ const Login = () => {
         <button type="submit">Login</button>
         {error && <p className="error">{error}</p>}
       </form>
+
+      <div className="text-center mt-4">
+        <Link
+          to="/forgot-password"
+          className="text-sm text-workzzy-600 hover:text-workzzy-500"
+        >
+          Forgot password?
+        </Link>
+      </div>
+      <div className="text-center mt-2">
+        <Link to="/" className="text-sm text-gray-600 hover:text-gray-500">
+          Back to Home
+        </Link>
+      </div>
     </div>
   );
 };

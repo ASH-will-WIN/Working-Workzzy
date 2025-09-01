@@ -5,6 +5,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import JobsList from "./pages/JobsList";
+import Home from "./pages/Home";
 import JobDetail from "./pages/JobDetail";
 import CreateJob from "./pages/CreateJob";
 import Dashboard from "./pages/Dashboard";
@@ -29,9 +30,10 @@ function App() {
           <Route path="/connect-refresh" element={<ConnectRefresh />} />
           <Route path="/terms" element={<Terms />} />{" "}
           {/* Added route for Terms and Conditions */}
+          <Route path="/" element={<Home />} />
           {/* Protected Routes */}
           <Route
-            path="/"
+            path="/jobs"
             element={
               <ProtectedRoute>
                 <JobsList />
