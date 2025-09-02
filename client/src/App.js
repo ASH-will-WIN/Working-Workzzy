@@ -30,7 +30,6 @@ function App() {
           <Route path="/connect-refresh" element={<ConnectRefresh />} />
           <Route path="/terms" element={<Terms />} />{" "}
           {/* Added route for Terms and Conditions */}
-          <Route path="/" element={<Home />} />
           {/* Protected Routes */}
           <Route
             path="/jobs"
@@ -40,6 +39,8 @@ function App() {
               </ProtectedRoute>
             }
           />
+          {/* Public Routes */}
+          <Route path="/" element={<Home />} />
           <Route
             path="/jobs/new"
             element={

@@ -60,8 +60,8 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <Link
-                  to="/"
-                  className={`nav-link ${isActive("/") ? "active" : ""}`}
+                  to="/jobs"
+                  className={`nav-link ${isActive("/jobs") ? "active" : ""}`}
                 >
                   <svg
                     className="w-4 h-4 mr-1"
@@ -186,6 +186,9 @@ const Navbar = () => {
                     </button>
                   </div>
                 </div>
+              </>
+            ) : (
+              <>
                 <Link
                   to="/"
                   className={`nav-link ${isActive("/") ? "active" : ""}`}
@@ -205,9 +208,6 @@ const Navbar = () => {
                   </svg>
                   Home
                 </Link>
-              </>
-            ) : (
-              <>
                 <Link
                   to="/login"
                   className={`nav-link ${isActive("/login") ? "active" : ""}`}
