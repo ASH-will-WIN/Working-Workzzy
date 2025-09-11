@@ -57,10 +57,10 @@ async function getJobs(req, res) {
       },
       where: {
         status: {
-          in: [JobStatus.PENDING] // Only show jobs that are accepting applications
-        }
+          in: [JobStatus.PENDING], // Only show jobs that are accepting applications
+        },
       },
-      orderBy: { createdAt: 'desc' }
+      orderBy: { createdAt: "desc" },
     });
     res.json(jobs);
   } catch (error) {
@@ -81,8 +81,36 @@ async function getJobs(req, res) {
 async function getJob(req, res) {
   try {
     const { id } = req.params;
-    const job = await prisma.job.findUnique({ where: { id } });
-    res.json(job);
+
+    // Get job with basic info
+    const job = await prisma.job.findUnique({
+      where: { id },
+      include: {
+        images: true,
+        applications: {
+          where: {
+            workerId: req.user?.id,
+          },
+        },
+      },
+    });
+
+    // If user is hirer or has accepted application, return full job details
+    if (
+      req.user?.id === job.hirerId ||
+      job.applications.some((app) => app.status === "ACCEPTED")
+    ) {
+      res.json(job);
+      return;
+    }
+
+    // Otherwise return job without sensitive info
+    const { address, images, ...jobWithoutSensitive } = job;
+    res.json({
+      ...jobWithoutSensitive,
+      address: "Restricted - Application must be accepted to view",
+      images: [],
+    });
   } catch (error) {
     console.error("Job Get Error:", {
       timestamp: new Date().toISOString(),
@@ -339,16 +367,16 @@ async function deleteJobImage(req, res) {
 async function startJob(req, res) {
   try {
     const { jobId } = req.params;
-    
+
     // Get the job and verify it's in COMMITTED status
     const job = await prisma.job.findUnique({
       where: { id: jobId },
       include: {
         applications: {
           where: { status: ApplicationStatus.ACCEPTED },
-          take: 1
-        }
-      }
+          take: 1,
+        },
+      },
     });
 
     if (!job) {
@@ -358,14 +386,14 @@ async function startJob(req, res) {
     if (job.status !== JobStatus.COMMITTED) {
       return res.status(400).json({
         error: "invalid_status",
-        message: "Job must be in COMMITTED status to start work"
+        message: "Job must be in COMMITTED status to start work",
       });
     }
 
     if (job.applications.length === 0) {
       return res.status(400).json({
         error: "no_accepted_application",
-        message: "No accepted application found for this job"
+        message: "No accepted application found for this job",
       });
     }
 
@@ -388,14 +416,14 @@ async function startJob(req, res) {
     if (job.applications[0].workerId !== user.id) {
       return res.status(403).json({
         error: "not_authorized_worker",
-        message: "Only the accepted worker can start this job"
+        message: "Only the accepted worker can start this job",
       });
     }
 
     // Update job status to IN_PROGRESS
     const updatedJob = await prisma.job.update({
       where: { id: jobId },
-      data: { status: JobStatus.IN_PROGRESS }
+      data: { status: JobStatus.IN_PROGRESS },
     });
 
     res.json(updatedJob);
@@ -412,16 +440,16 @@ async function startJob(req, res) {
 async function completeJob(req, res) {
   try {
     const { jobId } = req.params;
-    
+
     // Get the job and verify it's in IN_PROGRESS status
     const job = await prisma.job.findUnique({
       where: { id: jobId },
       include: {
         applications: {
           where: { status: ApplicationStatus.ACCEPTED },
-          take: 1
-        }
-      }
+          take: 1,
+        },
+      },
     });
 
     if (!job) {
@@ -431,14 +459,14 @@ async function completeJob(req, res) {
     if (job.status !== JobStatus.IN_PROGRESS) {
       return res.status(400).json({
         error: "invalid_status",
-        message: "Job must be in IN_PROGRESS status to be completed"
+        message: "Job must be in IN_PROGRESS status to be completed",
       });
     }
 
     if (job.applications.length === 0) {
       return res.status(400).json({
         error: "no_accepted_application",
-        message: "No accepted application found for this job"
+        message: "No accepted application found for this job",
       });
     }
 
@@ -461,14 +489,14 @@ async function completeJob(req, res) {
     if (job.applications[0].workerId !== user.id) {
       return res.status(403).json({
         error: "not_authorized_worker",
-        message: "Only the accepted worker can complete this job"
+        message: "Only the accepted worker can complete this job",
       });
     }
 
     // Update job status to COMPLETED
     const updatedJob = await prisma.job.update({
       where: { id: jobId },
-      data: { status: JobStatus.COMPLETED }
+      data: { status: JobStatus.COMPLETED },
     });
 
     res.json(updatedJob);

@@ -6,25 +6,7 @@ const Terms = () => {
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <button
-        onClick={() => navigate(-1)}
-        className="mb-6 text-workzzy-600 hover:text-workzzy-800 flex items-center"
-      >
-        <svg
-          className="w-5 h-5 mr-1"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
-        Back
-      </button>
+      {/* Removed back button as requested */}
 
       <h1 className="text-3xl font-bold mb-8 text-gray-900">
         Terms and Conditions

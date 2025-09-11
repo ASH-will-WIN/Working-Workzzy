@@ -201,7 +201,10 @@ const JobDetail = () => {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              {job.address}
+              {isHirer ||
+              job.applications?.some((app) => app.status === "ACCEPTED")
+                ? job.address
+                : "Restricted - Application must be accepted to view address"}
             </div>
           </div>
           <StatusBadge status={job.status} type="job" />
@@ -245,7 +248,30 @@ const JobDetail = () => {
             )}
           </div>
 
-          <ImageGallery images={images} className="mt-4" />
+          {isHirer ||
+          job.applications?.some((app) => app.status === "ACCEPTED") ? (
+            <ImageGallery images={images} className="mt-4" />
+          ) : (
+            <div className="text-center py-8">
+              <svg
+                className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                />
+              </svg>
+              <p className="text-gray-500 text-lg">Job images are restricted</p>
+              <p className="text-gray-400 text-sm mt-1">
+                Your application must be accepted to view images
+              </p>
+            </div>
+          )}
         </div>
       )}
       {isHirer ? (

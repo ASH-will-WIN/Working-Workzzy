@@ -71,9 +71,9 @@ const Register = () => {
           />
           <label htmlFor="terms" className="ml-2">
             I agree to the{" "}
-            <a href="/terms" className="text-workzzy-600 hover:underline">
+            <Link to="/terms" className="text-workzzy-600 hover:underline">
               Terms and Conditions
-            </a>
+            </Link>
           </label>
         </div>
 
