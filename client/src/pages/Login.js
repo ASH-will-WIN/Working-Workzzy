@@ -43,14 +43,6 @@ const Login = () => {
         {error && <p className="error">{error}</p>}
       </form>
 
-      <div className="text-center mt-4">
-        <Link
-          to="/forgot-password"
-          className="text-sm text-workzzy-600 hover:text-workzzy-500"
-        >
-          Forgot password?
-        </Link>
-      </div>
       <div className="text-center mt-2">
         <Link to="/" className="text-sm text-gray-600 hover:text-gray-500">
           Back to Home

@@ -7,7 +7,7 @@
     Version: 2.0
     Requires: PowerShell 5.1+
 #>
-$API_BASE = "http://workzzyuno.onrender.com"
+$API_BASE = "https://workzzyuno.onrender.com"
 $TIMESTAMP = (Get-Date).ToFileTime()
 $HIRER_EMAIL = "hirer_$TIMESTAMP@example.com"
 $WORKER_EMAIL = "worker_$TIMESTAMP@example.com"
