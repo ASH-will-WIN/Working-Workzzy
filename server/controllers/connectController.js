@@ -5,22 +5,26 @@ async function syncAccountStatus(accountId, userId) {
   try {
     const account = await stripeClient.accounts.retrieve(accountId);
     const requirements = account.requirements || {};
-    
+
     const updated = await prisma.stripeAccount.update({
       where: { userId },
       data: {
         chargesEnabled: Boolean(account.charges_enabled),
         payoutsEnabled: Boolean(account.payouts_enabled),
         detailsSubmitted: Boolean(account.details_submitted),
-        requiresAction: requirements.currently_due?.length > 0 || requirements.eventually_due?.length > 0,
-        currentDeadline: requirements.current_deadline ? new Date(requirements.current_deadline * 1000) : null,
+        requiresAction:
+          requirements.currently_due?.length > 0 ||
+          requirements.eventually_due?.length > 0,
+        currentDeadline: requirements.current_deadline
+          ? new Date(requirements.current_deadline * 1000)
+          : null,
         lastSyncAt: new Date(),
       },
     });
-    
+
     return updated;
   } catch (error) {
-    console.error('Failed to sync account status:', error);
+    console.error("Failed to sync account status:", error);
     throw error;
   }
 }
@@ -62,7 +66,7 @@ async function createAccount(req, res) {
     }
 
     // Generate fresh onboarding link
-    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:3000";
+    const frontendUrl = process.env.FRONTEND_URL;
     const accountLink = await stripeClient.accountLinks.create({
       account: accountRecord.accountId,
       refresh_url: `${frontendUrl}/connect-refresh`,
@@ -162,16 +166,24 @@ async function refreshStatus(req, res) {
     // Determine what changed
     const changes = [];
     if (previousState.chargesEnabled !== updated.chargesEnabled) {
-      changes.push(updated.chargesEnabled ? 'charges_enabled' : 'charges_disabled');
+      changes.push(
+        updated.chargesEnabled ? "charges_enabled" : "charges_disabled"
+      );
     }
     if (previousState.payoutsEnabled !== updated.payoutsEnabled) {
-      changes.push(updated.payoutsEnabled ? 'payouts_enabled' : 'payouts_disabled');
+      changes.push(
+        updated.payoutsEnabled ? "payouts_enabled" : "payouts_disabled"
+      );
     }
     if (previousState.detailsSubmitted !== updated.detailsSubmitted) {
-      changes.push(updated.detailsSubmitted ? 'details_completed' : 'details_incomplete');
+      changes.push(
+        updated.detailsSubmitted ? "details_completed" : "details_incomplete"
+      );
     }
     if (previousState.requiresAction !== updated.requiresAction) {
-      changes.push(updated.requiresAction ? 'action_required' : 'action_resolved');
+      changes.push(
+        updated.requiresAction ? "action_required" : "action_resolved"
+      );
     }
 
     res.json({

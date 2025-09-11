@@ -164,8 +164,8 @@ async function acceptApplication(req, res) {
     const application = await prisma.jobApplication.findUnique({
       where: { id },
       include: {
-        job: true
-      }
+        job: true,
+      },
     });
 
     if (!application) {
@@ -183,8 +183,8 @@ async function acceptApplication(req, res) {
     const existingAcceptedApp = await prisma.jobApplication.findFirst({
       where: {
         jobId: application.jobId,
-        status: ApplicationStatus.ACCEPTED
-      }
+        status: ApplicationStatus.ACCEPTED,
+      },
     });
 
     if (existingAcceptedApp) {
@@ -291,7 +291,7 @@ async function confirmApplicationPayment(req, res) {
       application.depositId,
       {
         payment_method: "pm_card_visa", // Test card for development
-        return_url: "http://localhost:5000/payment-complete", // Required for some payment methods
+        return_url: "https://workzzyunos.onrender.com/payment-complete", // Required for some payment methods
       }
     );
 

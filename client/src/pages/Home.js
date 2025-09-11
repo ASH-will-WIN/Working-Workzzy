@@ -134,124 +134,15 @@ const Home = () => {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
               <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                Product
-              </h3>
-              <ul className="mt-4 space-y-4">
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Security
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                Company
-              </h3>
-              <ul className="mt-4 space-y-4">
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Careers
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Press
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
                 Resources
               </h3>
               <ul className="mt-4 space-y-4">
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Docs
-                  </Link>
-                </li>
                 <li>
                   <Link
                     to="/terms"
                     className="text-base text-gray-600 hover:text-gray-900"
                   >
                     Terms
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Privacy
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">
-                Community
-              </h3>
-              <ul className="mt-4 space-y-4">
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Forums
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="#"
-                    className="text-base text-gray-600 hover:text-gray-900"
-                  >
-                    Events
                   </Link>
                 </li>
               </ul>
