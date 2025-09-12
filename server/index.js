@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const { createClient } = require("@supabase/supabase-js");
 const db = require("./db");
+const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -32,6 +33,12 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/applications", applicationRoutes);
 app.use("/api/connect", connectRoutes);
 app.use("/api/messages", messageRoutes);
+
+app.use(express.static(path.join(__dirname, "../client/build")));
+
+app.get("/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+});
 
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");
