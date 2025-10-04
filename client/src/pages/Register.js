@@ -24,7 +24,7 @@ const Register = () => {
 
     try {
       await register(name, email, password, role);
-      navigate("/");
+      navigate("/jobs");
     } catch (err) {
       setError("Failed to register.");
       console.error(err);
