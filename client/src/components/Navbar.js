@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
@@ -8,6 +8,7 @@ const Navbar = () => {
   const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -50,13 +51,57 @@ const Navbar = () => {
             <img
               src={logo}
               alt="Workzzy Logo"
-              className="w-12 h-12 object-contain mr-3"
+              className="w-10 h-10 object-contain mr-3"
             />
             <span className="sr-only">Workzzy</span>
           </Link>
 
-          {/* Navigation Links */}
-          <div className="nav-links">
+          {/* Mobile menu button */}
+          <div className="sm:hidden flex items-center">
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-workzzy-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-workzzy-500"
+              aria-expanded="false"
+            >
+              <span className="sr-only">Open main menu</span>
+              {isMenuOpen ? (
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              ) : (
+                <svg
+                  className="block h-6 w-6"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              )}
+            </button>
+          </div>
+
+          {/* Navigation Links - Desktop */}
+          <div className="hidden sm:flex nav-links">
             {isAuthenticated ? (
               <>
                 <Link
@@ -161,7 +206,7 @@ const Navbar = () => {
 
                   {/* User Avatar */}
                   <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
+                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
                       {getUserInitials()}
                     </div>
 
@@ -254,6 +299,96 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Mobile menu */}
+      {isMenuOpen && (
+        <div className="sm:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-50">
+          <div className="px-2 pt-2 pb-3 space-y-1">
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/jobs"
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive("/jobs") ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Jobs
+                </Link>
+                {user?.user_metadata?.role === "HIRER" && (
+                  <Link
+                    to="/jobs/new"
+                    className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
+                      isActive("/jobs/new") ? "bg-gray-100" : ""
+                    }`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Post Job
+                  </Link>
+                )}
+                <Link
+                  to="/dashboard"
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive("/dashboard") ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Dashboard
+                </Link>
+                <Link
+                  to="/messages"
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium relative ${
+                    isActive("/messages") ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Messages
+                  <UnreadMessagesBadge />
+                </Link>
+                <button
+                  onClick={() => {
+                    handleLogout();
+                    setIsMenuOpen(false);
+                  }}
+                  className="nav-link block px-3 py-2 rounded-md text-base font-medium text-left w-full"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/"
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive("/") ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
+                <Link
+                  to="/login"
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
+                    isActive("/login") ? "bg-gray-100" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  className={`btn btn-primary btn-sm block px-3 py-2 rounded-md text-base font-medium text-center ${
+                    isActive("/register") ? "ring-2 ring-workzzy-300" : ""
+                  }`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Get Started
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Mobile-friendly user info bar (only when authenticated) */}
       {isAuthenticated && (

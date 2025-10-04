@@ -215,7 +215,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-workzzy-50 via-blue-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-workzzy-700 to-workzzy-900 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-workzzy-700 to-workzzy-900 bg-clip-text text-transparent">
               My Accepted Jobs
             </h1>
             <p className="text-gray-600 mt-2">
@@ -272,7 +272,7 @@ const Dashboard = () => {
                     />
                   </div>
 
-                  <div className="card-header">
+                  <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900">
                         {application.job.title}
@@ -393,7 +393,7 @@ const Dashboard = () => {
                               Your application has been accepted! You can now
                               start the job when you're ready.
                             </p>
-                            <div className="flex space-x-3">
+                            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                               <button
                                 onClick={() =>
                                   handleStartJob(application.job.id)
@@ -450,7 +450,7 @@ const Dashboard = () => {
                               You're currently working on this job. Mark it as
                               complete when you're finished.
                             </p>
-                            <div className="flex space-x-3">
+                            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                               <button
                                 onClick={() =>
                                   handleCompleteJob(application.job.id)
@@ -538,7 +538,7 @@ const Dashboard = () => {
                       </div>
                     )}
 
-                    <div className="grid grid-cols-2 gap-4 text-sm bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border border-gray-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border border-gray-200">
                       <div className="flex flex-col">
                         <span className="font-semibold text-gray-800 mb-1">
                           💳 Deposit Status
@@ -581,7 +581,7 @@ const Dashboard = () => {
 
                     {/* Contact Hirer Section */}
                     <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                           <h4 className="font-medium text-blue-900 mb-1">
                             Need to contact the hirer?
@@ -637,7 +637,7 @@ const Dashboard = () => {
                 </svg>
                 All Applications ({applications.length})
               </h2>
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {applications.map((application) => (
                   <div key={application.id} className="card card-hover">
                     <div className="card-header">
@@ -699,7 +699,7 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-workzzy-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-purple-700 to-workzzy-700 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-workzzy-700 bg-clip-text text-transparent">
               My Job Postings
             </h1>
             <p className="text-gray-600 mt-2">
@@ -771,7 +771,7 @@ const Dashboard = () => {
                     </div>
                   )}
 
-                  <div className="card-header">
+                  <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div>
                       <h2 className="text-xl font-semibold text-gray-900">
                         {job.title}
@@ -968,7 +968,7 @@ const Dashboard = () => {
                               {application.status === "APPLIED" &&
                                 job.status === "PENDING" && (
                                   <div className="pt-4 border-t border-gray-200">
-                                    <div className="flex space-x-3">
+                                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                                       <button
                                         onClick={() =>
                                           handleAcceptApplication(

@@ -54,7 +54,7 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
         <button
           onClick={handleSend}
           disabled={!value.trim() || disabled}
-          className={`inline-flex items-center justify-center w-8 h-8 rounded-full transition-colors ${
+          className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             value.trim() && !disabled
               ? "bg-workzzy-500 text-white hover:bg-workzzy-600 focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:ring-offset-2"
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -63,12 +63,12 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
         >
           {disabled ? (
             <div
-              className="animate-spin rounded-full h-4 w-4 border-b-2 border-current"
+              className="animate-spin rounded-full h-5 w-5 border-b-2 border-current"
               aria-hidden="true"
             ></div>
           ) : (
             <svg
-              className="w-4 h-4"
+              className="w-5 h-5"
               fill="currentColor"
               viewBox="0 0 20 20"
               aria-hidden="true"
