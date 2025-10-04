@@ -86,7 +86,7 @@ async function getJob(req, res) {
     const job = await prisma.job.findUnique({
       where: { id },
       include: {
-        images: true,
+        jobImages: true,
         applications: {
           where: {
             workerId: req.user?.id,
@@ -105,7 +105,7 @@ async function getJob(req, res) {
     }
 
     // Otherwise return job without sensitive info
-    const { address, images, ...jobWithoutSensitive } = job;
+    const { address, jobImages: images, ...jobWithoutSensitive } = job;
     res.json({
       ...jobWithoutSensitive,
       address: "Restricted - Application must be accepted to view",
