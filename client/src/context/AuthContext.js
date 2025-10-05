@@ -31,16 +31,17 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
-    
+
     // Note: Onboarding status will be checked on Dashboard load
   };
 
-  const register = async (name, email, password, role) => {
+  const register = async (name, email, password, role, phone) => {
     const { user, session } = await registerUser({
       name,
       email,
       password,
       role,
+      phone,
     });
     localStorage.setItem("token", session.access_token);
     localStorage.setItem("user", JSON.stringify(user));
@@ -49,7 +50,7 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
-    
+
     // Note: Onboarding status will be checked on Dashboard load
   };
 

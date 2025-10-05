@@ -6,6 +6,7 @@ const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
   const [role, setRole] = useState("WORKER"); // Default role
   const [error, setError] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
@@ -23,7 +24,7 @@ const Register = () => {
     }
 
     try {
-      await register(name, email, password, role);
+      await register(name, email, password, role, phone);
       navigate("/jobs");
     } catch (err) {
       setError("Failed to register.");
@@ -48,6 +49,12 @@ const Register = () => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
+        />
+        <input
+          type="tel"
+          placeholder="Phone Number"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
         <input
           type="password"

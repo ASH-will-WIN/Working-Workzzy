@@ -1,4 +1,5 @@
 const { prisma } = require("../db"); // Make sure to import prisma
+const { getUserPhoneNumber, sendSMS } = require("../services/smsService");
 
 // Send a new message
 const sendMessage = async (req, res) => {
@@ -76,6 +77,22 @@ const sendMessage = async (req, res) => {
         isRead: false,
       },
     });
+
+    // Send SMS notification to receiver if they have a phone number
+    try {
+      const receiverPhone = await getUserPhoneNumber(receiverId, prisma);
+      if (receiverPhone) {
+        const senderName = req.user.user_metadata?.name || "Someone";
+        const smsContent = `New message from ${senderName}: ${content.substring(
+          0,
+          100
+        )}${content.length > 100 ? "..." : ""}`;
+        await sendSMS(receiverPhone, smsContent);
+      }
+    } catch (smsError) {
+      console.error("Error sending SMS notification:", smsError);
+      // Don't fail the message send if SMS fails
+    }
 
     res.status(201).json(message);
   } catch (error) {

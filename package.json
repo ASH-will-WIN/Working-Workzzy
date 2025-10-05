@@ -4,7 +4,8 @@
     "pg": "^8.16.3",
     "postman": "^0.2.0",
     "prisma": "^6.13.0",
-    "stripe": "^18.4.0"
+    "stripe": "^18.4.0",
+    "twilio": "^5.10.2"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
