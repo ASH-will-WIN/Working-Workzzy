@@ -25,7 +25,7 @@ const CreateJob = () => {
         return await addJobImage(jobId, {
           url: image.url,
           isPublic: image.isPublic,
-          caption: image.caption || null
+          caption: image.caption || null,
         });
       } catch (error) {
         console.error(`Failed to upload image ${image.name}:`, error);
@@ -33,32 +33,35 @@ const CreateJob = () => {
         return null;
       }
     });
-    
+
     const results = await Promise.all(uploadPromises);
-    const failedUploads = results.filter(result => result === null).length;
-    const successfulUploads = results.filter(result => result !== null).length;
-    
+    const failedUploads = results.filter((result) => result === null).length;
+    const successfulUploads = results.filter(
+      (result) => result !== null
+    ).length;
+
     if (failedUploads > 0) {
       console.warn(`${failedUploads} image(s) failed to upload`);
       if (successfulUploads > 0) {
         return {
           success: true,
           message: `Job created successfully! ${successfulUploads} image(s) uploaded, ${failedUploads} failed.`,
-          partial: true
+          partial: true,
         };
       } else {
         return {
           success: false,
-          message: "Job created but all images failed to upload. Please try re-uploading images later.",
-          partial: true
+          message:
+            "Job created but all images failed to upload. Please try re-uploading images later.",
+          partial: true,
         };
       }
     }
-    
+
     return {
       success: true,
       message: `Job created successfully with ${successfulUploads} image(s)!`,
-      partial: false
+      partial: false,
     };
   };
 
@@ -83,16 +86,16 @@ const CreateJob = () => {
     try {
       // Step 1: Create the job
       const createdJob = await createJob(jobData);
-      
+
       // Step 2: Upload images if any
       if (images.length > 0) {
         try {
           const uploadResult = await uploadJobImages(createdJob.id);
-          
+
           if (uploadResult.success) {
             // Show success message
             console.log(uploadResult.message);
-            
+
             // Navigate to the created job detail page to show the images
             navigate(`/jobs/${createdJob.id}`);
           } else {
@@ -105,7 +108,9 @@ const CreateJob = () => {
           }
         } catch (imageError) {
           console.error("Image upload failed:", imageError);
-          setError("Job created successfully, but image upload failed. You can add images later from the job details page.");
+          setError(
+            "Job created successfully, but image upload failed. You can add images later from the job details page."
+          );
           // Still navigate after showing the error
           setTimeout(() => {
             navigate(`/jobs/${createdJob.id}`);
@@ -128,12 +133,17 @@ const CreateJob = () => {
       <div className="card">
         <div className="card-header">
           <h2 className="text-3xl font-bold text-gray-900">Create a New Job</h2>
-          <p className="text-gray-600 mt-2">Fill in the details below to post your job listing</p>
+          <p className="text-gray-600 mt-2">
+            Fill in the details below to post your job listing
+          </p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="title"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Job Title *
             </label>
             <input
@@ -146,9 +156,12 @@ const CreateJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="initialDescription" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="initialDescription"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Short Description *
             </label>
             <input
@@ -161,9 +174,12 @@ const CreateJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="fullDescription" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="fullDescription"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Full Job Description *
             </label>
             <textarea
@@ -176,9 +192,12 @@ const CreateJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500 resize-vertical"
             />
           </div>
-          
+
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
+            <label
+              htmlFor="address"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
               Job Address *
             </label>
             <input
@@ -191,27 +210,28 @@ const CreateJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
             />
           </div>
-          
+
           {/* Image Upload Section */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-3">
               Job Images (Optional)
             </label>
             <p className="text-sm text-gray-500 mb-4">
-              Add photos to help workers understand the job better. You can upload up to 5 images.
+              Add photos to help workers understand the job better. You can
+              upload up to 30 images.
             </p>
-            <ImageUpload 
+            <ImageUpload
               onImagesChange={handleImagesChange}
-              maxImages={5}
+              maxImages={30}
               className="border border-gray-200 rounded-lg"
             />
           </div>
-          
+
           <div className="flex items-center justify-between pt-6 border-t border-gray-200">
             <div className="text-sm text-gray-600">
               <span className="text-red-500">*</span> Required fields
             </div>
-            
+
             <div className="flex space-x-3">
               <button
                 type="button"
@@ -221,17 +241,32 @@ const CreateJob = () => {
               >
                 Cancel
               </button>
-              
-              <button 
-                type="submit" 
+
+              <button
+                type="submit"
                 disabled={isSubmitting}
                 className="btn btn-primary min-w-[120px]"
               >
                 {isSubmitting ? (
                   <>
-                    <svg className="animate-spin w-4 h-4 mr-2" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    <svg
+                      className="animate-spin w-4 h-4 mr-2"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
                     </svg>
                     Creating...
                   </>
@@ -241,11 +276,21 @@ const CreateJob = () => {
               </button>
             </div>
           </div>
-          
+
           {error && (
             <div className="upload-error">
-              <svg className="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              <svg
+                className="w-5 h-5 text-red-500 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
               </svg>
               {error}
             </div>
