@@ -153,7 +153,7 @@ const CreateJob = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 
@@ -171,7 +171,7 @@ const CreateJob = () => {
               value={initialDescription}
               onChange={(e) => setInitialDescription(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 
@@ -189,7 +189,7 @@ const CreateJob = () => {
               value={fullDescription}
               onChange={(e) => setFullDescription(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500 resize-vertical"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500 resize-vertical"
             />
           </div>
 
@@ -207,7 +207,7 @@ const CreateJob = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:border-workzzy-500"
+              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 

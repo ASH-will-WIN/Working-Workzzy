@@ -14,6 +14,8 @@ import Onboarding from "./pages/Onboarding.js";
 import ConnectReturn from "./pages/ConnectReturn";
 import ConnectRefresh from "./pages/ConnectRefresh";
 import Terms from "./pages/Terms"; // Added import for Terms page
+import About from "./pages/About"; // Added import for About page
+import Mission from "./pages/Mission"; // Added import for Mission page
 import "./App.css";
 
 function App() {
@@ -30,6 +32,10 @@ function App() {
           <Route path="/connect-refresh" element={<ConnectRefresh />} />
           <Route path="/terms" element={<Terms />} />{" "}
           {/* Added route for Terms and Conditions */}
+          <Route path="/about" element={<About />} />{" "}
+          {/* Added route for About page */}
+          <Route path="/mission" element={<Mission />} />{" "}
+          {/* Added route for Mission page */}
           {/* Protected Routes */}
           <Route
             path="/jobs"

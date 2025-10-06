@@ -121,7 +121,7 @@ const MessageCenter = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-workzzy-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
             <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/4 mb-6"></div>
@@ -145,7 +145,7 @@ const MessageCenter = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-workzzy-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Messages</h1>
@@ -193,7 +193,7 @@ const MessageCenter = () => {
                   <div className="md:hidden p-4 border-b border-gray-200 bg-gray-50">
                     <button
                       onClick={() => setSelectedConversation(null)}
-                      className="flex items-center text-workzzy-600 hover:text-workzzy-800"
+                      className="flex items-center text-wurkzi-600 hover:text-wurkzi-800"
                     >
                       <svg
                         className="w-5 h-5 mr-2"

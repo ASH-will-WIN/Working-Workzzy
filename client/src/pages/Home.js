@@ -14,7 +14,7 @@ const Home = () => {
             <div className="text-center">
               <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
                 <span className="block">Find Your Perfect Work</span>
-                <span className="block text-workzzy-600">
+                <span className="block text-wurkzi-600">
                   Match with Opportunities
                 </span>
               </h1>
@@ -25,13 +25,13 @@ const Home = () => {
               <div className="mt-10 flex justify-center space-x-4">
                 <Link
                   to="/register"
-                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-workzzy-600 hover:bg-workzzy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-workzzy-500"
+                  className="px-6 py-3 border border-transparent text-base font-medium rounded-md text-white bg-wurkzi-600 hover:bg-wurkzi-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wurkzi-500"
                 >
                   Create Free Account
                 </Link>
                 <Link
                   to="/login"
-                  className="px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-workzzy-500"
+                  className="px-6 py-3 border border-gray-300 text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wurkzi-500"
                 >
                   Sign In
                 </Link>
@@ -58,14 +58,14 @@ const Home = () => {
                   name: "Sarah Johnson",
                   role: "Freelance Developer",
                   content:
-                    "Workzzy helped me find amazing opportunities and grow my freelance career by 300% in just 6 months.",
+                    "Wurkzi helped me find amazing opportunities and grow my freelance career by 300% in just 6 months.",
                   avatar: "SJ",
                 },
                 {
                   name: "Michael Chen",
                   role: "Small Business Owner",
                   content:
-                    "I've hired 5 talented professionals through Workzzy for my growing business. The platform is intuitive and effective.",
+                    "I've hired 5 talented professionals through Wurkzi for my growing business. The platform is intuitive and effective.",
                   avatar: "MC",
                 },
                 {
@@ -100,7 +100,7 @@ const Home = () => {
         {/* Call to Action */}
         <section className="py-16 bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative isolate overflow-hidden bg-workzzy-600 py-16 px-6 sm:py-24 rounded-lg shadow-lg sm:px-12 lg:px-16">
+            <div className="relative isolate overflow-hidden bg-wurkzi-600 py-16 px-6 sm:py-24 rounded-lg shadow-lg sm:px-12 lg:px-16">
               <div className="relative flex flex-col items-center text-center">
                 <h2 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                   Ready to start your journey?
@@ -111,7 +111,7 @@ const Home = () => {
                 <div className="mt-8 flex flex-wrap justify-center gap-4 sm:gap-6">
                   <Link
                     to="/register"
-                    className="px-6 py-3 border border-transparent text-base font-medium rounded-md text-workzzy-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
+                    className="px-6 py-3 border border-transparent text-base font-medium rounded-md text-wurkzi-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white"
                   >
                     Create Free Account
                   </Link>
@@ -145,12 +145,28 @@ const Home = () => {
                     Terms
                   </Link>
                 </li>
+                <li>
+                  <Link
+                    to="/about"
+                    className="text-base text-gray-600 hover:text-gray-900"
+                  >
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    to="/mission"
+                    className="text-base text-gray-600 hover:text-gray-900"
+                  >
+                    Mission
+                  </Link>
+                </li>
               </ul>
             </div>
           </div>
           <div className="mt-12 border-t border-gray-200 pt-8">
             <p className="text-base text-gray-500 text-center">
-              &copy; 2025 Workzzy, Inc. All rights reserved.
+              &copy; 2025 Wurkzi, Inc. All rights reserved.
             </p>
           </div>
         </div>

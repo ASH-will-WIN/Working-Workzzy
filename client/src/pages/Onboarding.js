@@ -42,8 +42,9 @@ const Onboarding = () => {
     <div className="onboarding-page">
       <h1>Complete Stripe Connect Onboarding</h1>
       <p>
-        To continue using Workzzy as a worker or hirer, you need to complete your
-        Stripe Connect onboarding. This will allow you to receive payments securely.
+        To continue using Wurkzi as a worker or client, you need to complete
+        your Stripe Connect onboarding. This will allow you to receive payments
+        securely.
       </p>
       <div className="onboarding-actions">
         <button onClick={handleContinue} className="btn-primary">

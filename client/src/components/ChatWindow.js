@@ -81,7 +81,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   if (loading || messagesLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-workzzy-500"></div>
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-wurkzi-500"></div>
       </div>
     );
   }
@@ -92,7 +92,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       <div className="p-4 border-b border-gray-200 bg-gray-50">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-br from-workzzy-400 to-workzzy-600 rounded-full flex items-center justify-center text-white font-medium">
+            <div className="w-10 h-10 bg-gradient-to-br from-wurkzi-400 to-wurkzi-600 rounded-full flex items-center justify-center text-white font-medium">
               {conversation.otherParticipantId.substring(0, 2).toUpperCase()}
             </div>
             <div>

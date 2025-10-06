@@ -33,8 +33,8 @@ const Navbar = () => {
   const getRoleColor = () => {
     const role = getUserRole();
     switch (role) {
-      case "HIRER":
-        return "bg-workzzy-500";
+      case "CLIENT":
+        return "bg-wurkzi-500";
       case "WORKER":
         return "bg-success-500";
       default:
@@ -60,7 +60,7 @@ const Navbar = () => {
           <div className="sm:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-workzzy-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-workzzy-500"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-wurkzi-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-wurkzi-500"
               aria-expanded="false"
             >
               <span className="sr-only">Open main menu</span>
@@ -212,7 +212,7 @@ const Navbar = () => {
 
                     <button
                       onClick={handleLogout}
-                      className="flex items-center text-gray-600 hover:text-workzzy-600 font-medium transition-colors duration-200"
+                      className="flex items-center text-gray-600 hover:text-wurkzi-600 font-medium transition-colors duration-200"
                     >
                       <svg
                         className="w-4 h-4 mr-1"
@@ -276,7 +276,7 @@ const Navbar = () => {
                 <Link
                   to="/register"
                   className={`btn btn-primary btn-sm ${
-                    isActive("/register") ? "ring-2 ring-workzzy-300" : ""
+                    isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
                   }`}
                 >
                   <svg
@@ -378,7 +378,7 @@ const Navbar = () => {
                 <Link
                   to="/register"
                   className={`btn btn-primary btn-sm block px-3 py-2 rounded-md text-base font-medium text-center ${
-                    isActive("/register") ? "ring-2 ring-workzzy-300" : ""
+                    isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
                   }`}
                   onClick={() => setIsMenuOpen(false)}
                 >

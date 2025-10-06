@@ -65,7 +65,7 @@ const Register = () => {
         />
         <select value={role} onChange={(e) => setRole(e.target.value)}>
           <option value="WORKER">I'm a Worker</option>
-          <option value="HIRER">I'm a Hirer</option>
+          <option value="CLIENT">I'm a Client</option>
         </select>
 
         {/* Terms and Conditions */}
@@ -78,7 +78,7 @@ const Register = () => {
           />
           <label htmlFor="terms" className="ml-2">
             I agree to the{" "}
-            <Link to="/terms" className="text-workzzy-600 hover:underline">
+            <Link to="/terms" className="text-wurkzi-600 hover:underline">
               Terms and Conditions
             </Link>
           </label>

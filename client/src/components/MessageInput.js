@@ -20,7 +20,7 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
     <div
       className={`relative border rounded-lg transition-colors ${
         isFocused
-          ? "border-workzzy-500 ring-1 ring-workzzy-500"
+          ? "border-wurkzi-500 ring-1 ring-wurkzi-500"
           : "border-gray-300"
       }`}
     >
@@ -56,7 +56,7 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
           disabled={!value.trim() || disabled}
           className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
             value.trim() && !disabled
-              ? "bg-workzzy-500 text-white hover:bg-workzzy-600 focus:outline-none focus:ring-2 focus:ring-workzzy-500 focus:ring-offset-2"
+              ? "bg-wurkzi-500 text-white hover:bg-wurkzi-600 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:ring-offset-2"
               : "bg-gray-200 text-gray-400 cursor-not-allowed"
           }`}
           aria-label="Send message"

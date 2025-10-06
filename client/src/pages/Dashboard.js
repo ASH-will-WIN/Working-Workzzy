@@ -212,10 +212,10 @@ const Dashboard = () => {
     );
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-workzzy-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-workzzy-700 to-workzzy-900 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wurkzi-700 to-wurkzi-900 bg-clip-text text-transparent">
               My Accepted Jobs
             </h1>
             <p className="text-gray-600 mt-2">
@@ -226,9 +226,9 @@ const Dashboard = () => {
           {acceptedJobs.length === 0 ? (
             <div className="text-center py-16">
               <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
-                <div className="w-20 h-20 bg-gradient-to-br from-workzzy-100 to-workzzy-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-wurkzi-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg
-                    className="w-10 h-10 text-workzzy-600"
+                    className="w-10 h-10 text-wurkzi-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -245,8 +245,8 @@ const Dashboard = () => {
                   No accepted jobs yet
                 </p>
                 <p className="text-gray-500 mb-6">
-                  Once hirers accept your applications, they'll appear here with
-                  payment tracking
+                  Once clients accept your applications, they'll appear here
+                  with payment tracking
                 </p>
                 <button
                   onClick={() => (window.location.href = "/")}
@@ -522,7 +522,7 @@ const Dashboard = () => {
                               🎉 Job Completed Successfully!
                             </p>
                             <p className="text-sm text-green-800 mb-4">
-                              Great work! The hirer will process the final
+                              Great work! The client will process the final
                               payment. You'll receive 90% of the payment amount
                               plus your $5 deposit refund.
                             </p>
@@ -579,12 +579,12 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    {/* Contact Hirer Section */}
+                    {/* Contact Client Section */}
                     <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
                           <h4 className="font-medium text-blue-900 mb-1">
-                            Need to contact the hirer?
+                            Need to contact the client?
                           </h4>
                           <p className="text-sm text-blue-800">
                             Send a message about this job
@@ -694,12 +694,12 @@ const Dashboard = () => {
       </div>
     );
   } else {
-    // Hirer Dashboard
+    // Client Dashboard
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-workzzy-50">
+      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-wurkzi-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-workzzy-700 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
               My Job Postings
             </h1>
             <p className="text-gray-600 mt-2">
@@ -710,7 +710,7 @@ const Dashboard = () => {
           {hirerJobs.length === 0 ? (
             <div className="text-center py-16">
               <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-workzzy-200 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg
                     className="w-10 h-10 text-purple-600"
                     fill="none"

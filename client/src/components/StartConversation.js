@@ -1,9 +1,14 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { getJobConversation } from '../api/messageApi';
-import { useAuth } from '../context/AuthContext';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getJobConversation } from "../api/messageApi";
+import { useAuth } from "../context/AuthContext";
 
-const StartConversation = ({ jobId, otherUserId, otherUserRole, className = '' }) => {
+const StartConversation = ({
+  jobId,
+  otherUserId,
+  otherUserRole,
+  className = "",
+}) => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -15,36 +20,46 @@ const StartConversation = ({ jobId, otherUserId, otherUserRole, className = '' }
     try {
       // Get or create conversation for this job
       const conversation = await getJobConversation(jobId, otherUserId);
-      
+
       // Navigate to messages page with the conversation
-      navigate('/messages', { 
-        state: { 
+      navigate("/messages", {
+        state: {
           conversationId: conversation.conversationId,
           otherUserId,
-          jobId 
-        } 
+          jobId,
+        },
       });
     } catch (error) {
-      console.error('Failed to start conversation:', error);
+      console.error("Failed to start conversation:", error);
       // Still navigate to messages page even if API call fails
-      navigate('/messages');
+      navigate("/messages");
     } finally {
       setLoading(false);
     }
   };
 
   const getButtonText = () => {
-    if (otherUserRole === 'HIRER') {
-      return 'Message Hirer';
-    } else if (otherUserRole === 'WORKER') {
-      return 'Message Worker';
+    if (otherUserRole === "CLIENT") {
+      return "Message Client";
+    } else if (otherUserRole === "WORKER") {
+      return "Message Worker";
     }
-    return 'Send Message';
+    return "Send Message";
   };
 
   const getIcon = () => (
-    <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z" />
+    <svg
+      className="w-4 h-4 mr-2"
+      fill="none"
+      stroke="currentColor"
+      viewBox="0 0 24 24"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+      />
     </svg>
   );
 
@@ -56,14 +71,14 @@ const StartConversation = ({ jobId, otherUserId, otherUserRole, className = '' }
     <button
       onClick={handleStartConversation}
       disabled={loading}
-      className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-workzzy-600 hover:bg-workzzy-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-workzzy-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${className}`}
+      className={`inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-wurkzi-600 hover:bg-wurkzi-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wurkzi-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors ${className}`}
     >
       {loading ? (
         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
       ) : (
         getIcon()
       )}
-      {loading ? 'Connecting...' : getButtonText()}
+      {loading ? "Connecting..." : getButtonText()}
     </button>
   );
 };

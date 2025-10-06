@@ -6,7 +6,7 @@ async function testSMS() {
 
   // Test sending a direct SMS (if Twilio is configured)
   try {
-    const result = await sendSMS("+1234567890", "Test message from Workzzy");
+    const result = await sendSMS("+12487640275", "Test message from Workzzy");
     console.log("Direct SMS test result:", result);
   } catch (error) {
     console.error("Error in direct SMS test:", error);
@@ -14,6 +14,11 @@ async function testSMS() {
 
   // Test getting user phone number (if any users exist)
   try {
+    console.log("Prisma object:", prisma);
+    if (!prisma) {
+      console.log("Prisma is not initialized");
+      return;
+    }
     const users = await prisma.userProfile.findMany({ take: 1 });
     if (users.length > 0) {
       const phone = await getUserPhoneNumber(users[0].userId, prisma);

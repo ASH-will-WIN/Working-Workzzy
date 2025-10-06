@@ -57,7 +57,7 @@ const ConversationList = ({
           onClick={() => onSelectConversation(conversation)}
           className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${
             selectedConversation?.conversationId === conversation.conversationId
-              ? "bg-workzzy-50 border-r-2 border-workzzy-500"
+              ? "bg-wurkzi-50 border-r-2 border-wurkzi-500"
               : ""
           }`}
         >
@@ -66,7 +66,7 @@ const ConversationList = ({
               <div className="flex items-center justify-between mb-1">
                 <div className="flex items-center space-x-2">
                   {/* Avatar placeholder */}
-                  <div className="w-10 h-10 bg-gradient-to-br from-workzzy-400 to-workzzy-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
+                  <div className="w-10 h-10 bg-gradient-to-br from-wurkzi-400 to-wurkzi-600 rounded-full flex items-center justify-center text-white text-xs font-medium">
                     {conversation.otherParticipantId
                       .substring(0, 2)
                       .toUpperCase()}

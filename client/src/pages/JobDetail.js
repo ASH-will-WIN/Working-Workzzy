@@ -443,12 +443,12 @@ const JobDetail = () => {
             <div className="card mb-6">
               <div className="card-header">
                 <h3 className="text-lg font-semibold text-gray-900">
-                  Contact Job Hirer
+                  Contact Job Client
                 </h3>
               </div>
               <div className="card-body">
                 <p className="text-gray-600 mb-4">
-                  Have questions about this job? Message the hirer directly.
+                  Have questions about this job? Message the client directly.
                 </p>
                 {/* Chat Button for non-hirers */}
                 {user &&
@@ -480,7 +480,7 @@ const JobDetail = () => {
                                 d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
                               />
                             </svg>
-                            Chat with Hirer
+                            Chat with Client
                           </>
                         )}
                       </button>
@@ -514,7 +514,7 @@ const JobDetail = () => {
                     id="message"
                     rows={4}
                     className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                    placeholder="Tell the hirer why you're a great fit for this job..."
+                    placeholder="Tell the client why you're a great fit for this job..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                   />
