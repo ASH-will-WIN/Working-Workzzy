@@ -699,12 +699,35 @@ const Dashboard = () => {
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-wurkzi-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
-              My Job Postings
-            </h1>
-            <p className="text-gray-600 mt-2">
-              Manage your job postings and process payments
-            </p>
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+              <div>
+                <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
+                  My Job Postings
+                </h1>
+                <p className="text-gray-600 mt-2">
+                  Manage your job postings and process payments
+                </p>
+              </div>
+              <button
+                onClick={() => navigate("/jobs/new")}
+                className="btn btn-primary flex items-center"
+              >
+                <svg
+                  className="w-5 h-5 mr-2"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                  />
+                </svg>
+                Create New Job
+              </button>
+            </div>
           </div>
 
           {hirerJobs.length === 0 ? (
