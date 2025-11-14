@@ -10,7 +10,7 @@ const About = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-                <span className="block">About Workzzy</span>
+                <span className="block">About Wurkzi</span>
               </h1>
               <p className="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
                 Connecting talent with opportunity in the modern workforce.
@@ -121,7 +121,7 @@ const About = () => {
                 Platform Benefits
               </h2>
               <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-                Why thousands of businesses and professionals choose Workzzy
+                Why thousands of businesses and professionals choose Wurkzi
               </p>
             </div>
 
