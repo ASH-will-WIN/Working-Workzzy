@@ -8,7 +8,7 @@ const {
 
 async function createJob(req, res) {
   try {
-    const { title, initialDescription, fullDescription, address, hirerId } =
+    const { title, initialDescription, fullDescription, address, price, hirerId } =
       req.body;
 
     // Validate required fields
@@ -17,9 +17,18 @@ async function createJob(req, res) {
       !initialDescription ||
       !fullDescription ||
       !address ||
-      !hirerId
+      !hirerId ||
+      price === undefined || price === null
     ) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+        // Validate price must be a positive number
+    if (isNaN(price) || Number(price) <= 0) {
+      return res.status(400).json({
+        error: "invalid_price",
+        message: "Price must be a valid positive number.",
+      });
     }
 
     const job = await prisma.job.create({
@@ -29,6 +38,7 @@ async function createJob(req, res) {
         initialDescription,
         fullDescription,
         hirerId, // Directly use the provided Supabase UID
+        price,
         status: JobStatus.PENDING,
       },
     });

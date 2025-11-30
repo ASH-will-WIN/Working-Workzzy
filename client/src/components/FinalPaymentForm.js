@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "./CheckoutForm";
@@ -7,13 +7,18 @@ import { createFinalPayment, confirmFinalPayment } from "../api/paymentApi";
 // Load Stripe outside of the component to avoid re-creating on every render
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
-const FinalPaymentForm = ({ jobId, onPaymentComplete }) => {
-  const [amount, setAmount] = useState("");
+const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
+  // const [amount, setAmount] = useState("");
+  const [amount, setAmount] = useState(jobPrice || 0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const [currentPayment, setCurrentPayment] = useState(null);
+
+    useEffect(() => {
+    setAmount(jobPrice || 0);
+  }, [jobPrice]); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -104,6 +109,8 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete }) => {
     );
   }
 
+  console.log(jobPrice);
+
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <h3 className="text-lg font-medium text-gray-900 mb-4">Final Payment</h3>
@@ -127,6 +134,7 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete }) => {
             id="amount"
             value={amount}
             onChange={(e) => setAmount(e.target.value)}
+            readOnly
             placeholder="0.00"
             step="0.01"
             min="0"
@@ -134,7 +142,7 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete }) => {
             required
           />
           <p className="text-xs text-gray-500 mt-1">
-            Platform fee: 10% | Worker receives: 90% + $5 deposit refund
+            Worker receives: 100% of the amount entered.
           </p>
         </div>
 

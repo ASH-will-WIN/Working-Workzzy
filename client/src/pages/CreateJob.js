@@ -11,6 +11,7 @@ const CreateJob = () => {
   const [address, setAddress] = useState("");
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
+  const [price, setPrice] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -80,6 +81,7 @@ const CreateJob = () => {
       initialDescription,
       fullDescription,
       address,
+      price: Number(price),
       hirerId: user.id,
     };
 
@@ -210,6 +212,25 @@ const CreateJob = () => {
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
+
+          <div>
+        <label
+          htmlFor="price"
+          className="block text-sm font-medium text-gray-700 mb-2"
+        >
+          Job Price (Amount to Pay) *
+        </label>
+        <input
+            id="price"
+            type="number"
+            min="1"
+            placeholder="Enter the amount you will pay"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            required
+            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+          />
+        </div>
 
           {/* Image Upload Section */}
           <div>

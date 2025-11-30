@@ -158,12 +158,13 @@ async function createFinalPayment(req, res) {
     const hirerId = job.hirerId;
 
     // Calculate platform fee (10%) and worker amount (90%)
-    const platformFee = Math.round(amount * 0.1 * 100) / 100;
-    const workerAmount = Math.round(amount * 0.9 * 100) / 100;
+    // const platformFee = Math.round(amount * 0.1 * 100) / 100;
+    // const workerAmount = Math.round(amount * 0.9 * 100) / 100;
 
     // Worker also gets their $5 deposit refunded
-    const depositRefund = 5.0;
-    const totalWorkerAmount = workerAmount + depositRefund;
+    // const depositRefund = 5.0;
+    // const totalWorkerAmount = workerAmount + depositRefund;
+    const workerAmount = amount;
 
     // Verify worker has a connected account with payouts enabled
     const stripeAccount = await prisma.stripeAccount.findUnique({
@@ -187,7 +188,7 @@ async function createFinalPayment(req, res) {
 
     // Create PaymentIntent with application fee and transfer to worker (destination charge)
     const amountInCents = Math.round(amount * 100);
-    const applicationFeeAmount = Math.round(platformFee * 100);
+    // const applicationFeeAmount = Math.round(platformFee * 100);
 
     const paymentIntent = await stripeClient.paymentIntents.create({
       amount: amountInCents,
@@ -196,7 +197,6 @@ async function createFinalPayment(req, res) {
       transfer_data: {
         destination: stripeAccount.accountId, // funds (less application fee) go to worker account
       },
-      application_fee_amount: applicationFeeAmount, // 10% to platform
       metadata: { jobId, hirerId, workerId, type: "FINAL_PAYMENT" },
     });
 
@@ -205,9 +205,9 @@ async function createFinalPayment(req, res) {
       data: {
         jobId,
         amount,
-        platformFee,
-        workerAmount: totalWorkerAmount, // 90% + $5 deposit refund
-        depositRefund, // Track the $5 deposit refund separately
+        platformFee: 0,
+        workerAmount, // full payment to worker
+        depositRefund: 0,
         hirerId,
         workerId,
         stripePaymentId: paymentIntent.id,

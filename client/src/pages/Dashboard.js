@@ -1198,7 +1198,8 @@ const Dashboard = () => {
                               Process Final Payment
                             </h4>
                             <FinalPaymentForm
-                              jobId={job.id}
+                              jobId={job.id}  
+                              jobPrice={job.price}
                               onPaymentComplete={() => fetchHirerData()}
                             />
                           </div>

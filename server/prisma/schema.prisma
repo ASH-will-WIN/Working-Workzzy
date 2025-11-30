@@ -15,6 +15,9 @@ model Job {
   initialDescription String       @map("initial_description")
   fullDescription    String       @map("full_description")
   status            JobStatus     @default(PENDING)
+
+  price              Int
+
   hirerId           String        @map("hirer_id")
   createdAt         DateTime      @default(now()) @map("createdAt")
   updatedAt         DateTime      @updatedAt @map("updatedAt")

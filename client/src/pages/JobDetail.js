@@ -67,7 +67,9 @@ const JobDetail = () => {
       setStartingChat(false);
     }
   };
+
   const isHirer = user?.id === job?.hirerId;
+  
   const fetchJobAndApps = async () => {
     try {
       setLoading(true);
@@ -168,7 +170,13 @@ const JobDetail = () => {
         </div>
       </div>
     );
-  }
+  } 
+
+  const hasApplied = job?.applications?.some(
+  (app) => app.workerId === user?.id
+);
+
+  console.log('job', hasApplied);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -179,6 +187,12 @@ const JobDetail = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">
               {job.title}
             </h1>
+
+              <p className="text-xl font-semibold text-green-700 mb-2">
+                ${job.price}
+              </p>
+
+
             <div className="flex items-center text-gray-600 mb-3">
               <svg
                 className="w-5 h-5 mr-2"
@@ -496,7 +510,7 @@ const JobDetail = () => {
             </div>
           )}
 
-          {job.status === "PENDING" && !showPaymentForm && (
+          {job.status === "PENDING" && !showPaymentForm && !hasApplied && (
             <div className="card">
               <h3 className="text-xl font-semibold text-gray-900 mb-6">
                 Apply for this Job
@@ -574,6 +588,14 @@ const JobDetail = () => {
                   Apply Now - $5 Deposit
                 </button>
               </form>
+            </div>
+          )}
+
+          {hasApplied && (
+            <div className="card p-6 bg-yellow-50 border border-yellow-200 rounded-md mb-6">
+              <p className="text-yellow-800 font-medium">
+                You have already applied for this job. Please wait for the hirer to review your application.
+              </p>
             </div>
           )}
 
