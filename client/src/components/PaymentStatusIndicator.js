@@ -146,15 +146,15 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
               <span className="font-medium">Total Amount:</span>
-              <div className="font-semibold">${payment.amount}</div>
+              <div className="font-semibold">${parseFloat(payment.amount).toFixed(2)}</div>
             </div>
             {userRole === "worker" && (
               <div>
                 <span className="font-medium">You Received:</span>
                 <div className="font-semibold text-success-700">
-                  ${payment.workerAmount}
-                  {payment.depositRefund && (
-                    <span className="text-xs ml-1">(+ ${payment.depositRefund} refund)</span>
+                  ${parseFloat(payment.workerAmount).toFixed(2)}
+                  {parseFloat(payment.depositRefund || 0) > 0 && (
+                    <span className="text-xs ml-1">(+ ${parseFloat(payment.depositRefund).toFixed(2)} refund)</span>
                   )}
                 </div>
               </div>

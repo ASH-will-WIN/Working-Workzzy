@@ -215,8 +215,7 @@ const JobDetail = () => {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              {isHirer ||
-              job.applications?.some((app) => app.status === "ACCEPTED")
+              {isHirer || hasApplied
                 ? job.address
                 : "Restricted - Application must be accepted to view address"}
             </div>
@@ -262,8 +261,7 @@ const JobDetail = () => {
             )}
           </div>
 
-          {isHirer ||
-          job.applications?.some((app) => app.status === "ACCEPTED") ? (
+          {isHirer || hasApplied ? (
             <ImageGallery images={images} className="mt-4" />
           ) : (
             <div className="text-center py-8">
