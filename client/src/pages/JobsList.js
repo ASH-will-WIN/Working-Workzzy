@@ -204,9 +204,14 @@ const JobsList = () => {
 
                       {/* Content */}
                       <div className="p-6">
-                        <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-wurkzi-700 transition-colors duration-200">
-                          {job.title}
-                        </h2>
+                        <div className="flex justify-between items-start mb-3">
+                          <h2 className="text-xl font-bold text-gray-900 group-hover:text-wurkzi-700 transition-colors duration-200">
+                            {job.title}
+                          </h2>
+                          <span className="bg-green-100 text-green-800 text-sm font-semibold px-2.5 py-0.5 rounded border border-green-200">
+                            ${job.price}
+                          </span>
+                        </div>
 
                         <p className="text-gray-700 leading-relaxed mb-4 line-clamp-3">
                           {job.initialDescription}
