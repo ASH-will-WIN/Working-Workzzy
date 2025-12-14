@@ -98,7 +98,11 @@ async function getApplications(req, res) {
     const applications = await prisma.jobApplication.findMany({
       where: { workerId },
       include: {
-        job: true,
+        job: {
+          include: {
+            payments: true,
+          },
+        },
       },
       orderBy: {
         createdAt: "desc",

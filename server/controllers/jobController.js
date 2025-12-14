@@ -108,7 +108,7 @@ async function getJob(req, res) {
     // If user is hirer or has accepted application, return full job details
     if (
       req.user?.id === job.hirerId ||
-      job.applications.some((app) => app.status === "ACCEPTED")
+      job.applications.length > 0 // User has applied (filtered by workerId above)
     ) {
       res.json(job);
       return;
@@ -294,7 +294,7 @@ async function getJobImages(req, res) {
             where: {
               jobId: id,
               workerId: user.id,
-              status: "ACCEPTED",
+              // status: "ACCEPTED", // Removed to allow all applicants
             },
           });
           canViewAllImages = !!application;

@@ -14,3 +14,8 @@ export const getPaymentsForJob = async (jobId) => {
   const response = await apiClient.get(`/payments?jobId=${jobId}`);
   return response.data;
 };
+
+export const markJobPaidInCash = async (jobId) => {
+  const response = await apiClient.post("/payments/cash", { jobId });
+  return response.data;
+};
