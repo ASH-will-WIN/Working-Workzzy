@@ -6,7 +6,7 @@ import {
   rejectApplication,
 } from "../api/applicationApi";
 import { getJobsByHirer, startJob, completeJob } from "../api/jobApi";
-import { getPaymentsForJob } from "../api/paymentApi";
+import { getPaymentsForJob, markJobPaidInCash } from "../api/paymentApi";
 import { connectApi } from "../api/connectApi";
 import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
@@ -114,6 +114,22 @@ const Dashboard = () => {
     }
   };
 
+  const handleCashPayment = async (jobId) => {
+    if (window.confirm("Are you sure the client paid you in cash? This will mark the job as fully paid and complete.")) {
+      try {
+        await markJobPaidInCash(jobId);
+        if (isWorker) {
+          fetchWorkerData();
+        } else {
+          fetchHirerData();
+        }
+      } catch (error) {
+        console.error("Failed to mark as paid in cash:", error);
+        alert("Failed to update status. Please try again.");
+      }
+    }
+  };
+
   const handleAcceptApplication = async (applicationId) => {
     try {
       await acceptApplication(applicationId);
@@ -211,6 +227,20 @@ const Dashboard = () => {
       (app) => app.status === "ACCEPTED"
     );
 
+    const activeAcceptedJobs = acceptedJobs.filter(app => {
+      const isCompleted = app.job.status === "COMPLETED";
+      // Check if there is a PAID final payment (or cash payment)
+      // Note: applicationController now returns job with payments included
+      const isPaid = app.job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      return !(isCompleted && isPaid);
+    });
+
+    const pastAcceptedJobs = acceptedJobs.filter(app => {
+      const isCompleted = app.job.status === "COMPLETED";
+      const isPaid = app.job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      return isCompleted && isPaid;
+    });
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -223,7 +253,7 @@ const Dashboard = () => {
             </p>
           </div>
 
-          {acceptedJobs.length === 0 ? (
+          {activeAcceptedJobs.length === 0 && pastAcceptedJobs.length === 0 ? (
             <div className="text-center py-16">
               <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
                 <div className="w-20 h-20 bg-gradient-to-br from-wurkzi-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -258,7 +288,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              {acceptedJobs.map((application) => (
+              {activeAcceptedJobs.map((application) => (
                 <div
                   key={application.id}
                   className="card card-hover bg-white border border-gray-200 shadow-lg"
@@ -523,16 +553,31 @@ const Dashboard = () => {
                             </p>
                             <p className="text-sm text-green-800 mb-4">
                               Great work! The client will process the final
-                              payment. You'll receive 90% of the payment amount
+                              payment. You'll receive the full payment amount
                               plus your $5 deposit refund.
                             </p>
-                            <div className="bg-white rounded-lg p-4 border border-green-200">
+                            <div className="bg-white rounded-lg p-4 border border-green-200 mb-4">
                               <PaymentStatusIndicator
                                 jobId={application.job.id}
                                 userRole="worker"
                                 className="w-full"
                               />
                             </div>
+                            
+                            {/* Cash Payment Option */}
+                            {(!getPaymentStatus(application.job.id) || getPaymentStatus(application.job.id)?.status !== 'PAID') && (
+                                <div className="mt-2">
+                                    <button
+                                        onClick={() => handleCashPayment(application.job.id)}
+                                        className="btn bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto"
+                                    >
+                                        Client Paid in Cash
+                                    </button>
+                                    <p className="text-xs text-green-700 mt-2">
+                                        Click this if the client has paid you directly in cash to mark the job as fully complete.
+                                    </p>
+                                </div>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -617,6 +662,47 @@ const Dashboard = () => {
             </div>
           )}
 
+          {/* Past Jobs Section for Worker */}
+          {pastAcceptedJobs.length > 0 && (
+            <div className="mt-12">
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                 <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 </svg>
+                 Past Jobs
+              </h2>
+              <div className="opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
+                <div className="space-y-6">
+                  {pastAcceptedJobs.map((application) => (
+                    <div
+                      key={application.id}
+                      className="card bg-gray-50 border border-gray-200"
+                    >
+                      <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                        <div>
+                          <h2 className="text-xl font-semibold text-gray-700">
+                            {application.job.title}
+                          </h2>
+                           <div className="flex items-center text-green-700 mt-1 font-medium">
+                            <span className="mr-2">✅ Completed & Paid</span>
+                            <span className="text-gray-500 text-sm">
+                                {new Date(application.job.updatedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                           <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                                Archived
+                           </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {applications.length > acceptedJobs.length && (
             <div className="mt-8">
               <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
@@ -695,6 +781,18 @@ const Dashboard = () => {
     );
   } else {
     // Client Dashboard
+    const activeHirerJobs = hirerJobs.filter(job => {
+        const isCompleted = job.status === "COMPLETED";
+        const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+        return !(isCompleted && isPaid);
+    });
+
+    const pastHirerJobs = hirerJobs.filter(job => {
+        const isCompleted = job.status === "COMPLETED";
+        const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+        return isCompleted && isPaid;
+    });
+
     return (
       <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-wurkzi-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -730,7 +828,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {hirerJobs.length === 0 ? (
+          {activeHirerJobs.length === 0 && pastHirerJobs.length === 0 ? (
             <div className="text-center py-16">
               <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
                 <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -778,7 +876,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="space-y-6">
-              {hirerJobs.map((job) => (
+              {activeHirerJobs.map((job) => (
                 <div
                   key={job.id}
                   className="card card-hover bg-white border border-gray-200 shadow-lg"
@@ -1217,6 +1315,47 @@ const Dashboard = () => {
                   )}
                 </div>
               ))}
+            </div>
+          )}
+
+          {/* Past Jobs Section for Hirer */}
+          {pastHirerJobs.length > 0 && (
+            <div className="mt-12">
+               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                 <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 </svg>
+                 Past Jobs History
+              </h2>
+              <div className="opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
+                <div className="space-y-6">
+                  {pastHirerJobs.map((job) => (
+                    <div
+                      key={job.id}
+                      className="card bg-gray-50 border border-gray-200"
+                    >
+                      <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                         <div>
+                          <h2 className="text-xl font-semibold text-gray-700">
+                            {job.title}
+                          </h2>
+                           <div className="flex items-center text-green-700 mt-1 font-medium">
+                            <span className="mr-2">✅ Completed & Paid</span>
+                            <span className="text-gray-500 text-sm">
+                                {new Date(job.updatedAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                                Archived
+                           </span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           )}
         </div>
