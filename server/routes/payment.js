@@ -21,4 +21,6 @@ router.patch(
   paymentController.confirmFinalPayment
 );
 
+router.post("/cash", authMiddleware, paymentController.markJobPaidInCash);
+
 module.exports = router;
