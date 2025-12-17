@@ -51,7 +51,7 @@ const Navbar = () => {
             <img
               src={logo}
               alt="Workzzy Logo"
-              className="w-10 h-10 object-contain mr-3"
+              className="w-14 h-14 sm:w-10 sm:h-10 object-contain mr-3"
             />
             <span className="sr-only">Workzzy</span>
           </Link>
@@ -127,9 +127,8 @@ const Navbar = () => {
                 {user?.user_metadata?.role === "HIRER" && (
                   <Link
                     to="/jobs/new"
-                    className={`nav-link ${
-                      isActive("/jobs/new") ? "active" : ""
-                    }`}
+                    className={`nav-link ${isActive("/jobs/new") ? "active" : ""
+                      }`}
                   >
                     <svg
                       className="w-4 h-4 mr-1"
@@ -150,9 +149,8 @@ const Navbar = () => {
 
                 <Link
                   to="/dashboard"
-                  className={`nav-link ${
-                    isActive("/dashboard") ? "active" : ""
-                  }`}
+                  className={`nav-link ${isActive("/dashboard") ? "active" : ""
+                    }`}
                 >
                   <svg
                     className="w-4 h-4 mr-1"
@@ -172,9 +170,8 @@ const Navbar = () => {
 
                 <Link
                   to="/messages"
-                  className={`nav-link relative ${
-                    isActive("/messages") ? "active" : ""
-                  }`}
+                  className={`nav-link relative ${isActive("/messages") ? "active" : ""
+                    }`}
                 >
                   <svg
                     className="w-4 h-4 mr-1"
@@ -275,9 +272,8 @@ const Navbar = () => {
 
                 <Link
                   to="/register"
-                  className={`btn btn-primary btn-sm ${
-                    isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
-                  }`}
+                  className={`btn btn-primary btn-sm ${isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
+                    }`}
                 >
                   <svg
                     className="w-4 h-4 mr-1"
@@ -308,9 +304,8 @@ const Navbar = () => {
               <>
                 <Link
                   to="/jobs"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
-                    isActive("/jobs") ? "bg-gray-100" : ""
-                  }`}
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/jobs") ? "bg-gray-100" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Jobs
@@ -318,9 +313,8 @@ const Navbar = () => {
                 {user?.user_metadata?.role === "HIRER" && (
                   <Link
                     to="/jobs/new"
-                    className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
-                      isActive("/jobs/new") ? "bg-gray-100" : ""
-                    }`}
+                    className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/jobs/new") ? "bg-gray-100" : ""
+                      }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Post Job
@@ -328,18 +322,16 @@ const Navbar = () => {
                 )}
                 <Link
                   to="/dashboard"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
-                    isActive("/dashboard") ? "bg-gray-100" : ""
-                  }`}
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/dashboard") ? "bg-gray-100" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/messages"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium relative ${
-                    isActive("/messages") ? "bg-gray-100" : ""
-                  }`}
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium relative ${isActive("/messages") ? "bg-gray-100" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Messages
@@ -359,27 +351,24 @@ const Navbar = () => {
               <>
                 <Link
                   to="/"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
-                    isActive("/") ? "bg-gray-100" : ""
-                  }`}
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/") ? "bg-gray-100" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
                   to="/login"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${
-                    isActive("/login") ? "bg-gray-100" : ""
-                  }`}
+                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/login") ? "bg-gray-100" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className={`btn btn-primary btn-sm block px-3 py-2 rounded-md text-base font-medium text-center ${
-                    isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
-                  }`}
+                  className={`btn btn-primary btn-sm block px-3 py-2 rounded-md text-base font-medium text-center ${isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
+                    }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Get Started
