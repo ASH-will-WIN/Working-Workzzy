@@ -11,7 +11,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
       try {
         setLoading(true);
         const payments = await getPaymentsForJob(jobId);
-        
+
         // Find the main payment (not deposit)
         const mainPayment = payments.find(p => p.amount > 5);
         setPayment(mainPayment);
@@ -50,18 +50,20 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
 
   if (!payment) {
     return (
-      <div className={`payment-indicator payment-pending ${className}`}>
-        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        ⏳ Awaiting payment setup
+      <div className={`payment-indicator payment-pending-action ${className}`}>
+        <div className="flex items-center text-gray-500">
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>No payment recorded</span>
+        </div>
       </div>
     );
   }
 
   const getPaymentDisplay = () => {
     const { status, amount, workerAmount, platformFee, depositRefund } = payment;
-    
+
     switch (status?.toLowerCase()) {
       case "paid":
       case "completed":
@@ -74,11 +76,11 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
           ),
           emoji: "💰",
           title: userRole === "worker" ? "Payment Received!" : "Payment Sent!",
-          description: userRole === "worker" 
+          description: userRole === "worker"
             ? `You received $${workerAmount}${depositRefund ? ` + $${depositRefund} deposit refund` : ""}`
             : `Paid $${amount} (worker gets $${workerAmount}, platform fee $${platformFee})`
         };
-      
+
       case "processing":
       case "pending":
         return {
@@ -92,7 +94,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
             ? `$${workerAmount} payment is being processed`
             : `$${amount} payment is being processed`
         };
-      
+
       case "failed":
       case "cancelled":
         return {
@@ -106,7 +108,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
           title: "Payment Failed",
           description: "Payment processing failed. Please contact support."
         };
-      
+
       default:
         return {
           className: "payment-pending",
@@ -140,7 +142,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
           </div>
         </div>
       </div>
-      
+
       {payment.status?.toLowerCase() === "paid" && (
         <div className="mt-3 p-3 bg-white bg-opacity-50 rounded-lg border border-current border-opacity-20">
           <div className="grid grid-cols-2 gap-3 text-sm">

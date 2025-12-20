@@ -177,7 +177,7 @@ async function createFinalPayment(req, res) {
         message: "Worker has not completed payout onboarding",
       });
     }
-    
+
     // Fetch latest account status
     const acct = await stripeClient.accounts.retrieve(stripeAccount.accountId);
     if (!acct.charges_enabled) {
@@ -261,24 +261,8 @@ async function confirmFinalPayment(req, res) {
       data: { status: "PAID" },
     });
 
-    // Attempt to send $5 deposit refund to the worker as an additional transfer
-    try {
-      const stripeAccount = await prisma.stripeAccount.findUnique({
-        where: { userId: jobPayment.workerId },
-      });
-      if (stripeAccount) {
-        // Create a separate transfer of $5 from platform to worker account
-        await stripeClient.transfers.create({
-          amount: 500, // $5 in cents
-          currency: "usd",
-          destination: stripeAccount.accountId,
-          description: `Deposit refund for job ${jobPayment.jobId}`,
-        });
-      }
-    } catch (transferError) {
-      console.error("Deposit transfer error:", transferError.message);
-      // Do not fail the request if the transfer fails; log for manual follow-up
-    }
+    // Deposit refund logic removed as per revised business logic (0% platform fee, fee handling on application)
+    // No additional transfer needed.
 
     res.json(updatedPayment);
   } catch (error) {
@@ -313,14 +297,14 @@ async function markJobPaidInCash(req, res) {
     // Requirement says "Add a button on the worker side... marks the job as complete"
     // So we trust the worker (or logic implies they got cash). 
     // Let's verify the user is the assigned worker.
-    
+
     // Check authentication
     /* 
        NOTE: In a real prod app we might want the Hirer to confirm cash payment.
        But user request says "button on the worker side... marks the job as complete and everything done".
        So we will allow worker to do this.
     */
-   
+
     // (Assuming middleware populates req.user - wait, looking at other controllers, they decode token manually sometimes?
     // createPayment didn't look like it did manually, checks req.body. Let's look at markJobPaidInCash context.
     // We should rely on req.user if auth middleware is used.
@@ -331,20 +315,20 @@ async function markJobPaidInCash(req, res) {
     // Safe bet: stick to simple logic first, maybe check existing patterns.
     // createFinalPayment checks "worker_not_onboarded" etc but doesn't explicitly check req.user vs workerId in body??
     // Actually createFinalPayment takes jobId from body.
-    
+
     // Let's proceed with robust check for Worker.
-    
+
     if (job.status !== "COMPLETED" && job.status !== "IN_PROGRESS") {
-         // The user said "bypasses stripe stuff and marks job as complete".
-         // If it's IN_PROGRESS, we should probably mark it COMPLETED too?
-         // Request: "marks the job as complete and everything done"
-         // So if it is IN_PROGRESS, we upgrade it.
+      // The user said "bypasses stripe stuff and marks job as complete".
+      // If it's IN_PROGRESS, we should probably mark it COMPLETED too?
+      // Request: "marks the job as complete and everything done"
+      // So if it is IN_PROGRESS, we upgrade it.
     }
-    
+
     if (job.applications.length === 0) {
-        return res.status(400).json({ error: "No accepted application found." });
+      return res.status(400).json({ error: "No accepted application found." });
     }
-    
+
     const workerId = job.applications[0].workerId;
     const hirerId = job.hirerId;
     const amount = job.price;
@@ -365,10 +349,10 @@ async function markJobPaidInCash(req, res) {
 
     // Ensure Job is marked COMPLETED
     if (job.status !== "COMPLETED") {
-        await prisma.job.update({
-            where: { id: jobId },
-            data: { status: "COMPLETED" },
-        });
+      await prisma.job.update({
+        where: { id: jobId },
+        data: { status: "COMPLETED" },
+      });
     }
 
     res.json({ message: "Job marked as paid in cash", payment });

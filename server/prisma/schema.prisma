@@ -108,6 +108,7 @@ model UserProfile {
 }
 
 enum DepositStatus {
+  PENDING
   AUTHORIZED
   CAPTURED
   REFUNDED

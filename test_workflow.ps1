@@ -49,6 +49,7 @@ $JOB_BODY = @{
     fullDescription = "Created by automated script"
     address = "456 Auto St"
     hirerId = $HIRER_UID
+    price = 150
 }
 $JOB_RESPONSE = Invoke-RestMethod -Method Post -Uri http://localhost:5000/api/jobs -ContentType 'application/json' -Headers @{Authorization = "Bearer $HIRER_TOKEN"} -Body (ConvertTo-Json $JOB_BODY)
 
