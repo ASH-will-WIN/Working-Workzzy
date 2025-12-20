@@ -49,8 +49,8 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
-          ? "bg-slate-950/80 backdrop-blur-md border-b border-slate-800 shadow-lg shadow-black/10"
-          : "bg-transparent border-transparent"
+        ? "bg-slate-950/80 backdrop-blur-md border-b border-slate-800 shadow-lg shadow-black/10"
+        : "bg-transparent border-transparent"
         }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -73,14 +73,21 @@ const Navbar = () => {
           {/* Desktop Menu */}
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
-              <Link
-                to="/"
-                className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/') ? 'text-white' : 'text-slate-400'}`}
-              >
-                Home
-              </Link>
-              {!isAuthenticated && (
+              {isAuthenticated ? (
+                <Link
+                  to="/dashboard"
+                  className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/dashboard') ? 'text-white' : 'text-slate-400'}`}
+                >
+                  Dashboard
+                </Link>
+              ) : (
                 <>
+                  <Link
+                    to="/"
+                    className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/') ? 'text-white' : 'text-slate-400'}`}
+                  >
+                    Home
+                  </Link>
                   <Link
                     to="/about"
                     className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/about') ? 'text-white' : 'text-slate-400'}`}
@@ -124,11 +131,11 @@ const Navbar = () => {
                 </Link>
 
                 <div className="relative group flex items-center gap-3">
-                  <Link to="/dashboard" className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] cursor-pointer hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all">
+                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all">
                     <div className="h-full w-full rounded-full bg-slate-900 flex items-center justify-center text-xs font-bold text-white">
                       {getUserInitials()}
                     </div>
-                  </Link>
+                  </div>
                   <button
                     onClick={handleLogout}
                     className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
@@ -180,15 +187,23 @@ const Navbar = () => {
       {isMenuOpen && (
         <div className="md:hidden bg-slate-900 border-t border-slate-800 absolute w-full left-0 animate-fade-in shadow-2xl">
           <div className="pt-2 pb-3 space-y-1 px-4">
-            <Link
-              to="/"
-              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Home
-            </Link>
-            {!isAuthenticated && (
+            {isAuthenticated ? (
+              <Link
+                to="/dashboard"
+                className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/dashboard') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                Dashboard
+              </Link>
+            ) : (
               <>
+                <Link
+                  to="/"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Home
+                </Link>
                 <Link
                   to="/about"
                   className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/about') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
@@ -221,13 +236,6 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Messages
-                </Link>
-                <Link
-                  to="/dashboard"
-                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/dashboard') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Dashboard
                 </Link>
               </>
             )}
