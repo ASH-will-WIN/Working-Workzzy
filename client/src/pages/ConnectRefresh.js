@@ -114,12 +114,12 @@ const ConnectRefresh = () => {
             <p className="text-slate-400 mb-6">{message}</p>
 
             {status === "ready" && onboardingUrl && (
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-                <p className="text-sm text-blue-700 mb-2">
+              <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4 mb-6">
+                <p className="text-sm text-blue-400 mb-2">
                   Automatically redirecting in 3 seconds...
                 </p>
-                <div className="w-full bg-blue-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                <div className="w-full bg-slate-700 rounded-full h-2">
+                  <div className="bg-blue-500 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
                 </div>
               </div>
             )}

@@ -16,9 +16,9 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
   const [clientSecret, setClientSecret] = useState(null);
   const [currentPayment, setCurrentPayment] = useState(null);
 
-    useEffect(() => {
+  useEffect(() => {
     setAmount(jobPrice || 0);
-  }, [jobPrice]); 
+  }, [jobPrice]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -88,11 +88,11 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
 
   if (showPaymentForm && clientSecret) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-medium text-gray-900 mb-4">
+      <div className="bg-slate-900 rounded-lg shadow-md p-6 border border-slate-700">
+        <h3 className="text-lg font-medium text-white mb-4">
           Final Payment
         </h3>
-        <p className="text-sm text-gray-600 mb-4">
+        <p className="text-sm text-slate-400 mb-4">
           Complete the payment to pay the worker for the completed job.
         </p>
 
@@ -112,12 +112,12 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
   console.log(jobPrice);
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h3 className="text-lg font-medium text-gray-900 mb-4">Final Payment</h3>
+    <div className="bg-slate-900 rounded-lg shadow-md p-6 border border-slate-700">
+      <h3 className="text-lg font-medium text-white mb-4">Final Payment</h3>
 
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-sm text-red-800">{error}</p>
+        <div className="mb-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+          <p className="text-sm text-red-300">{error}</p>
         </div>
       )}
 
@@ -125,7 +125,7 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
         <div>
           <label
             htmlFor="amount"
-            className="block text-sm font-medium text-gray-700 mb-1"
+            className="block text-sm font-medium text-slate-300 mb-1"
           >
             Payment Amount ($)
           </label>
@@ -137,10 +137,10 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
             placeholder="0.00"
             step="0.01"
             min="0"
-            className="w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100 cursor-not-allowed focus:outline-none"
+            className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white cursor-not-allowed focus:outline-none"
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-slate-500 mt-1">
             Worker receives: 100% of the amount entered.
           </p>
         </div>
@@ -148,18 +148,17 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
         <button
           type="submit"
           disabled={loading}
-          className={`w-full px-4 py-2 text-white font-medium rounded-md ${
-            loading
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          }`}
+          className={`w-full px-4 py-2 text-white font-medium rounded-md ${loading
+              ? "bg-slate-700 cursor-not-allowed"
+              : "bg-emerald-600 hover:bg-emerald-700"
+            }`}
         >
           {loading ? "Creating Payment..." : "Create Payment"}
         </button>
       </form>
 
-      <div className="mt-4 p-3 bg-blue-50 rounded-lg">
-        <p className="text-xs text-blue-800">
+      <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
+        <p className="text-xs text-blue-300">
           <strong>Note:</strong> This will create a payment that you can
           complete using your preferred payment method.
         </p>

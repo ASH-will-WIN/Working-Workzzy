@@ -397,10 +397,10 @@ const JobDetail = () => {
                   )}
 
                   {app.status === "REJECTED" && (
-                    <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-md">
+                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md">
                       <div className="flex items-center">
                         <svg
-                          className="w-5 h-5 text-red-600 mr-2"
+                          className="w-5 h-5 text-red-400 mr-2"
                           width="20"
                           height="20"
                           fill="none"
@@ -414,7 +414,7 @@ const JobDetail = () => {
                             d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                           />
                         </svg>
-                        <p className="text-sm text-red-800">
+                        <p className="text-sm text-red-300">
                           Application rejected. $5 deposit has been refunded.
                         </p>
                       </div>
@@ -499,8 +499,8 @@ const JobDetail = () => {
                   )}
 
                 {chatError && (
-                  <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-                    <p className="text-red-700 text-sm">{chatError}</p>
+                  <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                    <p className="text-red-300 text-sm">{chatError}</p>
                   </div>
                 )}
               </div>
@@ -531,10 +531,10 @@ const JobDetail = () => {
                   />
                 </div>
 
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-4">
                   <div className="flex items-start">
                     <svg
-                      className="w-5 h-5 text-blue-600 mt-0.5 mr-3"
+                      className="w-5 h-5 text-blue-400 mt-0.5 mr-3"
                       width="20"
                       height="20"
                       fill="none"
@@ -549,14 +549,14 @@ const JobDetail = () => {
                       />
                     </svg>
                     <div className="text-sm">
-                      <p className="font-medium text-blue-900 mb-1">
+                      <p className="font-medium text-blue-300 mb-1">
                         Application Deposit Required
                       </p>
-                      <p className="text-blue-800">
+                      <p className="text-blue-400">
                         A $5 refundable deposit is required to apply. This
                         deposit will be:
                       </p>
-                      <ul className="mt-2 text-blue-700 list-disc list-inside space-y-1">
+                      <ul className="mt-2 text-blue-400 list-disc list-inside space-y-1">
                         <li>Refunded if your application is rejected</li>
                         <li>
                           Added to your final payment if you complete the job

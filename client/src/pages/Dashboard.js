@@ -150,11 +150,11 @@ const Dashboard = () => {
 
   const getStatusBadge = (status) => {
     const statusColors = {
-      PENDING: "bg-yellow-100 text-yellow-800",
-      COMMITTED: "bg-blue-100 text-blue-800",
+      PENDING: "bg-yellow-100 text-amber-300",
+      COMMITTED: "bg-blue-100 text-blue-300",
       IN_PROGRESS: "bg-orange-100 text-orange-800",
-      COMPLETED: "bg-green-100 text-green-800",
-      CANCELLED: "bg-red-100 text-red-800",
+      COMPLETED: "bg-green-100 text-emerald-300",
+      CANCELLED: "bg-red-100 text-red-300",
     };
 
     return (
@@ -169,9 +169,9 @@ const Dashboard = () => {
 
   const getApplicationStatusBadge = (status) => {
     const statusColors = {
-      APPLIED: "bg-blue-100 text-blue-800",
-      ACCEPTED: "bg-green-100 text-green-800",
-      REJECTED: "bg-red-100 text-red-800",
+      APPLIED: "bg-blue-100 text-blue-300",
+      ACCEPTED: "bg-green-100 text-emerald-300",
+      REJECTED: "bg-red-100 text-red-300",
       WITHDRAWN: "bg-gray-100 text-gray-800",
     };
 
@@ -345,10 +345,10 @@ const Dashboard = () => {
                     </p>
 
                     {application.message && (
-                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                      <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                         <div className="flex items-start">
                           <svg
-                            className="w-5 h-5 text-blue-600 mt-0.5 mr-3"
+                            className="w-5 h-5 text-blue-400 mt-0.5 mr-3"
                             width="20"
                             height="20"
                             fill="none"
@@ -363,10 +363,10 @@ const Dashboard = () => {
                             />
                           </svg>
                           <div>
-                            <p className="font-medium text-blue-900 mb-1">
+                            <p className="font-medium text-blue-300 mb-1">
                               Your Application Message
                             </p>
-                            <p className="text-sm text-blue-800">
+                            <p className="text-sm text-blue-300">
                               {application.message}
                             </p>
                           </div>
@@ -396,10 +396,10 @@ const Dashboard = () => {
                     </h3>
 
                     {application.job.status === "COMMITTED" && (
-                      <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg mb-4">
+                      <div className="p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg mb-4">
                         <div className="flex items-start">
                           <svg
-                            className="w-6 h-6 text-blue-600 mt-1 mr-3"
+                            className="w-6 h-6 text-blue-400 mt-1 mr-3"
                             width="24"
                             height="24"
                             fill="none"
@@ -414,10 +414,10 @@ const Dashboard = () => {
                             />
                           </svg>
                           <div className="flex-1">
-                            <p className="font-medium text-blue-900 mb-2">
+                            <p className="font-medium text-blue-300 mb-2">
                               🎉 Application Accepted!
                             </p>
-                            <p className="text-sm text-blue-800 mb-4">
+                            <p className="text-sm text-blue-300 mb-4">
                               Your application has been accepted! You can now
                               start the job when you're ready.
                             </p>
@@ -528,10 +528,10 @@ const Dashboard = () => {
                     )}
 
                     {application.job.status === "COMPLETED" && (
-                      <div className="p-4 bg-green-50 border border-green-200 rounded-lg mb-4">
+                      <div className="p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg mb-4">
                         <div className="flex items-start">
                           <svg
-                            className="w-6 h-6 text-green-600 mt-1 mr-3"
+                            className="w-6 h-6 text-emerald-400 mt-1 mr-3"
                             width="24"
                             height="24"
                             fill="none"
@@ -549,7 +549,7 @@ const Dashboard = () => {
                             <p className="font-medium text-green-900 mb-2">
                               🎉 Job Completed Successfully!
                             </p>
-                            <p className="text-sm text-green-800 mb-4">
+                            <p className="text-sm text-emerald-300 mb-4">
                               Great work! The client will process the final
                               payment. You'll receive the full payment amount
                               plus your $5 deposit refund.
@@ -591,7 +591,7 @@ const Dashboard = () => {
                             className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${application.depositStatus === "CAPTURED"
                               ? "bg-success-100 text-success-800 border border-success-200"
                               : application.depositStatus === "REFUNDED"
-                                ? "bg-blue-100 text-blue-800 border border-blue-200"
+                                ? "bg-blue-100 text-blue-300 border border-blue-200"
                                 : "bg-warning-100 text-warning-800 border border-warning-200"
                               }`}
                           >
@@ -622,13 +622,13 @@ const Dashboard = () => {
                     </div>
 
                     {/* Contact Client Section */}
-                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-lg">
                       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                         <div>
-                          <h4 className="font-medium text-blue-900 mb-1">
+                          <h4 className="font-medium text-blue-300 mb-1">
                             Need to contact the client?
                           </h4>
-                          <p className="text-sm text-blue-800">
+                          <p className="text-sm text-blue-300">
                             Send a message about this job
                           </p>
                         </div>
@@ -1036,7 +1036,7 @@ const Dashboard = () => {
                                 <div className="flex items-start">
                                   <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
                                     <svg
-                                      className="w-5 h-5 text-blue-600"
+                                      className="w-5 h-5 text-blue-400"
                                       width="20"
                                       height="20"
                                       fill="none"
@@ -1140,10 +1140,10 @@ const Dashboard = () => {
 
                               {application.status === "ACCEPTED" &&
                                 job.status === "COMMITTED" && (
-                                  <div className="mt-4 p-4 bg-green-50 border border-green-200 rounded-lg">
+                                  <div className="mt-4 p-4 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
                                     <div className="flex items-start">
                                       <svg
-                                        className="w-5 h-5 text-green-600 mt-0.5 mr-3"
+                                        className="w-5 h-5 text-emerald-400 mt-0.5 mr-3"
                                         width="20"
                                         height="20"
                                         fill="none"
@@ -1161,16 +1161,16 @@ const Dashboard = () => {
                                         <p className="font-medium text-green-900 mb-2">
                                           Application Accepted
                                         </p>
-                                        <p className="text-sm text-green-800 mb-3">
+                                        <p className="text-sm text-emerald-300 mb-3">
                                           Great! You've accepted this
                                           application. The job is now committed
                                           and the worker will start when they're
                                           ready.
                                         </p>
-                                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-3">
-                                          <p className="text-sm text-blue-800 flex items-center">
+                                        <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 mb-3">
+                                          <p className="text-sm text-blue-300 flex items-center">
                                             <svg
-                                              className="w-4 h-4 mr-2 text-blue-600"
+                                              className="w-4 h-4 mr-2 text-blue-400"
                                               fill="none"
                                               stroke="currentColor"
                                               viewBox="0 0 24 24"
@@ -1211,10 +1211,10 @@ const Dashboard = () => {
                                 )}
 
                               {application.status === "REJECTED" && (
-                                <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                                <div className="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-lg">
                                   <div className="flex items-center">
                                     <svg
-                                      className="w-5 h-5 text-red-600 mr-3"
+                                      className="w-5 h-5 text-red-400 mr-3"
                                       width="20"
                                       height="20"
                                       fill="none"
@@ -1232,7 +1232,7 @@ const Dashboard = () => {
                                       <p className="font-medium text-red-900 mb-1">
                                         Application Rejected
                                       </p>
-                                      <p className="text-sm text-red-800">
+                                      <p className="text-sm text-red-300">
                                         You rejected this application. The
                                         worker's $5 deposit has been refunded.
                                       </p>
@@ -1246,10 +1246,10 @@ const Dashboard = () => {
                       )}
 
                       {job.status === "COMPLETED" && (
-                        <div className="mt-6 p-6 bg-green-50 border border-green-200 rounded-lg">
+                        <div className="mt-6 p-6 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
                           <div className="flex items-start mb-4">
                             <svg
-                              className="w-6 h-6 text-green-600 mt-1 mr-3"
+                              className="w-6 h-6 text-emerald-400 mt-1 mr-3"
                               width="24"
                               height="24"
                               fill="none"
@@ -1267,7 +1267,7 @@ const Dashboard = () => {
                               <p className="font-medium text-green-900 mb-2">
                                 🎉 Job Completed Successfully!
                               </p>
-                              <p className="text-sm text-green-800 mb-4">
+                              <p className="text-sm text-emerald-300 mb-4">
                                 The worker has marked this job as complete. You
                                 can now process the final payment to complete
                                 the transaction.
@@ -1419,7 +1419,7 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
           <div className="text-center">
             <div className="bg-slate-800 rounded-full p-3 mx-auto mb-4 w-fit">
               <svg
-                className="w-8 h-8 text-blue-600"
+                className="w-8 h-8 text-blue-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -1447,15 +1447,15 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
                 <div className="space-y-1 text-sm text-slate-300">
                   <div className="flex justify-between">
                     <span>Account Created:</span>
-                    <span className="text-green-600">✓ Yes</span>
+                    <span className="text-emerald-400">✓ Yes</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Details Submitted:</span>
                     <span
                       className={
                         stripeStatus.detailsSubmitted
-                          ? "text-green-600"
-                          : "text-red-600"
+                          ? "text-emerald-400"
+                          : "text-red-400"
                       }
                     >
                       {stripeStatus.detailsSubmitted ? "✓ Yes" : "✗ No"}
@@ -1466,8 +1466,8 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
                     <span
                       className={
                         stripeStatus.chargesEnabled
-                          ? "text-green-600"
-                          : "text-red-600"
+                          ? "text-emerald-400"
+                          : "text-red-400"
                       }
                     >
                       {stripeStatus.chargesEnabled ? "✓ Yes" : "✗ No"}
@@ -1478,8 +1478,8 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
                     <span
                       className={
                         stripeStatus.payoutsEnabled
-                          ? "text-green-600"
-                          : "text-red-600"
+                          ? "text-emerald-400"
+                          : "text-red-400"
                       }
                     >
                       {stripeStatus.payoutsEnabled ? "✓ Yes" : "✗ No"}
@@ -1490,7 +1490,7 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
             )}
 
             {error && (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+              <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4 mb-6">
                 <p className="text-sm text-red-700">{error}</p>
               </div>
             )}
