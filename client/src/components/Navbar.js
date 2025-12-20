@@ -47,11 +47,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Brand */}
-          <Link to="/" className="nav-brand flex items-center">
+          <Link to={isAuthenticated ? "/dashboard" : "/"} className="nav-brand flex items-center shrink-0">
             <img
               src={logo}
               alt="Workzzy Logo"
-              className="w-14 h-14 sm:w-10 sm:h-10 object-contain mr-3"
+              className="w-14 h-14 object-contain mr-3"
             />
             <span className="sr-only">Workzzy</span>
           </Link>
