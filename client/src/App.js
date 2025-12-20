@@ -17,6 +17,8 @@ import Terms from "./pages/Terms"; // Added import for Terms page
 import About from "./pages/About"; // Added import for About page
 import Mission from "./pages/Mission"; // Added import for Mission page
 import HowItWorks from "./pages/HowItWorks"; // Added import for HowItWorks page
+import Privacy from "./pages/Privacy"; // Added import for Privacy page
+import Support from "./pages/Support"; // Added import for Support page
 import Footer from "./components/Footer"; // Added import for Footer
 import "./App.css";
 
@@ -40,6 +42,10 @@ function App() {
           {/* Added route for Mission page */}
           <Route path="/how-it-works" element={<HowItWorks />} />{" "}
           {/* Added route for How It Works page */}
+          <Route path="/privacy" element={<Privacy />} />{" "}
+          {/* Added route for Privacy page */}
+          <Route path="/support" element={<Support />} />{" "}
+          {/* Added route for Support page */}
           {/* Protected Routes */}
           <Route
             path="/jobs"
