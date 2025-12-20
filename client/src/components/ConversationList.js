@@ -29,7 +29,7 @@ const ConversationList = ({
   if (conversations.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-full p-6 text-center">
-        <div className="w-12 h-12 text-gray-400 mb-4">
+        <div className="w-12 h-12 text-slate-500 mb-4">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
               strokeLinecap="round"
@@ -39,10 +39,10 @@ const ConversationList = ({
             />
           </svg>
         </div>
-        <h3 className="text-sm font-medium text-gray-900 mb-1">
+        <h3 className="text-sm font-medium text-white mb-1">
           No conversations yet
         </h3>
-        <p className="text-xs text-gray-600">
+        <p className="text-xs text-slate-400">
           Start messaging from a job page to begin a conversation
         </p>
       </div>
@@ -50,16 +50,15 @@ const ConversationList = ({
   }
 
   return (
-    <div className="divide-y divide-gray-100">
+    <div className="divide-y divide-slate-700">
       {conversations.map((conversation) => (
         <div
           key={conversation.conversationId}
           onClick={() => onSelectConversation(conversation)}
-          className={`p-4 cursor-pointer transition-colors hover:bg-gray-50 ${
-            selectedConversation?.conversationId === conversation.conversationId
-              ? "bg-wurkzi-50 border-r-2 border-wurkzi-500"
+          className={`p-4 cursor-pointer transition-colors hover:bg-slate-800 ${selectedConversation?.conversationId === conversation.conversationId
+              ? "bg-slate-800 border-r-2 border-wurkzi-500"
               : ""
-          }`}
+            }`}
         >
           <div className="flex items-start justify-between">
             <div className="flex-1 min-w-0">
@@ -71,7 +70,7 @@ const ConversationList = ({
                       .substring(0, 2)
                       .toUpperCase()}
                   </div>
-                  <p className="text-sm font-medium text-gray-900 truncate">
+                  <p className="text-sm font-medium text-white truncate">
                     User {conversation.otherParticipantId.substring(0, 8)}
                   </p>
                 </div>
@@ -83,25 +82,24 @@ const ConversationList = ({
                         : conversation.unreadCount}
                     </span>
                   )}
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-slate-500">
                     {formatTime(conversation.latestMessageTime)}
                   </span>
                 </div>
               </div>
 
               <p
-                className={`text-sm truncate ${
-                  conversation.unreadCount > 0
-                    ? "font-medium text-gray-900"
-                    : "text-gray-600"
-                }`}
+                className={`text-sm truncate ${conversation.unreadCount > 0
+                    ? "font-medium text-white"
+                    : "text-slate-400"
+                  }`}
               >
                 {truncateMessage(conversation.latestMessage)}
               </p>
 
               {conversation.jobId && (
                 <div className="mt-2">
-                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-100 text-blue-800">
+                  <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-blue-500/20 text-blue-400">
                     <svg
                       className="w-3 h-3 mr-1"
                       fill="currentColor"

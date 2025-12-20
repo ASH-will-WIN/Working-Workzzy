@@ -33,67 +33,141 @@ const Register = () => {
   };
 
   return (
-    <div className="form-container">
-      <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          placeholder="Full Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          required
-        />
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="tel"
-          placeholder="Phone Number"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <select value={role} onChange={(e) => setRole(e.target.value)}>
-          <option value="WORKER">I'm a Worker</option>
-          <option value="CLIENT">I'm a Client</option>
-        </select>
+    <div className="min-h-screen flex items-center justify-center bg-slate-950 relative overflow-hidden px-4 py-20">
+      {/* Background Effects */}
+      <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-blob" />
+      <div className="absolute bottom-[-10%] left-[-10%] w-[500px] h-[500px] bg-wurkzi-600/20 rounded-full mix-blend-screen filter blur-3xl opacity-20 animate-blob animation-delay-2000" />
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
 
-        {/* Terms and Conditions */}
-        <div className="terms-checkbox">
-          <input
-            type="checkbox"
-            id="terms"
-            checked={agreedToTerms}
-            onChange={(e) => setAgreedToTerms(e.target.checked)}
-          />
-          <label htmlFor="terms" className="ml-2">
-            I agree to the{" "}
-            <Link to="/terms" className="text-wurkzi-600 hover:underline">
-              Terms and Conditions
+      <div className="max-w-md w-full bg-slate-900/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in text-center">
+        <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
+        <p className="text-slate-400 mb-8">Join the Wurkzi community today</p>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="text-left">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+            <input
+              type="text"
+              placeholder="John Doe"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
+              required
+            />
+          </div>
+
+          <div className="text-left">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+            <input
+              type="email"
+              placeholder="name@example.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
+              required
+            />
+          </div>
+
+          <div className="text-left">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Phone Number (Optional)</label>
+            <input
+              type="tel"
+              placeholder="+1 (555) 000-0000"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
+            />
+          </div>
+
+          <div className="text-left">
+            <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+            <input
+              type="password"
+              placeholder="Create a strong password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
+              required
+            />
+          </div>
+
+          <div className="text-left">
+            <label className="block text-sm font-medium text-slate-300 mb-1">I want to...</label>
+            <div className="grid grid-cols-2 gap-4">
+              <button
+                type="button"
+                onClick={() => setRole("WORKER")}
+                className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "WORKER"
+                    ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
+                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  }`}
+              >
+                Find Work
+              </button>
+              <button
+                type="button"
+                onClick={() => setRole("CLIENT")}
+                className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "CLIENT"
+                    ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
+                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  }`}
+              >
+                Hire Talent
+              </button>
+            </div>
+          </div>
+
+          {/* Terms and Conditions */}
+          <div className="flex items-start mt-4">
+            <div className="flex items-center h-5">
+              <input
+                id="terms"
+                name="terms"
+                type="checkbox"
+                checked={agreedToTerms}
+                onChange={(e) => setAgreedToTerms(e.target.checked)}
+                className="h-4 w-4 rounded border-slate-600 bg-slate-900 text-wurkzi-600 focus:ring-wurkzi-500 focus:ring-offset-slate-900"
+              />
+            </div>
+            <div className="ml-3 text-sm">
+              <label htmlFor="terms" className="text-slate-400">
+                I agree to the{" "}
+                <Link to="/terms" className="font-medium text-wurkzi-400 hover:text-wurkzi-300 hover:underline">
+                  Terms and Conditions
+                </Link>
+              </label>
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            disabled={!agreedToTerms}
+            className="w-full py-3.5 mt-2 bg-gradient-to-r from-wurkzi-600 to-purple-600 hover:from-wurkzi-500 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg shadow-purple-900/20 transition-all duration-300 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          >
+            Create Account
+          </button>
+
+          {error && (
+            <div className="p-3 bg-red-500/10 border border-red-500/50 rounded-lg text-red-200 text-sm">
+              {error}
+            </div>
+          )}
+        </form>
+
+        <div className="mt-8 pt-6 border-t border-slate-700/50">
+          <p className="text-slate-400">
+            Already have an account?{" "}
+            <Link to="/login" className="text-wurkzi-400 hover:text-white font-medium transition-colors">
+              Sign in
             </Link>
-          </label>
+          </p>
+          <div className="mt-4">
+            <Link to="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
+              ← Back to Home
+            </Link>
+          </div>
         </div>
-
-        <button type="submit" disabled={!agreedToTerms} className="mt-4">
-          Register
-        </button>
-        {error && <p className="error mt-2">{error}</p>}
-        <div className="text-center mt-2">
-          <Link to="/" className="text-sm text-gray-600 hover:text-gray-500">
-            Back to Home
-          </Link>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };

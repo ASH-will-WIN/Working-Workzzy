@@ -13,15 +13,15 @@ const ConnectReturn = () => {
       try {
         // Refresh the account status to get latest info
         const refreshResult = await connectApi.refreshStripeStatus();
-        
+
         if (refreshResult.updated) {
           const statusData = refreshResult.status;
           setAccountStatus(statusData);
-          
+
           if (statusData.detailsSubmitted && statusData.chargesEnabled) {
             setStatus("success");
             setMessage("Great! Your account setup is complete. You can now receive payments.");
-            
+
             // Redirect to dashboard after 3 seconds
             setTimeout(() => {
               navigate("/dashboard");
@@ -29,7 +29,7 @@ const ConnectReturn = () => {
           } else if (statusData.detailsSubmitted && !statusData.chargesEnabled) {
             setStatus("pending");
             setMessage("Your information has been submitted and is being reviewed. You'll be notified when approved.");
-            
+
             // Redirect to dashboard after 3 seconds
             setTimeout(() => {
               navigate("/dashboard");
@@ -113,26 +113,26 @@ const ConnectReturn = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-slate-900 py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-slate-700">
           <div className="text-center">
             {getStatusIcon()}
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+
+            <h2 className="text-xl font-semibold text-white mb-4">
               {status === "checking" && "Checking Status..."}
               {status === "success" && "Setup Complete!"}
               {status === "pending" && "Review in Progress"}
               {status === "incomplete" && "Setup Incomplete"}
               {status === "error" && "Something Went Wrong"}
             </h2>
-            
-            <p className="text-gray-600 mb-6">{message}</p>
-            
+
+            <p className="text-slate-400 mb-6">{message}</p>
+
             {accountStatus && (
-              <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left">
-                <h3 className="text-sm font-medium text-gray-900 mb-2">Account Status:</h3>
-                <div className="space-y-1 text-sm text-gray-600">
+              <div className="bg-slate-800 p-4 rounded-lg mb-6 text-left border border-slate-700">
+                <h3 className="text-sm font-medium text-white mb-2">Account Status:</h3>
+                <div className="space-y-1 text-sm text-slate-300">
                   <div className="flex justify-between">
                     <span>Details Submitted:</span>
                     <span className={accountStatus.detailsSubmitted ? "text-green-600" : "text-red-600"}>
@@ -154,7 +154,7 @@ const ConnectReturn = () => {
                 </div>
               </div>
             )}
-            
+
             <div className="space-y-3">
               {status === "incomplete" && (
                 <button
@@ -164,16 +164,16 @@ const ConnectReturn = () => {
                   Continue Setup
                 </button>
               )}
-              
+
               {(status === "success" || status === "pending") && (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-slate-500">
                   Redirecting to dashboard in 3 seconds...
                 </div>
               )}
-              
+
               <button
                 onClick={handleGoToDashboard}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="w-full flex justify-center py-2 px-4 border border-slate-700 rounded-md shadow-sm text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wurkzi-500"
               >
                 Go to Dashboard
               </button>

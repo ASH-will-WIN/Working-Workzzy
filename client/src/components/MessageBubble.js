@@ -26,18 +26,17 @@ const MessageBubble = ({ message, isOwn, showTime }) => {
       <div className={`max-w-xs lg:max-w-md ${isOwn ? "order-1" : "order-2"}`}>
         {showTime && (
           <div className="text-center mb-4">
-            <span className="inline-block px-3 py-1 text-xs text-gray-500 bg-gray-100 rounded-full">
+            <span className="inline-block px-3 py-1 text-xs text-slate-400 bg-slate-800 rounded-full">
               {formatDate(message.createdAt)}
             </span>
           </div>
         )}
 
         <div
-          className={`px-4 py-2 rounded-2xl ${
-            isOwn
+          className={`px-4 py-2 rounded-2xl ${isOwn
               ? "bg-wurkzi-500 text-white rounded-br-md"
-              : "bg-gray-100 text-gray-900 rounded-bl-md"
-          }`}
+              : "bg-slate-800 text-white rounded-bl-md"
+            }`}
         >
           <p className="text-sm whitespace-pre-wrap break-words">
             {message.content}
@@ -45,11 +44,10 @@ const MessageBubble = ({ message, isOwn, showTime }) => {
         </div>
 
         <div
-          className={`mt-1 flex items-center space-x-1 ${
-            isOwn ? "justify-end" : "justify-start"
-          }`}
+          className={`mt-1 flex items-center space-x-1 ${isOwn ? "justify-end" : "justify-start"
+            }`}
         >
-          <span className="text-xs text-gray-500">
+          <span className="text-xs text-slate-500">
             {formatTime(message.createdAt)}
           </span>
           {isOwn && (

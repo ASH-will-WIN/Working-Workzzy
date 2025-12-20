@@ -159,9 +159,8 @@ const Dashboard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${
-          statusColors[status] || "bg-gray-100 text-gray-800"
-        }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
+          }`}
       >
         {status.replace("_", " ")}
       </span>
@@ -178,9 +177,8 @@ const Dashboard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${
-          statusColors[status] || "bg-gray-100 text-gray-800"
-        }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
+          }`}
       >
         {status}
       </span>
@@ -189,23 +187,23 @@ const Dashboard = () => {
 
   if (loading || stripeLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      <div className="min-h-screen bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/4 mb-8 animate-slide-up"></div>
+            <div className="h-8 bg-slate-800 rounded-lg w-1/4 mb-8 animate-slide-up"></div>
             <div className="space-y-6">
               {[1, 2, 3].map((i) => (
                 <div
                   key={i}
-                  className="card animate-fade-in"
+                  className="card animate-fade-in bg-slate-900 border-slate-800"
                   style={{ animationDelay: `${i * 0.1}s` }}
                 >
-                  <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-1/3 mb-4"></div>
-                  <div className="h-4 bg-gradient-to-r from-gray-200 to-gray-300 rounded w-1/2 mb-2"></div>
-                  <div className="h-16 bg-gradient-to-r from-gray-200 to-gray-300 rounded mb-4"></div>
+                  <div className="h-6 bg-slate-800 rounded w-1/3 mb-4"></div>
+                  <div className="h-4 bg-slate-800 rounded w-1/2 mb-2"></div>
+                  <div className="h-16 bg-slate-800 rounded mb-4"></div>
                   <div className="flex space-x-2">
-                    <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-20"></div>
-                    <div className="h-6 bg-gradient-to-r from-gray-200 to-gray-300 rounded-full w-24"></div>
+                    <div className="h-6 bg-slate-800 rounded-full w-20"></div>
+                    <div className="h-6 bg-slate-800 rounded-full w-24"></div>
                   </div>
                 </div>
               ))}
@@ -242,23 +240,23 @@ const Dashboard = () => {
     });
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-slate-950 text-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
-            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wurkzi-700 to-wurkzi-900 bg-clip-text text-transparent">
+            <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wurkzi-400 to-purple-400 bg-clip-text text-transparent">
               My Accepted Jobs
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p className="text-slate-400 mt-2">
               Track your job progress and payment status
             </p>
           </div>
 
           {activeAcceptedJobs.length === 0 && pastAcceptedJobs.length === 0 ? (
             <div className="text-center py-16">
-              <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
-                <div className="w-20 h-20 bg-gradient-to-br from-wurkzi-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-800">
+                <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg
-                    className="w-10 h-10 text-wurkzi-600"
+                    className="w-10 h-10 text-wurkzi-500"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -271,10 +269,10 @@ const Dashboard = () => {
                     />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-xl font-semibold mb-3">
+                <p className="text-white text-xl font-semibold mb-3">
                   No accepted jobs yet
                 </p>
-                <p className="text-gray-500 mb-6">
+                <p className="text-slate-400 mb-6">
                   Once clients accept your applications, they'll appear here
                   with payment tracking
                 </p>
@@ -291,10 +289,10 @@ const Dashboard = () => {
               {activeAcceptedJobs.map((application) => (
                 <div
                   key={application.id}
-                  className="card card-hover bg-white border border-gray-200 shadow-lg"
+                  className="card card-hover bg-slate-900 border border-slate-700 shadow-lg"
                 >
                   {/* Prominent Payment Status Banner */}
-                  <div className="mb-6 -m-6 p-4 bg-gradient-to-r from-gray-50 to-blue-50 border-b border-gray-100">
+                  <div className="mb-6 -m-6 p-4 bg-gradient-to-r from-slate-900 to-slate-800 border-b border-slate-700">
                     <PaymentStatusIndicator
                       jobId={application.job.id}
                       userRole="worker"
@@ -304,10 +302,10 @@ const Dashboard = () => {
 
                   <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
+                      <h2 className="text-xl font-semibold text-white">
                         {application.job.title}
                       </h2>
-                      <div className="flex items-center text-gray-600 mt-1">
+                      <div className="flex items-center text-slate-400 mt-1">
                         <svg
                           className="w-4 h-4 mr-1"
                           width="16"
@@ -342,7 +340,7 @@ const Dashboard = () => {
                   </div>
 
                   <div className="card-body">
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-slate-300 leading-relaxed">
                       {application.job.initialDescription}
                     </p>
 
@@ -378,9 +376,9 @@ const Dashboard = () => {
                   </div>
 
                   <div className="card-footer">
-                    <h3 className="font-medium text-gray-900 mb-4 flex items-center">
+                    <h3 className="font-medium text-white mb-4 flex items-center">
                       <svg
-                        className="w-5 h-5 mr-2 text-gray-600"
+                        className="w-5 h-5 mr-2 text-slate-400"
                         width="20"
                         height="20"
                         fill="none"
@@ -563,40 +561,39 @@ const Dashboard = () => {
                                 className="w-full"
                               />
                             </div>
-                            
+
                             {/* Cash Payment Option */}
                             {(!getPaymentStatus(application.job.id) || getPaymentStatus(application.job.id)?.status !== 'PAID') && (
-                                <div className="mt-2">
-                                    <button
-                                        onClick={() => handleCashPayment(application.job.id)}
-                                        className="btn bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto"
-                                    >
-                                        Client Paid in Cash
-                                    </button>
-                                    <p className="text-xs text-green-700 mt-2">
-                                        Click this if the client has paid you directly in cash to mark the job as fully complete.
-                                    </p>
-                                </div>
+                              <div className="mt-2">
+                                <button
+                                  onClick={() => handleCashPayment(application.job.id)}
+                                  className="btn bg-green-600 text-white hover:bg-green-700 w-full sm:w-auto"
+                                >
+                                  Client Paid in Cash
+                                </button>
+                                <p className="text-xs text-green-700 mt-2">
+                                  Click this if the client has paid you directly in cash to mark the job as fully complete.
+                                </p>
+                              </div>
                             )}
                           </div>
                         </div>
                       </div>
                     )}
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-gradient-to-r from-gray-50 to-blue-50 p-4 rounded-xl border border-gray-200">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm bg-slate-800 p-4 rounded-xl border border-slate-700">
                       <div className="flex flex-col">
-                        <span className="font-semibold text-gray-800 mb-1">
+                        <span className="font-semibold text-white mb-1">
                           💳 Deposit Status
                         </span>
                         <div className="flex items-center">
                           <span
-                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                              application.depositStatus === "CAPTURED"
-                                ? "bg-success-100 text-success-800 border border-success-200"
-                                : application.depositStatus === "REFUNDED"
+                            className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${application.depositStatus === "CAPTURED"
+                              ? "bg-success-100 text-success-800 border border-success-200"
+                              : application.depositStatus === "REFUNDED"
                                 ? "bg-blue-100 text-blue-800 border border-blue-200"
                                 : "bg-warning-100 text-warning-800 border border-warning-200"
-                            }`}
+                              }`}
                           >
                             {application.depositStatus === "CAPTURED" && "✅"}
                             {application.depositStatus === "REFUNDED" && "💰"}
@@ -608,10 +605,10 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <div className="flex flex-col">
-                        <span className="font-semibold text-gray-800 mb-1">
+                        <span className="font-semibold text-white mb-1">
                           📅 Applied Date
                         </span>
-                        <div className="text-gray-600 font-medium">
+                        <div className="text-slate-400 font-medium">
                           {new Date(application.createdAt).toLocaleDateString(
                             "en-US",
                             {
@@ -665,35 +662,35 @@ const Dashboard = () => {
           {/* Past Jobs Section for Worker */}
           {pastAcceptedJobs.length > 0 && (
             <div className="mt-12">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                 <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
-                 Past Jobs
+              <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
+                <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Past Jobs
               </h2>
               <div className="opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
                 <div className="space-y-6">
                   {pastAcceptedJobs.map((application) => (
                     <div
                       key={application.id}
-                      className="card bg-gray-50 border border-gray-200"
+                      className="card bg-slate-900 border border-slate-700"
                     >
                       <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                         <div>
-                          <h2 className="text-xl font-semibold text-gray-700">
+                          <h2 className="text-xl font-semibold text-slate-300">
                             {application.job.title}
                           </h2>
-                           <div className="flex items-center text-green-700 mt-1 font-medium">
+                          <div className="flex items-center text-green-700 mt-1 font-medium">
                             <span className="mr-2">✅ Completed & Paid</span>
-                            <span className="text-gray-500 text-sm">
-                                {new Date(application.job.updatedAt).toLocaleDateString()}
+                            <span className="text-slate-500 text-sm">
+                              {new Date(application.job.updatedAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                           <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
-                                Archived
-                           </span>
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                            Archived
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -782,19 +779,19 @@ const Dashboard = () => {
   } else {
     // Client Dashboard
     const activeHirerJobs = hirerJobs.filter(job => {
-        const isCompleted = job.status === "COMPLETED";
-        const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
-        return !(isCompleted && isPaid);
+      const isCompleted = job.status === "COMPLETED";
+      const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      return !(isCompleted && isPaid);
     });
 
     const pastHirerJobs = hirerJobs.filter(job => {
-        const isCompleted = job.status === "COMPLETED";
-        const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
-        return isCompleted && isPaid;
+      const isCompleted = job.status === "COMPLETED";
+      const isPaid = job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      return isCompleted && isPaid;
     });
 
     return (
-      <div className="min-h-screen bg-gradient-to-br from-purple-50 via-blue-50 to-wurkzi-50">
+      <div className="min-h-screen bg-slate-950 text-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
@@ -802,7 +799,7 @@ const Dashboard = () => {
                 <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
                   My Job Postings
                 </h1>
-                <p className="text-gray-600 mt-2">
+                <p className="text-slate-400 mt-2">
                   Manage your job postings and process payments
                 </p>
               </div>
@@ -830,8 +827,8 @@ const Dashboard = () => {
 
           {activeHirerJobs.length === 0 && pastHirerJobs.length === 0 ? (
             <div className="text-center py-16">
-              <div className="bg-white rounded-2xl shadow-lg p-12 max-w-lg mx-auto">
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-100 to-wurkzi-200 rounded-full flex items-center justify-center mx-auto mb-6">
+              <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-700">
+                <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
                   <svg
                     className="w-10 h-10 text-purple-600"
                     fill="none"
@@ -846,10 +843,10 @@ const Dashboard = () => {
                     />
                   </svg>
                 </div>
-                <p className="text-gray-700 text-xl font-semibold mb-3">
+                <p className="text-white text-xl font-semibold mb-3">
                   No job postings yet
                 </p>
-                <p className="text-gray-500 mb-6">
+                <p className="text-slate-400 mb-6">
                   Create your first job posting to start receiving applications
                   and manage payments
                 </p>
@@ -879,7 +876,7 @@ const Dashboard = () => {
               {activeHirerJobs.map((job) => (
                 <div
                   key={job.id}
-                  className="card card-hover bg-white border border-gray-200 shadow-lg"
+                  className="card card-hover bg-slate-900 border border-slate-700 shadow-lg"
                 >
                   {/* Prominent Payment Status Banner for Completed Jobs */}
                   {job.status === "COMPLETED" && (
@@ -894,10 +891,10 @@ const Dashboard = () => {
 
                   <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
                     <div>
-                      <h2 className="text-xl font-semibold text-gray-900">
+                      <h2 className="text-xl font-semibold text-white">
                         {job.title}
                       </h2>
-                      <div className="flex items-center text-gray-600 mt-1">
+                      <div className="flex items-center text-slate-400 mt-1">
                         <svg
                           className="w-4 h-4 mr-1"
                           width="16"
@@ -923,7 +920,7 @@ const Dashboard = () => {
                       </div>
                       <div className="mt-2 flex items-center space-x-2">
                         <StatusBadge status={job.status} type="job" />
-                        <span className="text-sm text-gray-500">
+                        <span className="text-sm text-slate-500">
                           {job.applications.length}{" "}
                           {job.applications.length === 1
                             ? "application"
@@ -980,16 +977,16 @@ const Dashboard = () => {
                   </div>
 
                   <div className="card-body">
-                    <p className="text-gray-700 leading-relaxed">
+                    <p className="text-slate-300 leading-relaxed">
                       {job.initialDescription}
                     </p>
                   </div>
 
                   {selectedJob === job.id && (
                     <div className="card-footer">
-                      <h3 className="font-medium text-gray-900 mb-4 flex items-center">
+                      <h3 className="font-medium text-white mb-4 flex items-center">
                         <svg
-                          className="w-5 h-5 mr-2 text-gray-600"
+                          className="w-5 h-5 mr-2 text-slate-400"
                           width="20"
                           height="20"
                           fill="none"
@@ -1296,7 +1293,7 @@ const Dashboard = () => {
                               Process Final Payment
                             </h4>
                             <FinalPaymentForm
-                              jobId={job.id}  
+                              jobId={job.id}
                               jobPrice={job.price}
                               onPaymentComplete={() => fetchHirerData()}
                             />
@@ -1321,35 +1318,35 @@ const Dashboard = () => {
           {/* Past Jobs Section for Hirer */}
           {pastHirerJobs.length > 0 && (
             <div className="mt-12">
-               <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
-                 <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                 </svg>
-                 Past Jobs History
+              <h2 className="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Past Jobs History
               </h2>
               <div className="opacity-75 grayscale hover:grayscale-0 transition-all duration-300">
                 <div className="space-y-6">
                   {pastHirerJobs.map((job) => (
                     <div
                       key={job.id}
-                      className="card bg-gray-50 border border-gray-200"
+                      className="card bg-slate-900 border border-slate-700"
                     >
                       <div className="card-header flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-                         <div>
+                        <div>
                           <h2 className="text-xl font-semibold text-gray-700">
                             {job.title}
                           </h2>
-                           <div className="flex items-center text-green-700 mt-1 font-medium">
+                          <div className="flex items-center text-green-700 mt-1 font-medium">
                             <span className="mr-2">✅ Completed & Paid</span>
                             <span className="text-gray-500 text-sm">
-                                {new Date(job.updatedAt).toLocaleDateString()}
+                              {new Date(job.updatedAt).toLocaleDateString()}
                             </span>
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                            <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
-                                Archived
-                           </span>
+                          <span className="px-2 py-1 rounded-full text-xs font-medium bg-gray-200 text-gray-600">
+                            Archived
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -1416,11 +1413,11 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-slate-900 py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-slate-700">
           <div className="text-center">
-            <div className="bg-blue-100 rounded-full p-3 mx-auto mb-4 w-fit">
+            <div className="bg-slate-800 rounded-full p-3 mx-auto mb-4 w-fit">
               <svg
                 className="w-8 h-8 text-blue-600"
                 fill="none"
@@ -1436,18 +1433,18 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
               </svg>
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            <h2 className="text-2xl font-bold text-white mb-4">
               Complete Payment Setup
             </h2>
 
-            <p className="text-gray-600 mb-6">{getStatusMessage()}</p>
+            <p className="text-slate-400 mb-6">{getStatusMessage()}</p>
 
             {stripeStatus.exists && (
-              <div className="bg-gray-50 p-4 rounded-lg mb-6 text-left">
-                <h3 className="text-sm font-medium text-gray-900 mb-2">
+              <div className="bg-slate-800 p-4 rounded-lg mb-6 text-left border border-slate-700">
+                <h3 className="text-sm font-medium text-white mb-2">
                   Current Status:
                 </h3>
-                <div className="space-y-1 text-sm text-gray-600">
+                <div className="space-y-1 text-sm text-slate-300">
                   <div className="flex justify-between">
                     <span>Account Created:</span>
                     <span className="text-green-600">✓ Yes</span>

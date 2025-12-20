@@ -131,11 +131,11 @@ const CreateJob = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto px-4 py-8 min-h-screen bg-slate-950">
       <div className="card">
         <div className="card-header">
-          <h2 className="text-3xl font-bold text-gray-900">Create a New Job</h2>
-          <p className="text-gray-600 mt-2">
+          <h2 className="text-3xl font-bold text-white">Create a New Job</h2>
+          <p className="text-slate-400 mt-2">
             Fill in the details below to post your job listing
           </p>
         </div>
@@ -144,7 +144,7 @@ const CreateJob = () => {
           <div>
             <label
               htmlFor="title"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-slate-300 mb-2"
             >
               Job Title *
             </label>
@@ -155,14 +155,14 @@ const CreateJob = () => {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="initialDescription"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-slate-300 mb-2"
             >
               Short Description *
             </label>
@@ -173,14 +173,14 @@ const CreateJob = () => {
               value={initialDescription}
               onChange={(e) => setInitialDescription(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 
           <div>
             <label
               htmlFor="fullDescription"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-slate-300 mb-2"
             >
               Full Job Description *
             </label>
@@ -191,14 +191,14 @@ const CreateJob = () => {
               value={fullDescription}
               onChange={(e) => setFullDescription(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500 resize-vertical"
+              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500 resize-vertical"
             />
           </div>
 
           <div>
             <label
               htmlFor="address"
-              className="block text-sm font-medium text-gray-700 mb-2"
+              className="block text-sm font-medium text-slate-300 mb-2"
             >
               Job Address *
             </label>
@@ -209,47 +209,47 @@ const CreateJob = () => {
               value={address}
               onChange={(e) => setAddress(e.target.value)}
               required
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
           </div>
 
           <div>
-        <label
-          htmlFor="price"
-          className="block text-sm font-medium text-gray-700 mb-2"
-        >
-          Job Price (Amount to Pay) *
-        </label>
-        <input
-            id="price"
-            type="number"
-            min="1"
-            placeholder="Enter the amount you will pay"
-            value={price}
-            onChange={(e) => setPrice(e.target.value)}
-            required
-            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
-          />
-        </div>
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-slate-300 mb-2"
+            >
+              Job Price (Amount to Pay) *
+            </label>
+            <input
+              id="price"
+              type="number"
+              min="1"
+              placeholder="Enter the amount you will pay"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              required
+              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+            />
+          </div>
 
           {/* Image Upload Section */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
+            <label className="block text-sm font-medium text-slate-300 mb-3">
               Job Images (Optional)
             </label>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-slate-500 mb-4">
               Add photos to help workers understand the job better. You can
               upload up to 30 images.
             </p>
             <ImageUpload
               onImagesChange={handleImagesChange}
               maxImages={30}
-              className="border border-gray-200 rounded-lg"
+              className="border border-slate-700 rounded-lg"
             />
           </div>
 
-          <div className="flex items-center justify-between pt-6 border-t border-gray-200">
-            <div className="text-sm text-gray-600">
+          <div className="flex items-center justify-between pt-6 border-t border-slate-700">
+            <div className="text-sm text-slate-400">
               <span className="text-red-500">*</span> Required fields
             </div>
 

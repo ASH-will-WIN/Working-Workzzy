@@ -9,34 +9,35 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f8fafc;
-  color: #1e293b;
+  background-color: #020617;
+  color: #e2e8f0;
 }
 
 @layer components {
+
   /* Enhanced Button Components */
   .btn {
-    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
+    @apply inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium text-sm transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm;
   }
 
   .btn-primary {
-    @apply bg-wurkzi-600 text-white hover:bg-wurkzi-700 focus:ring-wurkzi-500 shadow-md hover:shadow-lg;
+    @apply bg-wurkzi-600 text-white hover:bg-wurkzi-500 focus:ring-wurkzi-500 shadow-md hover:shadow-lg hover:shadow-wurkzi-500/30;
   }
 
   .btn-secondary {
-    @apply bg-gray-100 text-gray-700 hover:bg-gray-200 focus:ring-gray-500 border border-gray-300;
+    @apply bg-slate-800 text-slate-200 hover:bg-slate-700 focus:ring-slate-500 border border-slate-700;
   }
 
   .btn-success {
-    @apply bg-success-600 text-white hover:bg-success-700 focus:ring-success-500 shadow-md hover:shadow-lg;
+    @apply bg-success-600 text-white hover:bg-success-500 focus:ring-success-500 shadow-md hover:shadow-lg hover:shadow-success-500/30;
   }
 
   .btn-danger {
-    @apply bg-danger-600 text-white hover:bg-danger-700 focus:ring-danger-500 shadow-md hover:shadow-lg;
+    @apply bg-danger-600 text-white hover:bg-danger-500 focus:ring-danger-500 shadow-md hover:shadow-lg hover:shadow-danger-500/30;
   }
 
   .btn-warning {
-    @apply bg-warning-600 text-white hover:bg-warning-700 focus:ring-warning-500 shadow-md hover:shadow-lg;
+    @apply bg-warning-600 text-white hover:bg-warning-500 focus:ring-warning-500 shadow-md hover:shadow-lg hover:shadow-warning-500/30;
   }
 
   .btn-sm {
@@ -47,17 +48,17 @@ body {
     @apply px-6 py-3 text-base;
   }
 
-  /* Enhanced Card Components */
+  /* Enhanced Card Components - Dark Mode */
   .card {
-    @apply bg-white rounded-xl shadow-card border border-gray-100 p-6 transition-all duration-200;
+    @apply bg-slate-900 rounded-xl shadow-lg border border-slate-800 p-6 transition-all duration-200;
   }
 
   .card-hover {
-    @apply hover:shadow-card-hover hover:-translate-y-1;
+    @apply hover:shadow-xl hover:shadow-slate-900/50 hover:border-slate-700 hover:-translate-y-1;
   }
 
   .card-header {
-    @apply flex justify-between items-start mb-4 pb-4 border-b border-gray-100;
+    @apply flex justify-between items-start mb-4 pb-4 border-b border-slate-800;
   }
 
   .card-body {
@@ -135,20 +136,20 @@ body {
     @apply text-2xl font-bold text-wurkzi-700 hover:text-wurkzi-800 transition-colors duration-200;
   }
 
-  .nav-links {
+  .nav-menu {
     @apply flex items-center space-x-6;
   }
 
   .nav-link {
-    @apply text-gray-600 hover:text-wurkzi-600 font-medium transition-colors duration-200 relative;
+    @apply text-slate-400 hover:text-white font-medium transition-colors duration-200 relative;
   }
 
   .nav-link.active {
-    @apply text-wurkzi-600;
+    @apply text-white;
   }
 
   .nav-link.active::after {
-    @apply content-[''] absolute -bottom-1 left-0 w-full h-0.5 bg-wurkzi-600;
+    @apply content-[''] absolute -bottom-1 left-0 w-full h-0.5 bg-wurkzi-500 shadow-[0_0_10px_rgba(14, 165, 233, 0.5)];
   }
 }
 
@@ -163,6 +164,55 @@ body {
 
   .animate-bounce-gentle {
     animation: bounceGentle 0.6s ease-in-out;
+  }
+
+  .animate-gradient-x {
+    background-size: 200% auto;
+    animation: gradient-x 4s linear infinite;
+  }
+
+  @keyframes gradient-x {
+    0% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes blob {
+    0% {
+      transform: translate(0px, 0px) scale(1);
+    }
+
+    33% {
+      transform: translate(30px, -50px) scale(1.1);
+    }
+
+    66% {
+      transform: translate(-20px, 20px) scale(0.9);
+    }
+
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+  }
+
+  .animate-blob {
+    animation: blob 10s infinite;
+  }
+
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+
+  .animation-delay-4000 {
+    animation-delay: 4s;
   }
 
   .gradient-primary {
@@ -216,11 +266,11 @@ body {
   }
 
   .image-upload-area {
-    @apply border-2 border-dashed border-gray-300 rounded-lg p-8 text-center cursor-pointer transition-all duration-200 hover:border-wurkzi-500 hover:bg-wurkzi-50;
+    @apply border-2 border-dashed border-slate-700 bg-slate-900/50 rounded-lg p-8 text-center cursor-pointer transition-all duration-200 hover:border-wurkzi-500 hover:bg-slate-800;
   }
 
   .image-upload-area.dragging {
-    @apply border-wurkzi-500 bg-wurkzi-50 scale-105;
+    @apply border-wurkzi-500 bg-slate-800 scale-105;
   }
 
   .upload-content {
@@ -232,15 +282,15 @@ body {
   }
 
   .upload-error {
-    @apply flex items-center p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm;
+    @apply flex items-center p-3 bg-red-900/20 border border-red-900/50 rounded-lg text-red-400 text-sm;
   }
 
   .image-previews {
-    @apply bg-gray-50 rounded-lg p-4;
+    @apply bg-slate-900 rounded-lg p-4;
   }
 
   .preview-title {
-    @apply text-sm font-semibold text-gray-700 mb-3;
+    @apply text-sm font-semibold text-slate-300 mb-3;
   }
 
   .preview-grid {
@@ -248,7 +298,7 @@ body {
   }
 
   .image-preview-item {
-    @apply bg-white rounded-lg border border-gray-200 p-3 space-y-3;
+    @apply bg-slate-800 rounded-lg border border-slate-700 p-3 space-y-3;
   }
 
   .image-preview-wrapper {
@@ -347,12 +397,10 @@ body {
   .gallery-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      rgba(0, 0, 0, 0.6),
-      transparent,
-      transparent
-    );
+    background: linear-gradient(to top,
+        rgba(0, 0, 0, 0.6),
+        transparent,
+        transparent);
     opacity: 0;
     transition: opacity 0.2s;
   }

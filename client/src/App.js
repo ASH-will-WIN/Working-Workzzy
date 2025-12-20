@@ -16,13 +16,15 @@ import ConnectRefresh from "./pages/ConnectRefresh";
 import Terms from "./pages/Terms"; // Added import for Terms page
 import About from "./pages/About"; // Added import for About page
 import Mission from "./pages/Mission"; // Added import for Mission page
+import HowItWorks from "./pages/HowItWorks"; // Added import for HowItWorks page
+import Footer from "./components/Footer"; // Added import for Footer
 import "./App.css";
 
 function App() {
   return (
-    <div className="App">
+    <div className="App flex flex-col min-h-screen bg-slate-950">
       <Navbar />
-      <main className="container">
+      <main className="flex-grow pt-20">
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
@@ -36,6 +38,8 @@ function App() {
           {/* Added route for About page */}
           <Route path="/mission" element={<Mission />} />{" "}
           {/* Added route for Mission page */}
+          <Route path="/how-it-works" element={<HowItWorks />} />{" "}
+          {/* Added route for How It Works page */}
           {/* Protected Routes */}
           <Route
             path="/jobs"
@@ -81,6 +85,7 @@ function App() {
           />
         </Routes>
       </main>
+      <Footer />
     </div>
   );
 }

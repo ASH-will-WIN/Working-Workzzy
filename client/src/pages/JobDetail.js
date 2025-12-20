@@ -69,7 +69,7 @@ const JobDetail = () => {
   };
 
   const isHirer = user?.id === job?.hirerId;
-  
+
   const fetchJobAndApps = async () => {
     try {
       setLoading(true);
@@ -116,9 +116,8 @@ const JobDetail = () => {
       setShowPaymentForm(true); // Show the payment form
     } catch (error) {
       alert(
-        `Error: ${
-          error.response?.data?.message ||
-          "Could not start application process."
+        `Error: ${error.response?.data?.message ||
+        "Could not start application process."
         }`
       );
     }
@@ -151,11 +150,11 @@ const JobDetail = () => {
   };
   if (loading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen bg-slate-950">
         <div className="animate-pulse">
-          <div className="h-8 bg-gray-200 rounded w-1/3 mb-4"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/4 mb-6"></div>
-          <div className="h-20 bg-gray-200 rounded mb-4"></div>
+          <div className="h-8 bg-slate-800 rounded w-1/3 mb-4"></div>
+          <div className="h-4 bg-slate-800 rounded w-1/4 mb-6"></div>
+          <div className="h-20 bg-slate-800 rounded mb-4"></div>
         </div>
       </div>
     );
@@ -163,37 +162,37 @@ const JobDetail = () => {
 
   if (!job) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-8 text-center">
-        <div className="text-gray-500">
-          <h2 className="text-2xl font-semibold mb-2">Job not found</h2>
+      <div className="max-w-4xl mx-auto px-4 py-8 text-center min-h-screen bg-slate-950">
+        <div className="text-slate-400">
+          <h2 className="text-2xl font-semibold text-white mb-2">Job not found</h2>
           <p>The job you're looking for doesn't exist or has been removed.</p>
         </div>
       </div>
     );
-  } 
+  }
 
   const hasApplied = job?.applications?.some(
-  (app) => app.workerId === user?.id
-);
+    (app) => app.workerId === user?.id
+  );
 
   console.log('job', hasApplied);
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen bg-slate-950">
       {/* Job Header */}
       <div className="card mb-6">
         <div className="card-header">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            <h1 className="text-3xl font-bold text-white mb-2">
               {job.title}
             </h1>
 
-              <p className="text-xl font-semibold text-green-700 mb-2">
-                ${job.price}
-              </p>
+            <p className="text-xl font-semibold text-emerald-400 mb-2">
+              ${job.price}
+            </p>
 
 
-            <div className="flex items-center text-gray-600 mb-3">
+            <div className="flex items-center text-slate-400 mb-3">
               <svg
                 className="w-5 h-5 mr-2"
                 width="20"
@@ -224,7 +223,7 @@ const JobDetail = () => {
         </div>
 
         <div className="prose max-w-none">
-          <p className="text-gray-700 leading-relaxed text-lg">
+          <p className="text-slate-300 leading-relaxed text-lg">
             {job.fullDescription}
           </p>
         </div>
@@ -234,7 +233,7 @@ const JobDetail = () => {
       {(images.length > 0 || imagesLoading) && (
         <div className="card mb-6">
           <div className="card-header">
-            <h2 className="text-xl font-semibold text-gray-900">Job Images</h2>
+            <h2 className="text-xl font-semibold text-white">Job Images</h2>
             {imagesLoading && (
               <div className="flex items-center text-gray-500">
                 <svg
@@ -278,8 +277,8 @@ const JobDetail = () => {
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              <p className="text-gray-500 text-lg">Job images are restricted</p>
-              <p className="text-gray-400 text-sm mt-1">
+              <p className="text-slate-400 text-lg">Job images are restricted</p>
+              <p className="text-slate-500 text-sm mt-1">
                 Your application must be accepted to view images
               </p>
             </div>
@@ -288,7 +287,7 @@ const JobDetail = () => {
       )}
       {isHirer ? (
         <div className="card">
-          <h3 className="text-xl font-semibold text-gray-900 mb-6">
+          <h3 className="text-xl font-semibold text-white mb-6">
             Applications for this Job ({applications.length})
           </h3>
 
@@ -297,7 +296,7 @@ const JobDetail = () => {
               {applications.map((app) => (
                 <div
                   key={app.id}
-                  className="border border-gray-200 rounded-lg p-5 bg-gray-50"
+                  className="border border-slate-700 rounded-lg p-5 bg-slate-800"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -320,19 +319,19 @@ const JobDetail = () => {
                           </svg>
                         </div>
                         <div>
-                          <p className="font-medium text-gray-900">
+                          <p className="font-medium text-white">
                             Worker Application
                           </p>
-                          <p className="text-sm text-gray-500">
+                          <p className="text-sm text-slate-500">
                             ID: {app.workerId.substring(0, 8)}...
                           </p>
                         </div>
                       </div>
 
                       {app.message && (
-                        <div className="mt-3 p-3 bg-white rounded-md border">
-                          <p className="text-sm text-gray-700">
-                            <span className="font-medium text-gray-900">
+                        <div className="mt-3 p-3 bg-slate-900 rounded-md border border-slate-700">
+                          <p className="text-sm text-slate-300">
+                            <span className="font-medium text-white">
                               Message:
                             </span>{" "}
                             {app.message}
@@ -340,7 +339,7 @@ const JobDetail = () => {
                         </div>
                       )}
 
-                      <div className="mt-3 text-sm text-gray-500">
+                      <div className="mt-3 text-sm text-slate-500">
                         Applied: {new Date(app.createdAt).toLocaleDateString()}
                       </div>
                     </div>
@@ -351,7 +350,7 @@ const JobDetail = () => {
                   </div>
 
                   {job.status === "PENDING" && app.status === "APPLIED" && (
-                    <div className="flex space-x-3 pt-4 border-t border-gray-200">
+                    <div className="flex space-x-3 pt-4 border-t border-slate-700">
                       <button
                         onClick={() => handleAccept(app.id)}
                         className="btn btn-success btn-sm"
@@ -427,7 +426,7 @@ const JobDetail = () => {
           ) : (
             <div className="text-center py-8">
               <svg
-                className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                className="w-16 h-16 text-slate-700 mx-auto mb-4"
                 width="64"
                 height="64"
                 fill="none"
@@ -441,8 +440,8 @@ const JobDetail = () => {
                   d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                 />
               </svg>
-              <p className="text-gray-500 text-lg">No applications yet</p>
-              <p className="text-gray-400 text-sm mt-1">
+              <p className="text-slate-400 text-lg">No applications yet</p>
+              <p className="text-slate-500 text-sm mt-1">
                 Applications will appear here when workers apply
               </p>
             </div>
@@ -454,12 +453,12 @@ const JobDetail = () => {
           {!isHirer && (
             <div className="card mb-6">
               <div className="card-header">
-                <h3 className="text-lg font-semibold text-gray-900">
+                <h3 className="text-lg font-semibold text-white">
                   Contact Job Client
                 </h3>
               </div>
               <div className="card-body">
-                <p className="text-gray-600 mb-4">
+                <p className="text-slate-400 mb-4">
                   Have questions about this job? Message the client directly.
                 </p>
                 {/* Chat Button for non-hirers */}
@@ -510,7 +509,7 @@ const JobDetail = () => {
 
           {job.status === "PENDING" && !showPaymentForm && !hasApplied && (
             <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              <h3 className="text-xl font-semibold text-white mb-6">
                 Apply for this Job
               </h3>
 
@@ -518,14 +517,14 @@ const JobDetail = () => {
                 <div>
                   <label
                     htmlFor="message"
-                    className="block text-sm font-medium text-gray-700 mb-2"
+                    className="block text-sm font-medium text-slate-300 mb-2"
                   >
                     Why are you interested in this job? (Optional)
                   </label>
                   <textarea
                     id="message"
                     rows={4}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
                     placeholder="Tell the client why you're a great fit for this job..."
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
@@ -599,7 +598,7 @@ const JobDetail = () => {
 
           {showPaymentForm && clientSecret && (
             <div className="card">
-              <h3 className="text-xl font-semibold text-gray-900 mb-6">
+              <h3 className="text-xl font-semibold text-white mb-6">
                 Complete Your Application
               </h3>
               <div className="mb-6">
@@ -623,7 +622,7 @@ const JobDetail = () => {
                     Application submitted successfully!
                   </span>
                 </div>
-                <p className="text-gray-600 text-sm">
+                <p className="text-slate-400 text-sm">
                   Please complete the $5 deposit payment to finalize your
                   application.
                 </p>
@@ -643,7 +642,7 @@ const JobDetail = () => {
             <div className="card">
               <div className="text-center py-8">
                 <svg
-                  className="w-10 h-10 text-gray-300 mx-auto mb-4"
+                  className="w-16 h-16 text-slate-700 mx-auto mb-4"
                   width="40"
                   height="40"
                   fill="none"
@@ -657,10 +656,10 @@ const JobDetail = () => {
                     d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                   />
                 </svg>
-                <p className="text-gray-500 text-lg font-medium">
+                <p className="text-slate-400 text-lg font-medium">
                   Applications Closed
                 </p>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-slate-500 text-sm mt-1">
                   This job is no longer accepting applications
                 </p>
               </div>

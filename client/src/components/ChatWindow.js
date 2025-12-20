@@ -89,14 +89,14 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   return (
     <div className="flex-1 flex flex-col">
       {/* Chat Header */}
-      <div className="p-4 border-b border-gray-200 bg-gray-50">
+      <div className="p-4 border-b border-slate-700 bg-slate-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-wurkzi-400 to-wurkzi-600 rounded-full flex items-center justify-center text-white font-medium">
               {conversation.otherParticipantId.substring(0, 2).toUpperCase()}
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900">
+              <h3 className="font-semibold text-white">
                 User {conversation.otherParticipantId.substring(0, 8)}
               </h3>
               {/* Job-specific features removed for core messaging simplification */}
@@ -108,10 +108,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900">
         {localMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
-            <div className="w-16 h-16 text-gray-400 mb-4">
+            <div className="w-16 h-16 text-slate-600 mb-4">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -121,10 +121,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-medium text-white mb-2">
               Start the conversation
             </h3>
-            <p className="text-gray-600">
+            <p className="text-slate-400">
               Send your first message to begin the conversation
             </p>
           </div>
@@ -137,8 +137,8 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
               showTime={
                 index === 0 ||
                 new Date(message.createdAt).getTime() -
-                  new Date(localMessages[index - 1].createdAt).getTime() >
-                  300000
+                new Date(localMessages[index - 1].createdAt).getTime() >
+                300000
               }
             />
           ))
@@ -147,7 +147,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       </div>
 
       {/* Message Input */}
-      <div className="border-t border-gray-200 p-4">
+      <div className="border-t border-slate-700 p-4 bg-slate-800">
         <MessageInput
           value={newMessage}
           onChange={setNewMessage}

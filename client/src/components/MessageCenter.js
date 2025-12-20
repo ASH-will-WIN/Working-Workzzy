@@ -108,10 +108,10 @@ const MessageCenter = () => {
       prev.map((conv) =>
         conv.conversationId === selectedConversation.conversationId
           ? {
-              ...conv,
-              latestMessage: newMessage.content,
-              latestMessageTime: newMessage.createdAt,
-            }
+            ...conv,
+            latestMessage: newMessage.content,
+            latestMessageTime: newMessage.createdAt,
+          }
           : conv
       )
     );
@@ -121,18 +121,18 @@ const MessageCenter = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
+      <div className="min-h-screen bg-slate-950">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="animate-pulse">
-            <div className="h-8 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/4 mb-6"></div>
-            <div className="bg-white rounded-xl shadow-soft border border-gray-200 p-6">
+            <div className="h-8 bg-slate-800 rounded-lg w-1/4 mb-6"></div>
+            <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 p-6">
               <div className="space-y-4">
                 {[...Array(5)].map((_, i) => (
                   <div key={i} className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-gray-200 rounded-full"></div>
+                    <div className="w-12 h-12 bg-slate-800 rounded-full"></div>
                     <div className="flex-1">
-                      <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                      <div className="h-4 bg-slate-800 rounded w-1/3 mb-2"></div>
+                      <div className="h-3 bg-slate-800 rounded w-2/3"></div>
                     </div>
                   </div>
                 ))}
@@ -145,25 +145,24 @@ const MessageCenter = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-wurkzi-50 via-blue-50 to-purple-50">
+    <div className="min-h-screen bg-slate-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Messages</h1>
-          <p className="text-gray-600">Communicate with users</p>
+          <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
+          <p className="text-slate-400">Communicate with users</p>
         </div>
 
-        <div className="bg-white rounded-xl shadow-soft border border-gray-200 overflow-hidden">
+        <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
           <div className="flex flex-col md:flex-row h-[600px]">
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
-              className={`md:w-1/3 border-r border-gray-200 flex flex-col ${
-                selectedConversation ? "hidden md:flex" : "flex"
-              }`}
+              className={`md:w-1/3 border-r border-slate-700 flex flex-col ${selectedConversation ? "hidden md:flex" : "flex"
+                }`}
             >
-              <div className="p-4 border-b border-gray-200 bg-gray-50">
-                <h2 className="font-semibold text-gray-900">Conversations</h2>
+              <div className="p-4 border-b border-slate-700 bg-slate-800">
+                <h2 className="font-semibold text-white">Conversations</h2>
                 {conversations.length > 0 && (
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-sm text-slate-400 mt-1">
                     {conversations.reduce(
                       (total, conv) => total + conv.unreadCount,
                       0
@@ -183,14 +182,13 @@ const MessageCenter = () => {
 
             {/* Chat Window - Full width on mobile when selected, main area on desktop */}
             <div
-              className={`flex-1 flex flex-col ${
-                selectedConversation ? "flex" : "hidden md:flex"
-              }`}
+              className={`flex-1 flex flex-col ${selectedConversation ? "flex" : "hidden md:flex"
+                }`}
             >
               {selectedConversation ? (
                 <>
                   {/* Mobile header with back button */}
-                  <div className="md:hidden p-4 border-b border-gray-200 bg-gray-50">
+                  <div className="md:hidden p-4 border-b border-slate-700 bg-slate-800">
                     <button
                       onClick={() => setSelectedConversation(null)}
                       className="flex items-center text-wurkzi-600 hover:text-wurkzi-800"
@@ -219,10 +217,10 @@ const MessageCenter = () => {
                   />
                 </>
               ) : (
-                <div className="flex-1 flex items-center justify-center bg-gray-50 p-4">
+                <div className="flex-1 flex items-center justify-center bg-slate-800 p-4">
                   <div className="text-center">
                     <svg
-                      className="w-16 h-16 text-gray-300 mx-auto mb-4"
+                      className="w-16 h-16 text-slate-700 mx-auto mb-4"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -234,10 +232,10 @@ const MessageCenter = () => {
                         d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
                       />
                     </svg>
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    <h3 className="text-lg font-medium text-white mb-2">
                       No conversation selected
                     </h3>
-                    <p className="text-gray-500">
+                    <p className="text-slate-400">
                       Select a conversation from the list or start one from a
                       job application.
                     </p>

@@ -13,7 +13,7 @@ const ConnectRefresh = () => {
       try {
         // Get fresh account status and onboarding link
         const statusData = await connectApi.getStripeAccount();
-        
+
         if (statusData.detailsSubmitted && statusData.chargesEnabled) {
           // Already complete, go to dashboard
           setStatus("complete");
@@ -26,7 +26,7 @@ const ConnectRefresh = () => {
           setStatus("ready");
           setMessage("Ready to continue your account setup.");
           setOnboardingUrl(statusData.actionUrl);
-          
+
           // Auto-redirect after 3 seconds
           setTimeout(() => {
             window.location.href = statusData.actionUrl;
@@ -37,7 +37,7 @@ const ConnectRefresh = () => {
           setStatus("ready");
           setMessage("Ready to start your account setup.");
           setOnboardingUrl(newAccount.onboardingUrl);
-          
+
           // Auto-redirect after 3 seconds
           setTimeout(() => {
             window.location.href = newAccount.onboardingUrl;
@@ -98,32 +98,32 @@ const ConnectRefresh = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-slate-900 py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-slate-700">
           <div className="text-center">
             {getStatusIcon()}
-            
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">
+
+            <h2 className="text-xl font-semibold text-white mb-4">
               {status === "refreshing" && "Refreshing Session..."}
               {status === "ready" && "Ready to Continue"}
               {status === "complete" && "Setup Complete!"}
               {status === "error" && "Refresh Failed"}
             </h2>
-            
-            <p className="text-gray-600 mb-6">{message}</p>
-            
+
+            <p className="text-slate-400 mb-6">{message}</p>
+
             {status === "ready" && onboardingUrl && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <p className="text-sm text-blue-700 mb-2">
                   Automatically redirecting in 3 seconds...
                 </p>
                 <div className="w-full bg-blue-200 rounded-full h-2">
-                  <div className="bg-blue-600 h-2 rounded-full animate-pulse" style={{width: '100%'}}></div>
+                  <div className="bg-blue-600 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
                 </div>
               </div>
             )}
-            
+
             <div className="space-y-3">
               {status === "ready" && onboardingUrl && (
                 <button
@@ -133,13 +133,13 @@ const ConnectRefresh = () => {
                   Continue Setup Now
                 </button>
               )}
-              
+
               {status === "complete" && (
-                <div className="text-sm text-gray-500">
+                <div className="text-sm text-slate-500">
                   Redirecting to dashboard in 2 seconds...
                 </div>
               )}
-              
+
               {status === "error" && (
                 <button
                   onClick={() => window.location.reload()}
@@ -148,10 +148,10 @@ const ConnectRefresh = () => {
                   Try Again
                 </button>
               )}
-              
+
               <button
                 onClick={handleGoToDashboard}
-                className="w-full flex justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="w-full flex justify-center py-2 px-4 border border-slate-700 rounded-md shadow-sm text-sm font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-wurkzi-500"
               >
                 Go to Dashboard
               </button>

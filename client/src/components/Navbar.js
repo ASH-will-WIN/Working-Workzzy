@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
@@ -9,6 +9,22 @@ const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      const isScrolled = window.scrollY > 10;
+      if (isScrolled !== scrolled) {
+        setScrolled(isScrolled);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [scrolled]);
 
   const handleLogout = () => {
     logout();
@@ -30,368 +46,237 @@ const Navbar = () => {
     return user?.user_metadata?.role || "USER";
   };
 
-  const getRoleColor = () => {
-    const role = getUserRole();
-    switch (role) {
-      case "CLIENT":
-        return "bg-wurkzi-500";
-      case "WORKER":
-        return "bg-success-500";
-      default:
-        return "bg-gray-500";
-    }
-  };
-
   return (
-    <nav className="navbar">
+    <nav
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
+          ? "bg-slate-950/80 backdrop-blur-md border-b border-slate-800 shadow-lg shadow-black/10"
+          : "bg-transparent border-transparent"
+        }`}
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Brand */}
-          <Link to={isAuthenticated ? "/dashboard" : "/"} className="nav-brand flex items-center shrink-0">
-            <img
-              src={logo}
-              alt="Workzzy Logo"
-              className="w-14 h-14 object-contain mr-3"
-            />
-            <span className="sr-only">Workzzy</span>
+          <Link to={isAuthenticated ? "/dashboard" : "/"} className="nav-brand flex items-center shrink-0 group">
+            <div className="relative">
+              <div className="absolute inset-0 bg-wurkzi-500/30 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <img
+                src={logo}
+                alt="Wurkzi Logo"
+                className="w-10 h-10 object-contain mr-3 relative z-10 brightness-110 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]"
+              />
+            </div>
+            <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-slate-400">
+              Wurkzi
+            </span>
           </Link>
 
+          {/* Desktop Menu */}
+          <div className="hidden md:flex items-center space-x-8">
+            <div className="flex items-center space-x-6">
+              <Link
+                to="/"
+                className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/') ? 'text-white' : 'text-slate-400'}`}
+              >
+                Home
+              </Link>
+              {!isAuthenticated && (
+                <>
+                  <Link
+                    to="/about"
+                    className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/about') ? 'text-white' : 'text-slate-400'}`}
+                  >
+                    About
+                  </Link>
+                  <Link
+                    to="/how-it-works"
+                    className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/how-it-works') ? 'text-white' : 'text-slate-400'}`}
+                  >
+                    How it Works
+                  </Link>
+                </>
+              )}
+            </div>
+
+            {isAuthenticated ? (
+              <div className="flex items-center space-x-4 ml-6">
+                <Link
+                  to="/jobs"
+                  className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/jobs') ? 'text-white' : 'text-slate-400'}`}
+                >
+                  Jobs
+                </Link>
+
+                {user?.user_metadata?.role === "HIRER" && (
+                  <Link
+                    to="/jobs/new"
+                    className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/jobs/new') ? 'text-white' : 'text-slate-400'}`}
+                  >
+                    Post Job
+                  </Link>
+                )}
+
+                <Link to="/messages" className="relative group p-2 rounded-full hover:bg-slate-800 transition-colors text-slate-400 hover:text-white">
+                  <UnreadMessagesBadge />
+                  <span className="sr-only">Messages</span>
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                  </svg>
+                </Link>
+
+                <div className="relative group flex items-center gap-3">
+                  <Link to="/dashboard" className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] cursor-pointer hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all">
+                    <div className="h-full w-full rounded-full bg-slate-900 flex items-center justify-center text-xs font-bold text-white">
+                      {getUserInitials()}
+                    </div>
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link
+                  to="/login"
+                  className="text-white hover:text-wurkzi-400 font-medium text-sm transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="px-5 py-2.5 rounded-full bg-white text-slate-900 font-bold text-sm hover:bg-wurkzi-50 transition-all duration-300 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_20px_rgba(255,255,255,0.4)] hover:-translate-y-0.5"
+                >
+                  Join Now
+                </Link>
+              </div>
+            )}
+          </div>
+
           {/* Mobile menu button */}
-          <div className="sm:hidden flex items-center">
+          <div className="md:hidden flex items-center">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-wurkzi-600 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-wurkzi-500"
-              aria-expanded="false"
+              className="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 focus:outline-none transition-colors"
             >
               <span className="sr-only">Open main menu</span>
-              {isMenuOpen ? (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
+              {!isMenuOpen ? (
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               ) : (
-                <svg
-                  className="block h-6 w-6"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
+                <svg className="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               )}
             </button>
           </div>
+        </div>
+      </div>
 
-          {/* Navigation Links - Desktop */}
-          <div className="hidden sm:flex nav-links">
-            {isAuthenticated ? (
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden bg-slate-900 border-t border-slate-800 absolute w-full left-0 animate-fade-in shadow-2xl">
+          <div className="pt-2 pb-3 space-y-1 px-4">
+            <Link
+              to="/"
+              className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Home
+            </Link>
+            {!isAuthenticated && (
+              <>
+                <Link
+                  to="/about"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/about') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  About
+                </Link>
+                <Link
+                  to="/how-it-works"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/how-it-works') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  How it Works
+                </Link>
+              </>
+            )}
+
+            {isAuthenticated && (
               <>
                 <Link
                   to="/jobs"
-                  className={`nav-link ${isActive("/jobs") ? "active" : ""}`}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/jobs') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z"
-                    />
-                  </svg>
                   Jobs
                 </Link>
-
-                {user?.user_metadata?.role === "HIRER" && (
-                  <Link
-                    to="/jobs/new"
-                    className={`nav-link ${isActive("/jobs/new") ? "active" : ""
-                      }`}
-                  >
-                    <svg
-                      className="w-4 h-4 mr-1"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                      />
-                    </svg>
-                    Post Job
-                  </Link>
-                )}
-
-                <Link
-                  to="/dashboard"
-                  className={`nav-link ${isActive("/dashboard") ? "active" : ""
-                    }`}
-                >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2-2V7a2 2 0 012-2h2a2 2 0 002 2v2a2 2 0 002 2h6a2 2 0 002-2V7a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 00-2 2H5a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2z"
-                    />
-                  </svg>
-                  Dashboard
-                </Link>
-
                 <Link
                   to="/messages"
-                  className={`nav-link relative ${isActive("/messages") ? "active" : ""
-                    }`}
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/messages') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
-                    />
-                  </svg>
                   Messages
-                  <UnreadMessagesBadge />
-                </Link>
-
-                {/* User Menu */}
-                <div className="flex items-center ml-4 space-x-3">
-                  {/* User Role Badge */}
-                  <div className="hidden sm:flex items-center">
-                    <span
-                      className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium text-white ${getRoleColor()}`}
-                    >
-                      {getUserRole()}
-                    </span>
-                  </div>
-
-                  {/* User Avatar */}
-                  <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 bg-gray-200 rounded-full flex items-center justify-center text-sm font-medium text-gray-600">
-                      {getUserInitials()}
-                    </div>
-
-                    <button
-                      onClick={handleLogout}
-                      className="flex items-center text-gray-600 hover:text-wurkzi-600 font-medium transition-colors duration-200"
-                    >
-                      <svg
-                        className="w-4 h-4 mr-1"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                        />
-                      </svg>
-                      <span className="hidden sm:inline">Logout</span>
-                    </button>
-                  </div>
-                </div>
-              </>
-            ) : (
-              <>
-                <Link
-                  to="/"
-                  className={`nav-link ${isActive("/") ? "active" : ""}`}
-                >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-                    />
-                  </svg>
-                  Home
                 </Link>
                 <Link
-                  to="/login"
-                  className={`nav-link ${isActive("/login") ? "active" : ""}`}
+                  to="/dashboard"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/dashboard') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
                 >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-                    />
-                  </svg>
-                  Login
-                </Link>
-
-                <Link
-                  to="/register"
-                  className={`btn btn-primary btn-sm ${isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
-                    }`}
-                >
-                  <svg
-                    className="w-4 h-4 mr-1"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"
-                    />
-                  </svg>
-                  Get Started
+                  Dashboard
                 </Link>
               </>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Mobile menu */}
-      {isMenuOpen && (
-        <div className="sm:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg z-50">
-          <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="pt-4 pb-4 border-t border-slate-800 px-4">
             {isAuthenticated ? (
-              <>
-                <Link
-                  to="/jobs"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/jobs") ? "bg-gray-100" : ""
-                    }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Jobs
-                </Link>
-                {user?.user_metadata?.role === "HIRER" && (
-                  <Link
-                    to="/jobs/new"
-                    className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/jobs/new") ? "bg-gray-100" : ""
-                      }`}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Post Job
-                  </Link>
-                )}
-                <Link
-                  to="/dashboard"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/dashboard") ? "bg-gray-100" : ""
-                    }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Dashboard
-                </Link>
-                <Link
-                  to="/messages"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium relative ${isActive("/messages") ? "bg-gray-100" : ""
-                    }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Messages
-                  <UnreadMessagesBadge />
-                </Link>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <div className="flex-shrink-0">
+                    <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-slate-700">
+                      {getUserInitials()}
+                    </div>
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-base font-medium text-white">{user?.email}</div>
+                    <div className="text-sm font-medium text-slate-500 capitalize">{getUserRole()} Account</div>
+                  </div>
+                </div>
                 <button
                   onClick={() => {
                     handleLogout();
                     setIsMenuOpen(false);
                   }}
-                  className="nav-link block px-3 py-2 rounded-md text-base font-medium text-left w-full"
+                  className="bg-slate-800 p-2 rounded-full text-slate-400 hover:text-white focus:outline-none hover:bg-slate-700 transition-colors"
                 >
-                  Logout
+                  <span className="sr-only">Sign out</span>
+                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
                 </button>
-              </>
+              </div>
             ) : (
-              <>
-                <Link
-                  to="/"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/") ? "bg-gray-100" : ""
-                    }`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Home
-                </Link>
+              <div className="mt-3 space-y-3">
                 <Link
                   to="/login"
-                  className={`nav-link block px-3 py-2 rounded-md text-base font-medium ${isActive("/login") ? "bg-gray-100" : ""
-                    }`}
+                  className="block w-full px-4 py-3 text-center font-medium text-slate-300 bg-slate-800 hover:bg-slate-700 hover:text-white rounded-lg transition-colors border border-slate-700"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Login
+                  Sign In
                 </Link>
                 <Link
                   to="/register"
-                  className={`btn btn-primary btn-sm block px-3 py-2 rounded-md text-base font-medium text-center ${isActive("/register") ? "ring-2 ring-wurkzi-300" : ""
-                    }`}
+                  className="block w-full px-4 py-3 text-center font-bold text-slate-900 bg-white hover:bg-slate-200 rounded-lg transition-colors"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  Get Started
+                  Join Now
                 </Link>
-              </>
+              </div>
             )}
-          </div>
-        </div>
-      )}
-
-      {/* Mobile-friendly user info bar (only when authenticated) */}
-      {isAuthenticated && (
-        <div className="sm:hidden bg-gray-50 border-t border-gray-200 px-4 py-2">
-          <div className="flex items-center justify-between text-sm">
-            <div className="flex items-center space-x-2">
-              <span className="text-gray-600">Welcome back!</span>
-              <span
-                className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium text-white ${getRoleColor()}`}
-              >
-                {getUserRole()}
-              </span>
-            </div>
-            <div className="text-gray-500 text-xs">{user?.email}</div>
           </div>
         </div>
       )}

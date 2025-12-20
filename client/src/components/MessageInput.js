@@ -18,11 +18,10 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
 
   return (
     <div
-      className={`relative border rounded-lg transition-colors ${
-        isFocused
+      className={`relative border rounded-lg transition-colors ${isFocused
           ? "border-wurkzi-500 ring-1 ring-wurkzi-500"
-          : "border-gray-300"
-      }`}
+          : "border-slate-600"
+        } bg-slate-900`}
     >
       <div className="flex items-end space-x-2 p-2">
         <div className="flex-1">
@@ -35,7 +34,7 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
             placeholder={placeholder}
             disabled={disabled}
             rows={1}
-            className="w-full resize-none border-0 outline-none focus:ring-0 placeholder-gray-500 text-sm py-2 px-0 max-h-32"
+            className="w-full resize-none border-0 outline-none focus:ring-0 placeholder-slate-500 text-white text-sm py-2 px-0 max-h-32 bg-transparent"
             style={{
               minHeight: "20px",
               height: "auto",
@@ -54,11 +53,10 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
         <button
           onClick={handleSend}
           disabled={!value.trim() || disabled}
-          className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors ${
-            value.trim() && !disabled
+          className={`inline-flex items-center justify-center w-10 h-10 rounded-full transition-colors ${value.trim() && !disabled
               ? "bg-wurkzi-500 text-white hover:bg-wurkzi-600 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:ring-offset-2"
-              : "bg-gray-200 text-gray-400 cursor-not-allowed"
-          }`}
+              : "bg-slate-700 text-slate-500 cursor-not-allowed"
+            }`}
           aria-label="Send message"
         >
           {disabled ? (
@@ -80,7 +78,7 @@ const MessageInput = ({ value, onChange, onSend, disabled, placeholder }) => {
       </div>
 
       <div className="px-3 pb-2">
-        <p className="text-xs text-gray-500">
+        <p className="text-xs text-slate-500">
           Press Enter to send, Shift+Enter for new line
         </p>
       </div>
