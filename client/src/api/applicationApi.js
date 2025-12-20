@@ -24,3 +24,9 @@ export const rejectApplication = async (appId) => {
   const response = await apiClient.patch(`/applications/${appId}/reject`);
   return response.data;
 };
+
+export const withdrawApplication = async (appId) => {
+  const response = await apiClient.patch(`/applications/${appId}/withdraw`);
+  return response.data;
+};
+

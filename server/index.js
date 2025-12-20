@@ -19,7 +19,13 @@ const messageRoutes = require("./routes/message");
 // Webhook routes (must be before express.json middleware)
 app.use("/api/webhooks", webhookRoutes);
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://workzzyunos.onrender.com",
+    credentials: true,
+  })
+);
+
 // Increase payload size limit for Base64-encoded images
 // Base64 encoding increases size by ~33%, so 10MB images become ~13MB
 // Allow up to 50MB to handle multiple large images
@@ -48,9 +54,3 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.use(
-  cors({
-    origin: "https://workzzyunos.onrender.com",
-    credentials: true,
-  })
-);

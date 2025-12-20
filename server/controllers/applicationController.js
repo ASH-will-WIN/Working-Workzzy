@@ -123,7 +123,6 @@ async function getApplications(req, res) {
 async function getJobApplications(req, res) {
   try {
     const { jobId } = req.params;
-    const workerId = req.user.id;
     const hirerId = req.user.id;
 
     // Verify the job exists and belongs to the hirer
@@ -199,24 +198,35 @@ async function acceptApplication(req, res) {
     }
 
     // Capture the $5 deposit
-    await stripeClient.paymentIntents.capture(application.depositId);
+    try {
+      await stripeClient.paymentIntents.capture(application.depositId);
+    } catch (stripeError) {
+      console.error("Stripe Capture Error:", stripeError.message);
+      return res.status(500).json({
+        error: "payment_capture_failed",
+        message: "Failed to capture the worker's deposit. Application cannot be accepted.",
+        details: stripeError.message,
+      });
+    }
 
-    // Update job status to COMMITTED
-    await prisma.job.update({
-      where: { id: application.jobId },
-      data: { status: JobStatus.COMMITTED },
-    });
-
-    // Update application status
-    const updatedApplication = await prisma.jobApplication.update({
-      where: { id },
-      data: {
-        status: ApplicationStatus.ACCEPTED,
-        depositStatus: DepositStatus.CAPTURED,
-      },
-    });
+    // Update job status to COMMITTED and update application status
+    // Use a transaction to ensure both happen or neither
+    const [updatedJob, updatedApplication] = await prisma.$transaction([
+      prisma.job.update({
+        where: { id: application.jobId },
+        data: { status: JobStatus.COMMITTED },
+      }),
+      prisma.jobApplication.update({
+        where: { id },
+        data: {
+          status: ApplicationStatus.ACCEPTED,
+          depositStatus: DepositStatus.CAPTURED,
+        },
+      }),
+    ]);
 
     res.json(updatedApplication);
+
   } catch (error) {
     console.error("Accept Application Error:", error.message);
     res.status(500).json({
@@ -318,6 +328,63 @@ async function confirmApplicationPayment(req, res) {
   }
 }
 
+async function withdrawApplication(req, res) {
+  try {
+    const { id } = req.params;
+    const workerId = req.user.id;
+
+    // Get the application and verify it belongs to the worker and is in APPLIED status
+    const application = await prisma.jobApplication.findUnique({
+      where: { id },
+    });
+
+    if (!application) {
+      return res.status(404).json({ error: "Application not found" });
+    }
+
+    if (application.workerId !== workerId) {
+      return res.status(403).json({
+        error: "not_application_owner",
+        message: "You don't have permission to withdraw this application",
+      });
+    }
+
+    if (application.status !== ApplicationStatus.APPLIED) {
+      return res.status(400).json({
+        error: "invalid_status",
+        message: `Application in status ${application.status} cannot be withdrawn`,
+      });
+    }
+
+    // Cancel the deposit (refund the $5)
+    try {
+      await stripeClient.paymentIntents.cancel(application.depositId);
+    } catch (stripeError) {
+      // If payment intent is already cancelled or captured, handle it
+      console.error("Stripe Cancellation Error:", stripeError.message);
+      // We still want to update the DB if it was already cancelled or refund it if possible
+    }
+
+    // Update application status
+    const updatedApplication = await prisma.jobApplication.update({
+      where: { id },
+      data: {
+        status: ApplicationStatus.WITHDRAWN,
+        depositStatus: DepositStatus.REFUNDED,
+      },
+    });
+
+    res.json(updatedApplication);
+  } catch (error) {
+    console.error("Withdraw Application Error:", error.message);
+    res.status(500).json({
+      error: "application_withdrawal_failed",
+      message: "Failed to withdraw application",
+      details: error.message,
+    });
+  }
+}
+
 module.exports = {
   createApplication,
   getApplications,
@@ -325,4 +392,6 @@ module.exports = {
   acceptApplication,
   rejectApplication,
   confirmApplicationPayment,
+  withdrawApplication,
 };
+

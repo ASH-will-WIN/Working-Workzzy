@@ -4,6 +4,7 @@ import {
   getApplicationsForJob,
   acceptApplication,
   rejectApplication,
+  withdrawApplication,
 } from "../api/applicationApi";
 import { getJobsByHirer, startJob, completeJob } from "../api/jobApi";
 import { getPaymentsForJob, markJobPaidInCash } from "../api/paymentApi";
@@ -147,6 +148,19 @@ const Dashboard = () => {
       console.error("Failed to reject application:", error);
     }
   };
+
+  const handleWithdrawApplication = async (applicationId) => {
+    if (window.confirm("Are you sure you want to withdraw your application? Your $5 deposit will be refunded.")) {
+      try {
+        await withdrawApplication(applicationId);
+        fetchWorkerData(); // Refresh list
+      } catch (error) {
+        console.error("Failed to withdraw application:", error);
+        alert("Failed to withdraw application. Please try again.");
+      }
+    }
+  };
+
 
   const getStatusBadge = (status) => {
     const statusColors = {
@@ -762,11 +776,19 @@ const Dashboard = () => {
                       </div>
                     </div>
 
-                    <div className="card-footer">
+                    <div className="card-footer flex justify-between items-center">
                       <div className="text-xs text-gray-500">
                         Applied:{" "}
                         {new Date(application.createdAt).toLocaleDateString()}
                       </div>
+                      {application.status === "APPLIED" && (
+                        <button
+                          onClick={() => handleWithdrawApplication(application.id)}
+                          className="btn btn-danger btn-xs"
+                        >
+                          Withdraw
+                        </button>
+                      )}
                     </div>
                   </div>
                 ))}

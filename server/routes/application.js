@@ -21,7 +21,7 @@ router.patch(
   authMiddleware,
   applicationController.rejectApplication
 );
-
+router.patch("/:id/withdraw", authMiddleware, applicationController.withdrawApplication);
 router.post(
   "/:id/confirm",
   authMiddleware,

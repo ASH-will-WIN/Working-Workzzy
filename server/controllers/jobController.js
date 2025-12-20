@@ -23,7 +23,7 @@ async function createJob(req, res) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-        // Validate price must be a positive number
+    // Validate price must be a positive number
     if (isNaN(price) || Number(price) <= 0) {
       return res.status(400).json({
         error: "invalid_price",
@@ -217,24 +217,7 @@ async function addJobImage(req, res) {
       return res.status(404).json({ error: "Job not found" });
     }
 
-    // In your current auth setup, req.user isn't populated
-    // We need to get the user from the session
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    if (job.hirerId !== user.id) {
+    if (job.hirerId !== req.user.id) {
       return res
         .status(403)
         .json({ error: "Not authorized to add images to this job" });
@@ -274,31 +257,21 @@ async function getJobImages(req, res) {
     }
 
     // Check authentication
-    const authHeader = req.headers.authorization;
     let canViewAllImages = false;
 
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split(" ")[1];
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser(token);
-
-      if (!error && user) {
-        // Check if user is hirer
-        if (job.hirerId === user.id) {
-          canViewAllImages = true;
-        } else {
-          // Check if user is a worker with an accepted application
-          const application = await prisma.jobApplication.findFirst({
-            where: {
-              jobId: id,
-              workerId: user.id,
-              // status: "ACCEPTED", // Removed to allow all applicants
-            },
-          });
-          canViewAllImages = !!application;
-        }
+    if (req.user) {
+      // Check if user is hirer
+      if (job.hirerId === req.user.id) {
+        canViewAllImages = true;
+      } else {
+        // Check if user is a worker with an application
+        const application = await prisma.jobApplication.findFirst({
+          where: {
+            jobId: id,
+            workerId: req.user.id,
+          },
+        });
+        canViewAllImages = !!application;
       }
     }
 
@@ -306,11 +279,11 @@ async function getJobImages(req, res) {
     const images = canViewAllImages
       ? await prisma.jobImage.findMany({ where: { jobId: id } })
       : await prisma.jobImage.findMany({
-          where: {
-            jobId: id,
-            isPublic: true,
-          },
-        });
+        where: {
+          jobId: id,
+          isPublic: true,
+        },
+      });
 
     res.json(images);
   } catch (error) {
@@ -337,23 +310,7 @@ async function deleteJobImage(req, res) {
       return res.status(404).json({ error: "Image not found" });
     }
 
-    // Check authentication
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    if (jobImage.job.hirerId !== user.id) {
+    if (jobImage.job.hirerId !== req.user.id) {
       return res
         .status(403)
         .json({ error: "Not authorized to delete this image" });
@@ -407,23 +364,7 @@ async function startJob(req, res) {
       });
     }
 
-    // Verify that the requesting user is the accepted worker
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    if (job.applications[0].workerId !== user.id) {
+    if (job.applications[0].workerId !== req.user.id) {
       return res.status(403).json({
         error: "not_authorized_worker",
         message: "Only the accepted worker can start this job",
@@ -480,23 +421,7 @@ async function completeJob(req, res) {
       });
     }
 
-    // Verify that the requesting user is the accepted worker
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    if (job.applications[0].workerId !== user.id) {
+    if (job.applications[0].workerId !== req.user.id) {
       return res.status(403).json({
         error: "not_authorized_worker",
         message: "Only the accepted worker can complete this job",
@@ -520,45 +445,28 @@ async function completeJob(req, res) {
   }
 }
 
-async function getJobsByHirer(req, res) {
-  try {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ error: "Unauthorized" });
-    }
-
-    const token = authHeader.split(" ")[1];
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Invalid token" });
-    }
-
-    const jobs = await prisma.job.findMany({
-      where: { hirerId: user.id },
+const jobs = await prisma.job.findMany({
+  where: { hirerId: req.user.id },
+  include: {
+    applications: {
       include: {
-        applications: {
-          include: {
-            job: true,
-          },
-        },
-        payments: true,
+        job: true,
       },
-      orderBy: { createdAt: "desc" },
-    });
+    },
+    payments: true,
+  },
+  orderBy: { createdAt: "desc" },
+});
 
-    res.json(jobs);
+res.json(jobs);
   } catch (error) {
-    console.error("Get Jobs By Hirer Error:", error.message);
-    res.status(500).json({
-      error: "hirer_jobs_retrieval_failed",
-      message: "Failed to retrieve hirer jobs",
-      details: error.message,
-    });
-  }
+  console.error("Get Jobs By Hirer Error:", error.message);
+  res.status(500).json({
+    error: "hirer_jobs_retrieval_failed",
+    message: "Failed to retrieve hirer jobs",
+    details: error.message,
+  });
+}
 }
 
 module.exports = {
