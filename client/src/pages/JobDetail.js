@@ -185,7 +185,6 @@ const JobDetail = () => {
     (app) => app.workerId === user?.id
   );
 
-  console.log('job', hasApplied);
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen bg-slate-950">

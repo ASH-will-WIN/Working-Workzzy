@@ -51,6 +51,7 @@ const Register = () => {
               placeholder="John Doe"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              autoComplete="name"
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
               required
             />
@@ -63,6 +64,7 @@ const Register = () => {
               placeholder="name@example.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete="email"
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
               required
             />
@@ -75,6 +77,7 @@ const Register = () => {
               placeholder="+1 (555) 000-0000"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
+              autoComplete="tel"
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
             />
           </div>
@@ -86,6 +89,7 @@ const Register = () => {
               placeholder="Create a strong password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
               required
             />
@@ -98,8 +102,8 @@ const Register = () => {
                 type="button"
                 onClick={() => setRole("WORKER")}
                 className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "WORKER"
-                    ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
-                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
+                  : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
                   }`}
               >
                 Find Work
@@ -108,8 +112,8 @@ const Register = () => {
                 type="button"
                 onClick={() => setRole("CLIENT")}
                 className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "CLIENT"
-                    ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
-                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                  ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
+                  : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
                   }`}
               >
                 Hire Talent

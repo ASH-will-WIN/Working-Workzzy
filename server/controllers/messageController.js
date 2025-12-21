@@ -112,9 +112,10 @@ const getConversations = async (req, res) => {
       where: {
         OR: [{ senderId: userId }, { receiverId: userId }],
       },
-      orderBy: {
-        createdAt: "desc",
-      },
+      orderBy: [
+        { conversationId: "asc" },
+        { createdAt: "desc" }
+      ],
       distinct: ["conversationId"],
     });
 

@@ -133,7 +133,7 @@ async function getJob(req, res) {
       images: [],
     });
   } catch (error) {
-    console.error("Job Get Error:", {
+    console.error("Job Get Error Detail:", {
       timestamp: new Date().toISOString(),
       error: error.message,
       stack: error.stack,
@@ -298,7 +298,12 @@ async function getJobImages(req, res) {
 
     res.json(images);
   } catch (error) {
-    console.error("Get Job Images Error:", error.message);
+    console.error("Get Job Images Error Details:", {
+      timestamp: new Date().toISOString(),
+      error: error.message,
+      stack: error.stack,
+      jobId: req.params.id,
+    });
     res.status(500).json({
       error: "job_images_retrieval_failed",
       message: "Failed to retrieve job images",
