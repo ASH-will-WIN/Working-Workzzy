@@ -304,7 +304,7 @@ async function confirmApplicationPayment(req, res) {
       application.depositId,
       {
         payment_method: "pm_card_visa", // Test card for development
-        return_url: "https://workzzyunos.onrender.com/payment-complete", // Required for some payment methods
+        return_url: `${process.env.CLIENT_URL || "https://fantastic-motivation-production.up.railway.app"}/payment-complete`, // Required for some payment methods
       }
     );
 
