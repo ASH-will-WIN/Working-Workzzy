@@ -27,7 +27,7 @@ const Terms = () => {
             2. Platform Overview
           </h2>
           <p className="text-slate-400 mb-4">
-            Workzy connects clients with local teen service providers aged 13–17
+            Workzy connects clients with local teen service providers aged 15+
             for tasks such as car detailing, lawn care, babysitting, and other
             non-specialized work. We are a facilitator, not an employer or
             contractor.
@@ -42,7 +42,7 @@ const Terms = () => {
           <h3 className="text-lg font-semibold mt-4 mb-2 text-white">3. Eligibility</h3>
           <ul className="list-disc pl-6 mb-4 space-y-2 text-slate-400">
             <li>
-              Teen workers must be between 13–17 years old and have parental or
+              Teen workers must be 15+ years old and have parental or
               legal guardian consent to register and accept jobs.
             </li>
             <li>
