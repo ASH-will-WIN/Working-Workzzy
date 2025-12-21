@@ -14,10 +14,16 @@ async function createApplication(req, res) {
     // Use user_id from Supabase user object if available, fallback to id
     const workerId = req.user?.id;
 
-    // Verify the job exists and is in PENDING status
-    const job = await prisma.job.findUnique({
-      where: { id: jobId },
-    });
+    // Verify job existence and lack of duplicate application in parallel
+    const [job, existingApplication] = await Promise.all([
+      prisma.job.findUnique({ where: { id: jobId } }),
+      prisma.jobApplication.findFirst({
+        where: {
+          jobId,
+          workerId,
+        },
+      })
+    ]);
 
     if (!job) {
       return res.status(404).json({ error: "Job not found" });
@@ -30,20 +36,13 @@ async function createApplication(req, res) {
       });
     }
 
-    // Check if user already applied
-    const existingApplication = await prisma.jobApplication.findFirst({
-      where: {
-        jobId,
-        workerId,
-      },
-    });
-
     if (existingApplication) {
       return res.status(400).json({
         error: "duplicate_application",
         message: "You have already applied for this job",
       });
     }
+
 
     // Create $5 deposit PaymentIntent
     // CRITICAL FIX: Use 'metadata' (not 'meta') for Stripe API

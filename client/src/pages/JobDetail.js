@@ -73,21 +73,31 @@ const JobDetail = () => {
   const fetchJobAndApps = async () => {
     try {
       setLoading(true);
+      setImagesLoading(true);
+
+      // Fetch job data first to check hirer status
       const jobData = await getJobById(id);
       setJob(jobData);
+
+      // Fetch applications and images in parallel
+      const promises = [fetchJobImages(id)];
       if (user?.id === jobData.hirerId) {
-        const appData = await getApplicationsForJob(id);
-        setApplications(appData);
+        promises.push(getApplicationsForJob(id));
       }
 
-      // Fetch job images
-      await fetchJobImages(id);
+      const results = await Promise.all(promises);
+
+      if (user?.id === jobData.hirerId) {
+        setApplications(results[1] || []);
+      }
     } catch (error) {
       console.error("Failed to fetch job details:", error);
     } finally {
       setLoading(false);
+      setImagesLoading(false);
     }
   };
+
 
   const fetchJobImages = async (jobId) => {
     try {

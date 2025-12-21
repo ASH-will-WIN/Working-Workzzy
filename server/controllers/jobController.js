@@ -63,7 +63,17 @@ async function getJobs(req, res) {
         fullDescription: true,
         address: true,
         status: true,
+        price: true,
         createdAt: true,
+        jobImages: {
+          where: { isPublic: true },
+          select: {
+            id: true,
+            url: true,
+            caption: true,
+            isPublic: true
+          }
+        },
       },
       where: {
         status: {
@@ -72,6 +82,7 @@ async function getJobs(req, res) {
       },
       orderBy: { createdAt: "desc" },
     });
+
     res.json(jobs);
   } catch (error) {
     console.error("Job List Error:", {
@@ -445,29 +456,32 @@ async function completeJob(req, res) {
   }
 }
 
-const jobs = await prisma.job.findMany({
-  where: { hirerId: req.user.id },
-  include: {
-    applications: {
+async function getJobsByHirer(req, res) {
+  try {
+    const jobs = await prisma.job.findMany({
+      where: { hirerId: req.user.id },
       include: {
-        job: true,
+        applications: {
+          include: {
+            job: true,
+          },
+        },
+        payments: true,
       },
-    },
-    payments: true,
-  },
-  orderBy: { createdAt: "desc" },
-});
+      orderBy: { createdAt: "desc" },
+    });
 
-res.json(jobs);
+    res.json(jobs);
   } catch (error) {
-  console.error("Get Jobs By Hirer Error:", error.message);
-  res.status(500).json({
-    error: "hirer_jobs_retrieval_failed",
-    message: "Failed to retrieve hirer jobs",
-    details: error.message,
-  });
+    console.error("Get Jobs By Hirer Error:", error.message);
+    res.status(500).json({
+      error: "hirer_jobs_retrieval_failed",
+      message: "Failed to retrieve hirer jobs",
+      details: error.message,
+    });
+  }
 }
-}
+
 
 module.exports = {
   createJob,

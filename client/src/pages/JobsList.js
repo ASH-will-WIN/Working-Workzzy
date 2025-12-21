@@ -16,21 +16,10 @@ const JobsList = () => {
         const data = await getJobs();
         setJobs(data);
 
-        // Fetch preview images for each job
-        const imagePromises = data.map(async (job) => {
-          try {
-            const images = await getJobImages(job.id);
-            return { jobId: job.id, images: images || [] };
-          } catch (error) {
-            console.error(`Failed to fetch images for job ${job.id}:`, error);
-            return { jobId: job.id, images: [] };
-          }
-        });
-
-        const imageResults = await Promise.all(imagePromises);
+        // Images are now included in the getJobs response
         const imageMap = {};
-        imageResults.forEach(({ jobId, images }) => {
-          imageMap[jobId] = images;
+        data.forEach((job) => {
+          imageMap[job.id] = job.jobImages || [];
         });
         setJobImages(imageMap);
       } catch (error) {
@@ -41,6 +30,7 @@ const JobsList = () => {
     };
     fetchJobs();
   }, []);
+
 
   if (loading) {
     return (
