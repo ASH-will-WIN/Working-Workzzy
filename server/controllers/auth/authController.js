@@ -70,7 +70,52 @@ const loginUser = async (req, res) => {
   }
 };
 
+// Send password reset email
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const redirectTo = `${process.env.CLIENT_URL || "http://localhost:3000"}/reset-password`;
+
+  try {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo,
+    });
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.status(200).json({ message: "Password reset email sent", data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Reset password with token
+const resetPassword = async (req, res) => {
+  const { password, access_token } = req.body;
+
+  try {
+    // We can use the access_token directly to update the user's password
+    const { data, error } = await supabase.auth.updateUser(
+      { password },
+      {
+        accessToken: access_token,
+      }
+    );
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.status(200).json({ message: "Password updated successfully", data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  forgotPassword,
+  resetPassword,
 };

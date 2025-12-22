@@ -20,6 +20,8 @@ import HowItWorks from "./pages/HowItWorks"; // Added import for HowItWorks page
 import Privacy from "./pages/Privacy"; // Added import for Privacy page
 import Support from "./pages/Support"; // Added import for Support page
 import Footer from "./components/Footer"; // Added import for Footer
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 import "./App.css";
 
 function App() {
@@ -31,6 +33,8 @@ function App() {
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/onboarding" element={<Onboarding />} />
           <Route path="/connect-return" element={<ConnectReturn />} />
           <Route path="/connect-refresh" element={<ConnectRefresh />} />

@@ -57,6 +57,11 @@ const Login = () => {
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
               required
             />
+            <div className="mt-2 text-right">
+              <Link to="/forgot-password" size="sm" className="text-sm text-wurkzi-400 hover:text-white transition-colors">
+                Forgot Password?
+              </Link>
+            </div>
           </div>
 
           <button
