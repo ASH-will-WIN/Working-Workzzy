@@ -67,6 +67,7 @@ async function getJobs(req, res) {
         createdAt: true,
         jobImages: {
           where: { isPublic: true },
+          take: 1,
           select: {
             id: true,
             url: true,
