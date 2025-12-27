@@ -23,6 +23,7 @@ const allowedOrigins = [
   "https://fantastic-motivation-production.up.railway.app",
   "https://workzzyunos.onrender.com",
   "http://localhost:3000",
+  "https://wurkzi.com"
 ];
 
 if (process.env.CLIENT_URL) {
