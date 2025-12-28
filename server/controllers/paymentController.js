@@ -82,6 +82,49 @@ async function getPayments(req, res) {
   }
 }
 
+async function getMyPayments(req, res) {
+  try {
+    const userId = req.user.id;
+    const { role } = req.user.user_metadata || {};
+    // We can also infer role or just fetch where they are either hirer or worker
+
+    // Fetch payments where user is either hirer or worker
+    const payments = await prisma.payment.findMany({
+      where: {
+        OR: [
+          { hirerId: userId },
+          { workerId: userId }
+        ]
+      },
+      include: {
+        job: {
+          select: {
+            title: true,
+            id: true
+          }
+        }
+      },
+      orderBy: { createdAt: "desc" },
+    });
+
+    // Validated response
+    const safePayments = payments.map((payment) => ({
+      ...payment,
+      platformFee: payment.platformFee !== null ? payment.platformFee : 0,
+      workerAmount: payment.workerAmount !== null ? payment.workerAmount : 0,
+      depositRefund: payment.depositRefund !== null ? payment.depositRefund : 0,
+    }));
+
+    res.json(safePayments);
+  } catch (error) {
+    console.error("Get My Payments Error:", error.message);
+    res.status(500).json({
+      message: "Error getting your payments",
+      details: error.message,
+    });
+  }
+}
+
 async function getPayment(req, res) {
   try {
     const { id } = req.params;
@@ -373,6 +416,8 @@ module.exports = {
   updatePayment,
   deletePayment,
   createFinalPayment,
+  createFinalPayment,
   confirmFinalPayment,
   markJobPaidInCash,
+  getMyPayments,
 };

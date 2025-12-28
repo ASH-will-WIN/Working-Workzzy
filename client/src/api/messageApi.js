@@ -49,4 +49,15 @@ export const markConversationAsRead = async (conversationId) => {
   return response.data;
 };
 
+// Get unread message count (lightweight)
+export const getUnreadCount = async () => {
+  try {
+    const response = await apiClient.get("/messages/unread-count");
+    return response.data;
+  } catch (error) {
+    console.error("Failed to get unread count:", error);
+    return { count: 0 };
+  }
+};
+
 // Job-specific conversation API removed to simplify core messaging

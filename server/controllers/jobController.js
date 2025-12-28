@@ -469,7 +469,13 @@ async function getJobsByHirer(req, res) {
       include: {
         applications: {
           include: {
-            job: true,
+            // job: true, // REMOVED: Redundant and potentially heavy
+            // If we need worker details (which we do for the dashboard to show who applied)
+            // We should relying on the 'workerId' which is on the application
+            // But we might need the worker's name/profile?
+            // The schema says workerId is a String (Supabase ID).
+            // We don't have a specific relation to a "User" model for worker details in the prisma schema shown?
+            // Wait, schema has UserProfile but no User model relation on JobApplication.
           },
         },
         payments: true,

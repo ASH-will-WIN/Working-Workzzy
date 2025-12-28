@@ -29,6 +29,9 @@ router.put("/:messageId/read", markMessageAsRead);
 // Mark all messages in a conversation as read
 router.put("/conversation/:conversationId/read", markConversationAsRead);
 
+// Get total unread count (lightweight)
+router.get("/unread-count", require("../controllers/messageController").getUnreadCount);
+
 // Job-specific conversation route removed to simplify core messaging
 
 // Create a new conversation (simplified)

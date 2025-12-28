@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getConversations } from '../api/messageApi';
+import { getUnreadCount } from '../api/messageApi';
 
 const UnreadMessagesBadge = () => {
   const [unreadCount, setUnreadCount] = useState(0);
@@ -7,9 +7,8 @@ const UnreadMessagesBadge = () => {
   useEffect(() => {
     const fetchUnreadCount = async () => {
       try {
-        const conversations = await getConversations();
-        const totalUnread = conversations.reduce((total, conv) => total + conv.unreadCount, 0);
-        setUnreadCount(totalUnread);
+        const data = await getUnreadCount();
+        setUnreadCount(data.count || 0);
       } catch (error) {
         console.error('Failed to fetch unread messages:', error);
         setUnreadCount(0);

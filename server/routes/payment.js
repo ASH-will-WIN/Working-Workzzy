@@ -9,6 +9,9 @@ router.post("/", authMiddleware, paymentController.createPayment); // ADD MIDDLE
 // Get a list of payments
 router.get("/", authMiddleware, paymentController.getPayments); // ADD MIDDLEWARE
 
+// Get my payments (for dashboard)
+router.get("/my-payments", authMiddleware, paymentController.getMyPayments);
+
 router.get("/:id", authMiddleware, paymentController.getPayment); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, paymentController.updatePayment); // ADD MIDDLEWARE
 router.delete("/:id", authMiddleware, paymentController.deletePayment); // ADD MIDDLEWARE

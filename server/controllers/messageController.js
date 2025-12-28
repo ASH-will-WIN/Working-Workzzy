@@ -287,10 +287,28 @@ const markConversationAsRead = async (req, res) => {
   }
 };
 
+// Get unread message count
+const getUnreadCount = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const count = await prisma.message.count({
+      where: {
+        receiverId: userId,
+        isRead: false,
+      },
+    });
+    res.json({ count });
+  } catch (error) {
+    console.error("Error getting unread count:", error);
+    res.status(500).json({ error: "Failed to get unread count" });
+  }
+};
+
 module.exports = {
   sendMessage,
   getConversations,
   getConversationMessages,
   markMessageAsRead,
   markConversationAsRead,
+  getUnreadCount,
 };
