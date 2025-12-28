@@ -50,30 +50,41 @@ export const deleteJobImage = async (imageId) => {
 
 // Upload image to base64 for demo purposes
 // In production, you'd upload to a service like AWS S3, Cloudinary, etc.
-export const uploadImageToBase64 = (file) => {
-  return new Promise((resolve, reject) => {
-    if (!file) {
-      reject(new Error('No file provided'));
-      return;
-    }
-    
-    // Check file size (limit to 5MB)
-    const maxSize = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSize) {
-      reject(new Error('File size must be less than 5MB'));
-      return;
-    }
-    
-    // Check file type
-    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-    if (!allowedTypes.includes(file.type)) {
-      reject(new Error('Only JPEG, PNG, GIF, and WebP images are allowed'));
-      return;
-    }
-    
-    const reader = new FileReader();
-    reader.onload = (e) => resolve(e.target.result);
-    reader.onerror = (e) => reject(new Error('Failed to read file'));
-    reader.readAsDataURL(file);
-  });
+import imageCompression from 'browser-image-compression';
+
+// ... (existing imports if any)
+
+export const uploadImageToBase64 = async (file) => {
+  if (!file) {
+    throw new Error('No file provided');
+  }
+
+  // Check file type
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error('Only JPEG, PNG, GIF, and WebP images are allowed');
+  }
+
+  // Compression Options
+  const options = {
+    maxSizeMB: 0.5,           // Compress to ~500KB
+    maxWidthOrHeight: 1280,   // Max dimension 1280px
+    useWebWorker: true,
+    fileType: file.type       // Preserve original file type
+  };
+
+  try {
+    const compressedFile = await imageCompression(file, options);
+
+    // Convert compressed file to Base64
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => resolve(e.target.result);
+      reader.onerror = (e) => reject(new Error('Failed to read file'));
+      reader.readAsDataURL(compressedFile);
+    });
+  } catch (error) {
+    console.error('Compression ended with error:', error);
+    throw error;
+  }
 };
