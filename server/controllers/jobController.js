@@ -70,7 +70,7 @@ async function getJobs(req, res) {
           take: 1,
           select: {
             id: true,
-            url: true,
+            // url: true, // REMOVED FOR LAZY LOADING OPTIMIZATION
             caption: true,
             isPublic: true
           }
