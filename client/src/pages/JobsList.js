@@ -1,3 +1,7 @@
+import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { getJobs } from "../api/jobApi";
+import { useAuth } from "../context/AuthContext";
 import LazyJobImage from "../components/LazyJobImage";
 
 const JobsList = () => {
@@ -87,71 +91,70 @@ const JobsList = () => {
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              return (
-              <Link
-                key={job.id}
-                to={`/jobs/${job.id}`}
-                className="block group hover:scale-[1.02] transition-transform duration-200"
-              >
-                <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-800 hover:border-slate-700 hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
-                  {/* Lazy Loaded Image Preview */}
-                  <LazyJobImage job={job} />
+              {jobs.map((job) => (
+                <Link
+                  key={job.id}
+                  to={`/jobs/${job.id}`}
+                  className="block group hover:scale-[1.02] transition-transform duration-200"
+                >
+                  <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-800 hover:border-slate-700 hover:shadow-xl transition-all duration-300 overflow-hidden h-full flex flex-col">
+                    {/* Lazy Loaded Image Preview */}
+                    <LazyJobImage job={job} />
 
-                  {/* Content */}
-                  <div className="p-6 flex-grow flex flex-col">
-                    <div className="flex justify-between items-start mb-3">
-                      <h2 className="text-xl font-bold text-slate-100 group-hover:text-wurkzi-400 transition-colors duration-200">
-                        {job.title}
-                      </h2>
-                      <span className="bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-2.5 py-0.5 rounded border border-emerald-500/20">
-                        ${job.price}
-                      </span>
-                    </div>
-
-                    <p className="text-slate-400 leading-relaxed mb-4 line-clamp-3">
-                      {job.initialDescription}
-                    </p>
-
-                    <div className="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
-                      <div className="flex items-center text-sm text-slate-500">
-                        <svg
-                          className="w-4 h-4 mr-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-                        Apply now
+                    {/* Content */}
+                    <div className="p-6 flex-grow flex flex-col">
+                      <div className="flex justify-between items-start mb-3">
+                        <h2 className="text-xl font-bold text-slate-100 group-hover:text-wurkzi-400 transition-colors duration-200">
+                          {job.title}
+                        </h2>
+                        <span className="bg-emerald-500/10 text-emerald-400 text-sm font-semibold px-2.5 py-0.5 rounded border border-emerald-500/20">
+                          ${job.price}
+                        </span>
                       </div>
 
-                      <div className="flex items-center text-wurkzi-400 font-medium group-hover:text-wurkzi-300">
-                        View Details
-                        <svg
-                          className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
+                      <p className="text-slate-400 leading-relaxed mb-4 line-clamp-3">
+                        {job.initialDescription}
+                      </p>
+
+                      <div className="mt-auto pt-4 border-t border-slate-800 flex items-center justify-between">
+                        <div className="flex items-center text-sm text-slate-500">
+                          <svg
+                            className="w-4 h-4 mr-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                          Apply now
+                        </div>
+
+                        <div className="flex items-center text-wurkzi-400 font-medium group-hover:text-wurkzi-300">
+                          View Details
+                          <svg
+                            className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform duration-200"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Link>
-              );
-              })}
+                </Link>
+              ))}
             </div>
           </>
         ) : (
