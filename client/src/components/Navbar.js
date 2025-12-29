@@ -113,7 +113,7 @@ const Navbar = () => {
                   Jobs
                 </Link>
 
-                {user?.user_metadata?.role === "HIRER" && (
+                {user?.user_metadata?.role === "HIRER" || user?.user_metadata?.role === "CLIENT" && (
                   <Link
                     to="/jobs/new"
                     className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/jobs/new') ? 'text-white' : 'text-slate-400'}`}
@@ -131,6 +131,11 @@ const Navbar = () => {
                 </Link>
 
                 <div className="relative group flex items-center gap-3">
+                  <div className="hidden lg:flex flex-col items-end mr-1">
+                    <span className="text-xs font-bold text-wurkzi-400 uppercase tracking-wider border border-wurkzi-500/30 bg-wurkzi-500/10 px-2 py-0.5 rounded">
+                      {getUserRole()}
+                    </span>
+                  </div>
                   <div className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all">
                     <div className="h-full w-full rounded-full bg-slate-900 flex items-center justify-center text-xs font-bold text-white">
                       {getUserInitials()}
@@ -230,6 +235,15 @@ const Navbar = () => {
                 >
                   Jobs
                 </Link>
+                {(user?.user_metadata?.role === "HIRER" || user?.user_metadata?.role === "CLIENT") && (
+                  <Link
+                    to="/jobs/new"
+                    className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/jobs/new') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Post Job
+                  </Link>
+                )}
                 <Link
                   to="/messages"
                   className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/messages') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}

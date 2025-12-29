@@ -17,6 +17,7 @@ model Job {
   status            JobStatus     @default(PENDING)
 
   price              Int
+  estimatedTime      Int?          @map("estimated_time") // In minutes
 
   hirerId           String        @map("hirer_id")
   createdAt         DateTime      @default(now()) @map("createdAt")

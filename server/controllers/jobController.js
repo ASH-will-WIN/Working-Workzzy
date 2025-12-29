@@ -8,7 +8,7 @@ const {
 
 async function createJob(req, res) {
   try {
-    const { title, initialDescription, fullDescription, address, price, hirerId } =
+    const { title, initialDescription, fullDescription, address, price, hirerId, estimatedTime } =
       req.body;
 
     // Validate required fields
@@ -31,6 +31,14 @@ async function createJob(req, res) {
       });
     }
 
+    // Validate estimatedTime if provided
+    if (estimatedTime !== undefined && (isNaN(estimatedTime) || Number(estimatedTime) < 0)) {
+      return res.status(400).json({
+        error: "invalid_estimated_time",
+        message: "Estimated time must be a valid positive number.",
+      });
+    }
+
     const job = await prisma.job.create({
       data: {
         title,
@@ -39,6 +47,7 @@ async function createJob(req, res) {
         fullDescription,
         hirerId, // Directly use the provided Supabase UID
         price,
+        estimatedTime: estimatedTime ? Number(estimatedTime) : null,
         status: JobStatus.PENDING,
       },
     });
@@ -65,6 +74,7 @@ async function getJobs(req, res) {
         status: true,
         price: true,
         createdAt: true,
+        estimatedTime: true,
         jobImages: {
           where: { isPublic: true },
           take: 1,

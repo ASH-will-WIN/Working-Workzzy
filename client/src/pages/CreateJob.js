@@ -12,6 +12,8 @@ const CreateJob = () => {
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
   const [price, setPrice] = useState("");
+  const [hours, setHours] = useState("");
+  const [minutes, setMinutes] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -82,6 +84,7 @@ const CreateJob = () => {
       fullDescription,
       address,
       price: Number(price),
+      estimatedTime: (Number(hours || 0) * 60) + Number(minutes || 0),
       hirerId: user.id,
     };
 
@@ -230,6 +233,44 @@ const CreateJob = () => {
               required
               className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
             />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label
+                htmlFor="hours"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Estimated Time (Hours)
+              </label>
+              <input
+                id="hours"
+                type="number"
+                min="0"
+                placeholder="e.g. 2"
+                value={hours}
+                onChange={(e) => setHours(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              />
+            </div>
+            <div>
+              <label
+                htmlFor="minutes"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Estimated Time (Minutes)
+              </label>
+              <input
+                id="minutes"
+                type="number"
+                min="0"
+                max="59"
+                placeholder="e.g. 30"
+                value={minutes}
+                onChange={(e) => setMinutes(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              />
+            </div>
           </div>
 
           {/* Image Upload Section */}

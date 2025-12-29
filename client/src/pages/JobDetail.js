@@ -198,8 +198,13 @@ const JobDetail = () => {
 
             <p className="text-xl font-semibold text-emerald-400 mb-2">
               ${job.price}
+              {job.estimatedTime && (
+                <span className="text-slate-400 text-base font-normal ml-3">
+                  • Est. {Math.floor(job.estimatedTime / 60) > 0 ? `${Math.floor(job.estimatedTime / 60)} hrs ` : ''}
+                  {job.estimatedTime % 60 > 0 ? `${job.estimatedTime % 60} mins` : ''}
+                </span>
+              )}
             </p>
-
 
             <div className="flex items-center text-slate-400 mb-3">
               <svg
