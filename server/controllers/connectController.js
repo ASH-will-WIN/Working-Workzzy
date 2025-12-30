@@ -35,6 +35,13 @@ async function createAccount(req, res) {
     const userId = req.user.id;
     const userEmail = req.user.email;
 
+    if (!userEmail) {
+      return res.status(400).json({
+        error: "missing_email",
+        message: "User email is required for Stripe onboarding. Please ensure your profile has an email address.",
+      });
+    }
+
     // Check if account already exists
     let accountRecord = await prisma.stripeAccount.findUnique({
       where: { userId },

@@ -42,9 +42,15 @@ if (!supabaseUrl.startsWith("https://") || !supabaseKey.startsWith("ey")) {
 }
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Initialize Stripe client with validation
+// Initialize Stripe client with validation and sanitization
 const stripe = require("stripe");
-const stripeClient = stripe(process.env.STRIPE_SECRET_KEY);
+
+// Remove any spaces or newlines that might have been accidentally copied/pasted in Railway
+// This fixes the "An error occurred with our connection to Stripe" error
+const rawSecretKey = process.env.STRIPE_SECRET_KEY || "";
+const sanitizedSecretKey = rawSecretKey.replace(/\s/g, "");
+
+const stripeClient = stripe(sanitizedSecretKey);
 
 const {
   JobStatus,
