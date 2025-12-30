@@ -14,10 +14,13 @@ import StatusBadge from "../components/StatusBadge";
 import PaymentStatusIndicator from "../components/PaymentStatusIndicator";
 import FinalPaymentForm from "../components/FinalPaymentForm";
 import { useNavigate } from "react-router-dom";
+import MessageCenter from "../components/MessageCenter";
+import { getMyPayments } from "../api/paymentApi";
 
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('overview');
   const [applications, setApplications] = useState([]);
   const [hirerJobs, setHirerJobs] = useState([]);
   const [loading, setLoading] = useState(true);

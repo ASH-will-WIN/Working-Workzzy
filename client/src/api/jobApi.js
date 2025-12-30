@@ -1,4 +1,5 @@
 import { apiClient } from "./apiClient";
+import imageCompression from 'browser-image-compression';
 
 // Existing job functions
 export const createJob = async (jobData) => {
@@ -50,7 +51,6 @@ export const deleteJobImage = async (imageId) => {
 
 // Upload image to base64 for demo purposes
 // In production, you'd upload to a service like AWS S3, Cloudinary, etc.
-import imageCompression from 'browser-image-compression';
 
 // ... (existing imports if any)
 
