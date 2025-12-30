@@ -45,10 +45,28 @@ const supabase = createClient(supabaseUrl, supabaseKey);
 // Initialize Stripe client with validation and sanitization
 const stripe = require("stripe");
 
-// Remove any spaces or newlines that might have been accidentally copied/pasted in Railway
-// This fixes the "An error occurred with our connection to Stripe" error
+// Remove any spaces, newlines, literal \n string, or accidental double quotes that might have been copied
 const rawSecretKey = process.env.STRIPE_SECRET_KEY || "";
-const sanitizedSecretKey = rawSecretKey.replace(/\s/g, "");
+const sanitizedSecretKey = rawSecretKey
+  .trim()
+  .replace(/^"|"$/g, "")    // Remove wrapping quotes
+  .replace(/\\n/g, "")       // Remove literal \n strings
+  .replace(/\\r/g, "")       // Remove literal \r strings
+  .replace(/\s/g, "");       // Remove all internal whitespace/newlines
+
+if (sanitizedSecretKey) {
+  const prefix = sanitizedSecretKey.substring(0, 10);
+  const suffix = sanitizedSecretKey.substring(sanitizedSecretKey.length - 4);
+  console.log("-----------------------------------------");
+  console.log("🚀 STRIPE CONFIGURATION LOADED");
+  console.log(`📡 Mode: ${sanitizedSecretKey.startsWith("sk_live") ? "LIVE" : "TEST"}`);
+  console.log(`🔑 Prefix: ${prefix}...`);
+  console.log(`🔚 Suffix: ...${suffix}`);
+  console.log(`📏 Length: ${sanitizedSecretKey.length} characters`);
+  console.log("-----------------------------------------");
+} else {
+  console.error("❌ CRITICAL: STRIPE_SECRET_KEY IS MISSING IN ENVIRONMENT!");
+}
 
 const stripeClient = stripe(sanitizedSecretKey);
 
