@@ -801,144 +801,145 @@ const Dashboard = () => {
         </div>
       </div>
     );
-    // Calculate Active/Past Jobs for Hirer
-    const activeHirerJobs = hirerJobs.filter(job => {
-      const isCompleted = job.status === "COMPLETED";
-      // Check for 'PAID' status or a payments array with a PAID record
-      const isPaid = job.status === "COMPLETED" && job.payments?.some(p => p.status === "PAID");
-      // Actually the logic was: if completed AND paid -> Past. Else -> Active.
-      // Simplification: Active = Not (Completed AND Paid)
-      return !(isCompleted && isPaid);
-    });
+  }
 
-    const pastHirerJobs = hirerJobs.filter(job => {
-      const isCompleted = job.status === "COMPLETED";
-      const isPaid = job.payments?.some(p => p.status === "PAID");
-      return isCompleted && isPaid;
-    });
+  // Calculate Active/Past Jobs for Hirer
+  const activeHirerJobs = hirerJobs.filter(job => {
+    const isCompleted = job.status === "COMPLETED";
+    // Check for 'PAID' status or a payments array with a PAID record
+    const isPaid = job.status === "COMPLETED" && job.payments?.some(p => p.status === "PAID");
+    // Actually the logic was: if completed AND paid -> Past. Else -> Active.
+    // Simplification: Active = Not (Completed AND Paid)
+    return !(isCompleted && isPaid);
+  });
 
-    return (
-      <div className="min-h-screen bg-slate-950 text-slate-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  const pastHirerJobs = hirerJobs.filter(job => {
+    const isCompleted = job.status === "COMPLETED";
+    const isPaid = job.payments?.some(p => p.status === "PAID");
+    return isCompleted && isPaid;
+  });
 
-          {/* Header Section */}
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
-                  Dashboard
-                </h1>
-                <p className="text-slate-400 mt-2">
-                  Manage your jobs, payments, and messages
-                </p>
-              </div>
-              <button
-                onClick={() => navigate("/jobs/new")}
-                className="btn btn-primary flex items-center"
-              >
-                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                </svg>
-                Post a Job
-              </button>
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        {/* Header Section */}
+        <div className="mb-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-purple-700 to-wurkzi-700 bg-clip-text text-transparent">
+                Dashboard
+              </h1>
+              <p className="text-slate-400 mt-2">
+                Manage your jobs, payments, and messages
+              </p>
             </div>
-          </div>
-
-          {/* Tabs Navigation */}
-          <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
             <button
-              onClick={() => setActiveTab('overview')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'overview'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
+              onClick={() => navigate("/jobs/new")}
+              className="btn btn-primary flex items-center"
             >
-              Overview
+              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              </svg>
+              Post a Job
             </button>
-            <button
-              onClick={() => setActiveTab('payments')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'payments'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              Payments
-            </button>
-            <button
-              onClick={() => setActiveTab('messages')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'messages'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
-            >
-              Messages
-            </button>
-          </div>
-
-          {/* Tab Content */}
-          <div className="min-h-[400px]">
-            {activeTab === 'overview' && (
-              <div className="animate-fade-in">
-                {activeHirerJobs.length === 0 && pastHirerJobs.length === 0 ? (
-                  <div className="text-center py-16">
-                    <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-700">
-                      <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
-                        </svg>
-                      </div>
-                      <h3 className="text-xl font-semibold text-white mb-2">No Jobs Yet</h3>
-                      <p className="text-slate-400 mb-6">Post a job to get started!</p>
-                      <button onClick={() => navigate("/jobs/new")} className="btn btn-primary">Create Job</button>
-                    </div>
-                  </div>
-                ) : (
-                  <>
-                    <div className="space-y-6">
-                      {activeHirerJobs.map(job => (
-                        <HirerJobCard
-                          key={job.id}
-                          job={job}
-                          selectedJob={selectedJob}
-                          setSelectedJob={setSelectedJob}
-                          onAcceptApplication={handleAcceptApplication}
-                          onRejectApplication={handleRejectApplication}
-                          onPaymentComplete={() => fetchHirerData()} // Refresh data after payment
-                        />
-                      ))}
-                    </div>
-
-                    {pastHirerJobs.length > 0 && (
-                      <div className="mt-12">
-                        <h2 className="text-xl font-bold text-slate-300 mb-6">Past Jobs</h2>
-                        <div className="space-y-4 opacity-75">
-                          {pastHirerJobs.map(job => (
-                            <HirerJobCard key={job.id} job={job} readOnly />
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </>
-                )}
-              </div>
-            )}
-
-            {activeTab === 'payments' && (
-              <div className="animate-fade-in">
-                <PaymentsList />
-              </div>
-            )}
-
-            {activeTab === 'messages' && (
-              <div className="animate-fade-in">
-                <MessageCenter />
-              </div>
-            )}
           </div>
         </div>
+
+        {/* Tabs Navigation */}
+        <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
+          <button
+            onClick={() => setActiveTab('overview')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'overview'
+              ? 'bg-slate-800 text-white shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+              }`}
+          >
+            Overview
+          </button>
+          <button
+            onClick={() => setActiveTab('payments')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'payments'
+              ? 'bg-slate-800 text-white shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+              }`}
+          >
+            Payments
+          </button>
+          <button
+            onClick={() => setActiveTab('messages')}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'messages'
+              ? 'bg-slate-800 text-white shadow-sm'
+              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
+              }`}
+          >
+            Messages
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <div className="min-h-[400px]">
+          {activeTab === 'overview' && (
+            <div className="animate-fade-in">
+              {activeHirerJobs.length === 0 && pastHirerJobs.length === 0 ? (
+                <div className="text-center py-16">
+                  <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-700">
+                    <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
+                      <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
+                      </svg>
+                    </div>
+                    <h3 className="text-xl font-semibold text-white mb-2">No Jobs Yet</h3>
+                    <p className="text-slate-400 mb-6">Post a job to get started!</p>
+                    <button onClick={() => navigate("/jobs/new")} className="btn btn-primary">Create Job</button>
+                  </div>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-6">
+                    {activeHirerJobs.map(job => (
+                      <HirerJobCard
+                        key={job.id}
+                        job={job}
+                        selectedJob={selectedJob}
+                        setSelectedJob={setSelectedJob}
+                        onAcceptApplication={handleAcceptApplication}
+                        onRejectApplication={handleRejectApplication}
+                        onPaymentComplete={() => fetchHirerData()} // Refresh data after payment
+                      />
+                    ))}
+                  </div>
+
+                  {pastHirerJobs.length > 0 && (
+                    <div className="mt-12">
+                      <h2 className="text-xl font-bold text-slate-300 mb-6">Past Jobs</h2>
+                      <div className="space-y-4 opacity-75">
+                        {pastHirerJobs.map(job => (
+                          <HirerJobCard key={job.id} job={job} readOnly />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'payments' && (
+            <div className="animate-fade-in">
+              <PaymentsList />
+            </div>
+          )}
+
+          {activeTab === 'messages' && (
+            <div className="animate-fade-in">
+              <MessageCenter />
+            </div>
+          )}
+        </div>
       </div>
-    );
-  }
+    </div>
+  );
 };
 
 // --- Sub-components to keep file clean ---
