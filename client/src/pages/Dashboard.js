@@ -1091,7 +1091,12 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
       window.location.href = onboardingUrl;
     } catch (err) {
       console.error("Failed to start onboarding:", err);
-      setError("Failed to start onboarding. Please try again.");
+      // Try to get the detailed message from our new error response format
+      const serverMessage = err.response?.data?.message;
+      const stripeError = err.response?.data?.raw_error?.message;
+      const finalMessage = stripeError || serverMessage || "Failed to start onboarding. Please try again.";
+
+      setError(finalMessage);
       setLoading(false);
     }
   };

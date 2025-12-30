@@ -66,25 +66,32 @@ async function createAccount(req, res) {
     }
 
     // Generate fresh onboarding link
-    const frontendUrl = process.env.FRONTEND_URL;
+    // Fallback order: FRONTEND_URL -> CLIENT_URL -> default localhost
+    const frontendUrl = process.env.FRONTEND_URL || process.env.CLIENT_URL || "http://localhost:3000";
+
+    // Stripe requires valid absolute URLs. If frontendUrl is missing, this would crash.
+    const cleanFrontendUrl = frontendUrl.endsWith('/') ? frontendUrl.slice(0, -1) : frontendUrl;
+
     const accountLink = await stripeClient.accountLinks.create({
       account: accountRecord.accountId,
-      refresh_url: `${frontendUrl}/connect-refresh`,
-      return_url: `${frontendUrl}/connect-return`,
+      refresh_url: `${cleanFrontendUrl}/connect-refresh`,
+      return_url: `${cleanFrontendUrl}/connect-return`,
       type: "account_onboarding",
     });
 
     res.json({
       accountId: accountRecord.accountId,
       onboardingUrl: accountLink.url,
-      refreshUrl: `${frontendUrl}/connect-refresh`,
-      returnUrl: `${frontendUrl}/connect-return`,
+      refreshUrl: `${cleanFrontendUrl}/connect-refresh`,
+      returnUrl: `${cleanFrontendUrl}/connect-return`,
     });
   } catch (error) {
     console.error("Create Connect account error:", error.message);
     res.status(500).json({
       error: "connect_account_creation_failed",
-      message: "Failed to create Connect account. Please try again.",
+      message: error.message || "Failed to create Connect account.",
+      details: error.type || "StripeError",
+      raw_error: error // This will help identify if it's a validation error, auth error, etc.
     });
   }
 }
