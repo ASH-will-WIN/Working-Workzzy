@@ -54,18 +54,11 @@ const sanitizedSecretKey = rawSecretKey
   .replace(/\\r/g, "")       // Remove literal \r strings
   .replace(/\s/g, "");       // Remove all internal whitespace/newlines
 
-if (sanitizedSecretKey) {
-  const prefix = sanitizedSecretKey.substring(0, 10);
-  const suffix = sanitizedSecretKey.substring(sanitizedSecretKey.length - 4);
-  console.log("-----------------------------------------");
-  console.log("🚀 STRIPE CONFIGURATION LOADED");
-  console.log(`📡 Mode: ${sanitizedSecretKey.startsWith("sk_live") ? "LIVE" : "TEST"}`);
-  console.log(`🔑 Prefix: ${prefix}...`);
-  console.log(`🔚 Suffix: ...${suffix}`);
-  console.log(`📏 Length: ${sanitizedSecretKey.length} characters`);
-  console.log("-----------------------------------------");
-} else {
-  console.error("❌ CRITICAL: STRIPE_SECRET_KEY IS MISSING IN ENVIRONMENT!");
+// Basic key mode validation and sanitization
+if (sanitizedSecretKey.startsWith("sk_live") &&
+  (process.env.STRIPE_PUBLISHABLE_KEY?.startsWith("pk_test") ||
+    process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY?.startsWith("pk_test"))) {
+  console.warn("⚠️ WARNING: Stripe Secret Key is in LIVE mode, but Publishable Key is in TEST mode. This will cause errors.");
 }
 
 const stripeClient = stripe(sanitizedSecretKey);
