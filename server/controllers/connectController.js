@@ -93,12 +93,19 @@ async function createAccount(req, res) {
       returnUrl: `${cleanFrontendUrl}/connect-return`,
     });
   } catch (error) {
-    console.error("Create Connect account error:", error.message);
+    console.error("Create Connect account error:", error);
+    console.error("Error type:", error.type);
+    console.error("Error code:", error.code);
+    console.error("Error message:", error.message);
+    console.error("Error raw:", error.raw);
+
     res.status(500).json({
       error: "connect_account_creation_failed",
       message: error.message || "Failed to create Connect account.",
       details: error.type || "StripeError",
-      raw_error: error // This will help identify if it's a validation error, auth error, etc.
+      code: error.code,
+      raw_message: error.raw?.message,
+      statusCode: error.statusCode,
     });
   }
 }
