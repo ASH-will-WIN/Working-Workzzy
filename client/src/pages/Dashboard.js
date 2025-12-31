@@ -30,9 +30,7 @@ const Dashboard = () => {
   const [targetUserIdForChat, setTargetUserIdForChat] = useState(null);
   const [targetJobIdForChat, setTargetJobIdForChat] = useState(null);
   const isWorker = user?.user_metadata?.role === "WORKER";
-  const needsStripeSetup =
-    user?.user_metadata?.role === "WORKER" ||
-    user?.user_metadata?.role === "HIRER";
+  const needsStripeSetup = user?.user_metadata?.role === "WORKER";
 
   useEffect(() => {
     const fetchData = async () => {
