@@ -21,6 +21,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
   // Fetch conversations on component mount
   useEffect(() => {
+    console.log("MessageCenter useEffect triggered", { initialTargetUserId, initialTargetJobId, locationState: location.state });
     const fetchConversations = async () => {
       try {
         const data = await getConversations();

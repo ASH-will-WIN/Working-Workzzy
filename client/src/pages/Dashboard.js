@@ -167,13 +167,13 @@ const Dashboard = () => {
   const handleOpenChat = (userId, jobId = null) => {
     if (!userId) {
       console.error("handleOpenChat called with missing userId. JobId:", jobId);
-      // alert("Error: Cannot open chat because the user ID is missing. Please try refreshing the page.");
       return;
     }
     console.log("Opening chat with user:", userId, "for job:", jobId);
     setTargetUserIdForChat(userId);
     setTargetJobIdForChat(jobId);
-    setActiveTab('messages');
+    // Use a slight delay to ensure state is updated before switching tabs
+    setTimeout(() => setActiveTab('messages'), 0);
   };
 
   const getStatusBadge = (status) => {
