@@ -141,7 +141,7 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
             required
           />
           <p className="text-xs text-slate-500 mt-1">
-            Worker receives: 100% of the amount entered.
+            Total amount to pay the worker.
           </p>
         </div>
 
@@ -149,8 +149,8 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
           type="submit"
           disabled={loading}
           className={`w-full px-4 py-2 text-white font-medium rounded-md ${loading
-              ? "bg-slate-700 cursor-not-allowed"
-              : "bg-emerald-600 hover:bg-emerald-700"
+            ? "bg-slate-700 cursor-not-allowed"
+            : "bg-emerald-600 hover:bg-emerald-700"
             }`}
         >
           {loading ? "Creating Payment..." : "Create Payment"}

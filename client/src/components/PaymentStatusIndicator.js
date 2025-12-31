@@ -77,7 +77,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
           emoji: "💰",
           title: userRole === "worker" ? "Payment Received!" : "Payment Sent!",
           description: userRole === "worker"
-            ? `You received $${workerAmount}${depositRefund ? ` + $${depositRefund} deposit refund` : ""}`
+            ? `You received $${workerAmount}`
             : `Paid $${amount} (worker gets $${workerAmount}, platform fee $${platformFee})`
         };
 
@@ -153,11 +153,8 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
             {userRole === "worker" && (
               <div>
                 <span className="font-medium">You Received:</span>
-                <div className="font-semibold text-success-700">
+                <div className="font-semibold text-emerald-300">
                   ${parseFloat(payment.workerAmount).toFixed(2)}
-                  {parseFloat(payment.depositRefund || 0) > 0 && (
-                    <span className="text-xs ml-1">(+ ${parseFloat(payment.depositRefund).toFixed(2)} refund)</span>
-                  )}
                 </div>
               </div>
             )}

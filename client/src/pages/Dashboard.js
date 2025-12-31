@@ -597,8 +597,7 @@ const Dashboard = () => {
                             </p>
                             <p className="text-sm text-emerald-200/80 mb-4">
                               Great work! The client will process the final
-                              payment. You'll receive the full payment amount
-                              plus your $5 deposit refund.
+                              payment. You'll receive the full payment amount.
                             </p>
                             <div className="bg-slate-800 rounded-lg p-4 border border-emerald-500/30 mb-4">
                               <PaymentStatusIndicator
