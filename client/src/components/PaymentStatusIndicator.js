@@ -144,7 +144,7 @@ const PaymentStatusIndicator = ({ jobId, userRole = "worker", className = "" }) 
       </div>
 
       {payment.status?.toLowerCase() === "paid" && (
-        <div className="mt-3 p-3 bg-white bg-opacity-50 rounded-lg border border-current border-opacity-20">
+        <div className="mt-3 p-3 bg-slate-900/50 rounded-lg border border-current border-opacity-20">
           <div className="grid grid-cols-2 gap-3 text-sm">
             <div>
               <span className="font-medium">Total Amount:</span>

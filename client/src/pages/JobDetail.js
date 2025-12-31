@@ -382,11 +382,11 @@ const JobDetail = () => {
                   )}
 
                   {app.status === "ACCEPTED" && (
-                    <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-md">
+                    <div className="mt-4 p-3 bg-emerald-900/30 border border-emerald-500/30 rounded-md">
                       <div className="flex items-center justify-between">
                         <div className="flex items-center">
                           <svg
-                            className="w-5 h-5 text-green-600 mr-2"
+                            className="w-5 h-5 text-emerald-400 mr-2"
                             width="20"
                             height="20"
                             fill="none"
@@ -400,7 +400,7 @@ const JobDetail = () => {
                               d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                           </svg>
-                          <p className="text-sm text-green-800 font-medium">
+                          <p className="text-sm text-emerald-300 font-medium">
                             Application accepted! Waiting for worker to start
                             the job.
                           </p>
