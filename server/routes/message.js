@@ -34,7 +34,9 @@ router.get("/unread-count", require("../controllers/messageController").getUnrea
 
 // Job-specific conversation route removed to simplify core messaging
 
-// Create a new conversation (simplified)
+const { prisma } = require("../db");
+
+// Create or get a conversation ID (simplified)
 router.post("/conversations", auth, async (req, res) => {
   try {
     const { otherUserId } = req.body;
@@ -47,24 +49,10 @@ router.post("/conversations", auth, async (req, res) => {
     // Create consistent conversation ID
     const conversationId = [userId, otherUserId].sort().join("-");
 
-    // Check if conversation already exists
-    let conversation = await prisma.conversation.findUnique({
-      where: { id: conversationId },
-    });
-
-    // Create if it doesn't exist
-    if (!conversation) {
-      conversation = await prisma.conversation.create({
-        data: {
-          id: conversationId,
-          participants: {
-            connect: [{ id: userId }, { id: otherUserId }],
-          },
-        },
-      });
-    }
-
-    res.json(conversation);
+    // We don't have a separate Conversation model in the current schema.
+    // Conversations are implicitly created by messages sharing a conversationId.
+    // We just return the ID so the frontend can navigate.
+    res.json({ conversationId, otherParticipantId: otherUserId });
   } catch (error) {
     console.error("Create conversation error:", error);
     res.status(500).json({ error: "Failed to create conversation" });

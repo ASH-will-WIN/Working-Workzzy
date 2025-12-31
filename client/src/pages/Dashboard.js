@@ -27,6 +27,8 @@ const Dashboard = () => {
   const [selectedJob, setSelectedJob] = useState(null);
   const [stripeStatus, setStripeStatus] = useState(null);
   const [stripeLoading, setStripeLoading] = useState(true);
+  const [targetUserIdForChat, setTargetUserIdForChat] = useState(null);
+  const [targetJobIdForChat, setTargetJobIdForChat] = useState(null);
   const isWorker = user?.user_metadata?.role === "WORKER";
   const needsStripeSetup =
     user?.user_metadata?.role === "WORKER" ||
@@ -164,6 +166,11 @@ const Dashboard = () => {
     }
   };
 
+  const handleOpenChat = (userId, jobId = null) => {
+    setTargetUserIdForChat(userId);
+    setTargetJobIdForChat(jobId);
+    setActiveTab('messages');
+  };
 
   const getStatusBadge = (status) => {
     const statusColors = {
@@ -520,7 +527,7 @@ const Dashboard = () => {
                                 Mark as Complete
                               </button>
                               <button
-                                onClick={() => navigate("/messages")}
+                                onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
                                 className="btn btn-primary btn-sm"
                               >
                                 <svg
@@ -650,7 +657,7 @@ const Dashboard = () => {
                           </p>
                         </div>
                         <button
-                          onClick={() => navigate("/messages")}
+                          onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
                           className="btn btn-primary btn-sm"
                         >
                           <svg
@@ -906,6 +913,7 @@ const Dashboard = () => {
                         onAcceptApplication={handleAcceptApplication}
                         onRejectApplication={handleRejectApplication}
                         onPaymentComplete={() => fetchHirerData()} // Refresh data after payment
+                        onOpenChat={handleOpenChat}
                       />
                     ))}
                   </div>
@@ -933,7 +941,10 @@ const Dashboard = () => {
 
           {activeTab === 'messages' && (
             <div className="animate-fade-in">
-              <MessageCenter />
+              <MessageCenter
+                initialTargetUserId={targetUserIdForChat}
+                initialTargetJobId={targetJobIdForChat}
+              />
             </div>
           )}
         </div>
@@ -944,7 +955,7 @@ const Dashboard = () => {
 
 // --- Sub-components to keep file clean ---
 
-const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, onRejectApplication, onPaymentComplete, readOnly }) => {
+const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, onRejectApplication, onPaymentComplete, onOpenChat, readOnly }) => {
   const navigate = useNavigate();
   const isExpanded = selectedJob === job.id;
 
@@ -1000,7 +1011,7 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
                   {app.status === 'ACCEPTED' && (
                     <div className="text-xs text-emerald-400 mt-2">
                       You accepted this application.
-                      <button onClick={() => navigate('/messages')} className="text-blue-400 ml-2 hover:underline">Message Worker</button>
+                      <button onClick={() => onOpenChat(app.workerId, job.id)} className="text-blue-400 ml-2 hover:underline">Message Worker</button>
                     </div>
                   )}
                 </div>

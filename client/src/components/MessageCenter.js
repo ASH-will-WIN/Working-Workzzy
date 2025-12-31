@@ -10,7 +10,7 @@ import ConversationList from "./ConversationList";
 import ChatWindow from "./ChatWindow";
 // Remove the import for searchUsers since it's no longer used
 
-const MessageCenter = () => {
+const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
   const location = useLocation();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
@@ -26,21 +26,42 @@ const MessageCenter = () => {
         const data = await getConversations();
         setConversations(data);
 
-        // Check if we should auto-select a conversation from navigation state
-        if (location.state?.conversationId) {
+        // Determine target from navigation state OR props
+        const targetUserId = initialTargetUserId || location.state?.targetUserId;
+        const targetJobId = initialTargetJobId || location.state?.jobId;
+        const targetConvId = location.state?.conversationId;
+
+        if (targetConvId) {
           const targetConversation = data.find(
-            (conv) => conv.conversationId === location.state.conversationId
+            (conv) => conv.conversationId === targetConvId
           );
           if (targetConversation) {
             handleSelectConversation(targetConversation);
+          }
+        } else if (targetUserId) {
+          // Find existing conversation with this user (and job if specified)
+          const existingConv = data.find(
+            (conv) =>
+              conv.otherParticipantId === targetUserId &&
+              (!targetJobId || conv.jobId === targetJobId)
+          );
 
-            // If this is a new conversation, focus the message input
-            if (location.state.focusNew) {
-              setTimeout(() => {
-                const messageInput = document.querySelector("textarea");
-                if (messageInput) messageInput.focus();
-              }, 500);
-            }
+          if (existingConv) {
+            handleSelectConversation(existingConv);
+          } else {
+            // Virtual conversation for starting a new chat
+            // In a real app, you might fetch user details first
+            const virtualConv = {
+              conversationId: "new",
+              otherParticipantId: targetUserId,
+              jobId: targetJobId,
+              isVirtual: true,
+              latestMessage: "",
+              unreadCount: 0
+            };
+            setSelectedConversation(virtualConv);
+            setMessages([]);
+            setMessagesLoading(false);
           }
         }
       } catch (error) {
@@ -51,7 +72,7 @@ const MessageCenter = () => {
     };
 
     fetchConversations();
-  }, [location.state]);
+  }, [location.state, initialTargetUserId, initialTargetJobId]);
 
   // Remove the useEffect for user search
 
@@ -103,18 +124,28 @@ const MessageCenter = () => {
   const handleMessageSent = (newMessage) => {
     setMessages((prev) => [...prev, newMessage]);
 
-    // Update the conversation's latest message
-    setConversations((prev) =>
-      prev.map((conv) =>
-        conv.conversationId === selectedConversation.conversationId
-          ? {
-            ...conv,
-            latestMessage: newMessage.content,
-            latestMessageTime: newMessage.createdAt,
-          }
-          : conv
-      )
-    );
+    // If this was a virtual conversation, we should refresh the list to get the real ID
+    if (selectedConversation.isVirtual) {
+      setTimeout(async () => {
+        const data = await getConversations();
+        setConversations(data);
+        const realConv = data.find(c => c.conversationId === newMessage.conversationId);
+        if (realConv) setSelectedConversation(realConv);
+      }, 500);
+    } else {
+      // Update the conversation's latest message
+      setConversations((prev) =>
+        prev.map((conv) =>
+          conv.conversationId === selectedConversation.conversationId
+            ? {
+              ...conv,
+              latestMessage: newMessage.content,
+              latestMessageTime: newMessage.createdAt,
+            }
+            : conv
+        )
+      );
+    }
   };
 
   // Remove the handleStartConversation function since it's not used anymore

@@ -24,7 +24,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
 
   // Load messages once when conversation is selected
   useEffect(() => {
-    if (!conversation) return;
+    if (!conversation || conversation.conversationId === "new") {
+      setLocalMessages([]);
+      return;
+    }
 
     const loadMessages = async () => {
       try {
@@ -59,6 +62,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       const messageData = {
         content: content.trim(),
         receiverId: conversation.otherParticipantId,
+        jobId: conversation.jobId || null,
       };
 
       const sentMessage = await sendMessage(messageData);
