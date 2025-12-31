@@ -165,6 +165,12 @@ const Dashboard = () => {
   };
 
   const handleOpenChat = (userId, jobId = null) => {
+    if (!userId) {
+      console.error("handleOpenChat called with missing userId. JobId:", jobId);
+      // alert("Error: Cannot open chat because the user ID is missing. Please try refreshing the page.");
+      return;
+    }
+    console.log("Opening chat with user:", userId, "for job:", jobId);
     setTargetUserIdForChat(userId);
     setTargetJobIdForChat(jobId);
     setActiveTab('messages');
@@ -467,7 +473,25 @@ const Dashboard = () => {
                                 </svg>
                                 Start Job
                               </button>
-                              {/* Removed job-specific conversation button */}
+                              <button
+                                onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
+                                className="btn btn-secondary btn-sm"
+                              >
+                                <svg
+                                  className="w-4 h-4 mr-2"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                                  />
+                                </svg>
+                                Open Messages
+                              </button>
                             </div>
                           </div>
                         </div>
