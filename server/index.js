@@ -20,9 +20,7 @@ const messageRoutes = require("./routes/message");
 app.use("/api/webhooks", webhookRoutes);
 
 const allowedOrigins = [
-  "https://fantastic-motivation-production.up.railway.app",
-  "https://workzzyunos.onrender.com",
-  "http://localhost:3000",
+  "http://localhost:3000", // Local development
 ];
 
 if (process.env.CLIENT_URL) {
