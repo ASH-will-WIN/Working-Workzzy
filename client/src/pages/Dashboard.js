@@ -173,7 +173,10 @@ const Dashboard = () => {
     setTargetUserIdForChat(userId);
     setTargetJobIdForChat(jobId);
     // Use a slight delay to ensure state is updated before switching tabs
-    setTimeout(() => setActiveTab('messages'), 0);
+    setTimeout(() => {
+      console.log("Switching to messages tab now...");
+      setActiveTab('messages');
+    }, 0);
   };
 
   const getStatusBadge = (status) => {
