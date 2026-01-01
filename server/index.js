@@ -24,7 +24,15 @@ const allowedOrigins = [
 ];
 
 if (process.env.CLIENT_URL) {
-  allowedOrigins.push(process.env.CLIENT_URL);
+  const clientUrl = process.env.CLIENT_URL.replace(/\/$/, "");
+  allowedOrigins.push(clientUrl);
+
+  // Also allow the alternative (www vs non-www)
+  if (clientUrl.includes("://www.")) {
+    allowedOrigins.push(clientUrl.replace("://www.", "://"));
+  } else if (clientUrl.includes("://")) {
+    allowedOrigins.push(clientUrl.replace("://", "://www."));
+  }
 }
 
 app.use(
@@ -33,6 +41,7 @@ app.use(
       // allow requests with no origin (like mobile apps or curl requests)
       if (!origin) return callback(null, true);
       if (allowedOrigins.indexOf(origin) === -1) {
+        console.error(`CORS Blocked: Origin "${origin}" not in allowed list:`, allowedOrigins);
         var msg =
           "The CORS policy for this site does not " +
           "allow access from the specified Origin.";
@@ -58,15 +67,15 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/connect", connectRoutes);
 app.use("/api/messages", messageRoutes);
 
-app.use(express.static(path.join(__dirname, "../client/build")));
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build", "index.html"));
-});
-
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");
 });
+
+// Remove static file serving if we are just an API
+// app.use(express.static(path.join(__dirname, "../client/build")));
+// app.get("/*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
