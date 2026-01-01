@@ -121,39 +121,56 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         <div>
           <label
             htmlFor="amount"
-            className="block text-sm font-medium text-slate-300 mb-1"
+            className="block text-sm font-semibold text-slate-400 mb-2 uppercase tracking-wider"
           >
-            Payment Amount ($)
+            Payment Amount
           </label>
-          <input
-            type="number"
-            id="amount"
-            value={amount}
-            readOnly
-            placeholder="0.00"
-            step="0.01"
-            min="0"
-            className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white cursor-not-allowed focus:outline-none"
-            required
-          />
-          <p className="text-xs text-slate-500 mt-1">
-            Total amount to pay the worker.
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <span className="text-slate-400 text-xl font-bold">$</span>
+            </div>
+            <input
+              type="number"
+              id="amount"
+              value={amount}
+              readOnly
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              className="w-full pl-10 pr-4 py-4 border-2 border-slate-700 rounded-xl bg-slate-800 text-white text-2xl font-bold cursor-not-allowed focus:outline-none"
+              required
+            />
+          </div>
+          <p className="text-sm text-slate-500 mt-2">
+            The total agreed price for this job.
           </p>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className={`w-full px-4 py-2 text-white font-medium rounded-md ${loading
-            ? "bg-slate-700 cursor-not-allowed"
-            : "bg-emerald-600 hover:bg-emerald-700"
+          className={`w-full py-4 px-6 text-white font-bold text-lg rounded-xl shadow-lg transition-all duration-200 flex items-center justify-center space-x-2 ${loading
+              ? "bg-slate-700 cursor-not-allowed opacity-50"
+              : "bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-500/20"
             }`}
         >
-          {loading ? "Creating Payment..." : "Create Payment"}
+          {loading ? (
+            <>
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+              <span>Preparing Payment...</span>
+            </>
+          ) : (
+            <>
+              <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+              </svg>
+              <span>Create Payment</span>
+            </>
+          )}
         </button>
       </form>
 

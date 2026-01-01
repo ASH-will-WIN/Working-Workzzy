@@ -133,7 +133,7 @@ const JobDetail = () => {
     }
   };
   const onPaymentSuccess = () => {
-    alert("Application submitted successfully!");
+    alert("Application submitted successfully! Check your dashboard for next steps.");
     setShowPaymentForm(false);
     setMessage("");
   };
