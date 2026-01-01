@@ -15,6 +15,10 @@ model Job {
   initialDescription String       @map("initial_description")
   fullDescription    String       @map("full_description")
   status            JobStatus     @default(PENDING)
+  
+  generalLocation   String?       @map("general_location")
+  city              String?
+  state             String?
 
   price              Int
   estimatedTime      Int?          @map("estimated_time") // In minutes

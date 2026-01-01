@@ -8,7 +8,7 @@ const {
 
 async function createJob(req, res) {
   try {
-    const { title, initialDescription, fullDescription, address, price, hirerId, estimatedTime } =
+    const { title, initialDescription, fullDescription, address, generalLocation, city, state, price, hirerId, estimatedTime } =
       req.body;
 
     // Validate required fields
@@ -17,6 +17,8 @@ async function createJob(req, res) {
       !initialDescription ||
       !fullDescription ||
       !address ||
+      !city ||
+      !state ||
       !hirerId ||
       price === undefined || price === null
     ) {
@@ -43,6 +45,9 @@ async function createJob(req, res) {
       data: {
         title,
         address,
+        generalLocation,
+        city,
+        state,
         initialDescription,
         fullDescription,
         hirerId, // Directly use the provided Supabase UID
@@ -71,6 +76,9 @@ async function getJobs(req, res) {
         initialDescription: true,
         fullDescription: true,
         address: true,
+        generalLocation: true,
+        city: true,
+        state: true,
         status: true,
         price: true,
         createdAt: true,

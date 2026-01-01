@@ -9,6 +9,9 @@ const CreateJob = () => {
   const [initialDescription, setInitialDescription] = useState("");
   const [fullDescription, setFullDescription] = useState("");
   const [address, setAddress] = useState("");
+  const [generalLocation, setGeneralLocation] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [images, setImages] = useState([]);
   const [error, setError] = useState("");
   const [price, setPrice] = useState("");
@@ -83,6 +86,9 @@ const CreateJob = () => {
       initialDescription,
       fullDescription,
       address,
+      generalLocation,
+      city,
+      state,
       price: Number(price),
       estimatedTime: (Number(hours || 0) * 60) + Number(minutes || 0),
       hirerId: user.id,
@@ -198,22 +204,81 @@ const CreateJob = () => {
             />
           </div>
 
-          <div>
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-slate-300 mb-2"
-            >
-              Job Address *
-            </label>
-            <input
-              id="address"
-              type="text"
-              placeholder="Street address, city, state"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="md:col-span-2">
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                Street Address * (Keep private until accepted)
+              </label>
+              <input
+                id="address"
+                type="text"
+                placeholder="e.g. 123 Main St"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="city"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                City *
+              </label>
+              <input
+                id="city"
+                type="text"
+                placeholder="e.g. Troy"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                required
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="state"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                State *
+              </label>
+              <select
+                id="state"
+                value={state}
+                onChange={(e) => setState(e.target.value)}
+                required
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              >
+                <option value="" disabled className="text-slate-500">Select state</option>
+                {["AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI", "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"].map(s => (
+                  <option key={s} value={s}>{s}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="md:col-span-2">
+              <label
+                htmlFor="generalLocation"
+                className="block text-sm font-medium text-slate-300 mb-2"
+              >
+                General Location (Visible to everyone)
+              </label>
+              <input
+                id="generalLocation"
+                type="text"
+                placeholder="e.g. Near Livernois and Wattles"
+                value={generalLocation}
+                onChange={(e) => setGeneralLocation(e.target.value)}
+                className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+              />
+              <p className="text-xs text-slate-500 mt-1">This helps workers know the area before applying.</p>
+            </div>
           </div>
 
           <div>
