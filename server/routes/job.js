@@ -7,6 +7,7 @@ router.post("/", authMiddleware, jobController.createJob); // ADD MIDDLEWARE
 router.get("/", authMiddleware, jobController.getJobs); // ADD MIDDLEWARE
 router.get("/:id", authMiddleware, jobController.getJob); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, jobController.updateJob); // ADD THIS LINE
+router.delete("/:id", authMiddleware, jobController.deleteJob); // ADD DELETE ROUTE
 router.patch("/accept/:jobId", authMiddleware, jobController.acceptJob); // ADD MIDDLEWARE
 
 // New job workflow routes

@@ -17,6 +17,11 @@ export const getJobById = async (id) => {
   return response.data;
 };
 
+export const deleteJob = async (id) => {
+  const response = await apiClient.delete(`/jobs/${id}`);
+  return response.data;
+};
+
 // New job workflow functions
 export const startJob = async (jobId) => {
   const response = await apiClient.patch(`/jobs/${jobId}/start`);

@@ -190,11 +190,71 @@ async function updateJob(req, res) {
 async function deleteJob(req, res) {
   try {
     const { id } = req.params;
-    await prisma.job.delete({ where: { id } });
-    res.json({ message: "Job deleted successfully" });
+    const hirerId = req.user.id;
+
+    // 1. Fetch job with applications to check status and ownership
+    const job = await prisma.job.findUnique({
+      where: { id },
+      include: {
+        applications: true,
+      },
+    });
+
+    if (!job) {
+      return res.status(404).json({ error: "Job not found" });
+    }
+
+    // 2. Security Check: Only the hirer can delete their job
+    if (job.hirerId !== hirerId) {
+      return res.status(403).json({
+        error: "not_authorized",
+        message: "You can only delete jobs that you created.",
+      });
+    }
+
+    // 3. Status Check: Only PENDING jobs can be deleted
+    // (If a job is COMMITTED, IN_PROGRESS, or COMPLETED, it shouldn't be deleted)
+    if (job.status !== JobStatus.PENDING) {
+      return res.status(400).json({
+        error: "invalid_status",
+        message: `Cannot delete a job that is already in ${job.status} status.`,
+      });
+    }
+
+    // 4. Refund Workers: Cancel all authorized deposits
+    const refundPromises = job.applications
+      .filter((app) => app.depositId && app.depositStatus === DepositStatus.AUTHORIZED)
+      .map(async (app) => {
+        try {
+          const { stripeClient } = require("../db");
+          await stripeClient.paymentIntents.cancel(app.depositId);
+          console.log(`Refunded deposit ${app.depositId} for worker ${app.workerId}`);
+        } catch (stripeError) {
+          console.error(`Failed to refund deposit ${app.depositId}:`, stripeError.message);
+          // We continue anyway to ensure the job can still be deleted if Stripe fails
+        }
+      });
+
+    await Promise.all(refundPromises);
+
+    // 5. Database Cleanup: Delete related records first
+    // In a real production app, you might want to "Soft Delete" (set status to CANCELLED)
+    // but here we will clean up the database as requested.
+    await prisma.$transaction([
+      prisma.jobApplication.deleteMany({ where: { jobId: id } }),
+      prisma.jobImage.deleteMany({ where: { jobId: id } }),
+      prisma.message.deleteMany({ where: { jobId: id } }),
+      prisma.job.delete({ where: { id } }),
+    ]);
+
+    res.json({ message: "Job deleted successfully and all worker deposits were refunded." });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deleting job" });
+    console.error("Job Deletion Error:", error.message);
+    res.status(500).json({
+      error: "job_deletion_failed",
+      message: "Failed to delete job.",
+      details: error.message,
+    });
   }
 }
 
