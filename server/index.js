@@ -21,6 +21,9 @@ app.use("/api/webhooks", webhookRoutes);
 
 const allowedOrigins = [
   "http://localhost:3000", // Local development
+  "https://wurkzi.com",
+  "https://www.wurkzi.com",
+  "https://fantastic-motivation-production.up.railway.app",
 ];
 
 if (process.env.CLIENT_URL) {
