@@ -229,16 +229,6 @@ const JobDetail = () => {
                 ? `${job.address}, ${job.city}, ${job.state}`
                 : `Restricted - ${job.city}, ${job.state}`}
             </div>
-
-            {job.generalLocation && (
-              <div className="flex items-center text-slate-300 mb-4 bg-slate-800/50 p-3 rounded-lg border border-slate-700 w-fit">
-                <svg className="w-5 h-5 mr-2 text-wurkzi-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-                <span className="font-medium mr-2 text-slate-400">General Area:</span>
-                <span>{job.generalLocation}</span>
-              </div>
-            )}
           </div>
           <StatusBadge status={job.status} type="job" />
         </div>
@@ -248,7 +238,7 @@ const JobDetail = () => {
           <div className="mt-4 flex justify-end">
             <button
               onClick={handleDeleteJob}
-              className="btn btn-danger flex items-center bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200"
+              className="btn btn-danger flex items-center bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 shadow-lg shadow-red-900/20"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -257,14 +247,53 @@ const JobDetail = () => {
             </button>
           </div>
         )}
+      </div>
 
-        <div className="prose max-w-none mt-6 space-y-4">
-          {job.initialDescription && (
-            <p className="text-xl text-wurkzi-400 font-medium italic border-l-4 border-wurkzi-500 pl-4 bg-slate-900/50 py-2">
-              {job.initialDescription}
+      {/* Job Overview Section */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div className="md:col-span-2 card p-6 bg-slate-900 border border-slate-800">
+          <h2 className="text-lg font-bold text-white mb-4 flex items-center">
+            <svg className="w-5 h-5 mr-2 text-wurkzi-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            Job Overview
+          </h2>
+          <p className="text-slate-200 text-lg leading-relaxed font-medium">
+            {job.initialDescription}
+          </p>
+        </div>
+
+        <div className="card p-6 bg-slate-900 border border-slate-800">
+          <h2 className="text-lg font-bold text-white mb-4 flex items-center">
+            <svg className="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Location
+          </h2>
+          <div className="space-y-1">
+            <p className="text-white font-semibold">
+              {job.city}, {job.state}
             </p>
-          )}
-          <p className="text-slate-300 leading-relaxed text-lg">
+            {job.generalLocation && (
+              <p className="text-slate-400 text-sm italic">
+                {job.generalLocation}
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Full Description Section */}
+      <div className="card mb-6 p-8 bg-slate-900 border border-slate-800">
+        <h2 className="text-xl font-bold text-white mb-6 flex items-center border-b border-slate-800 pb-4">
+          <svg className="w-6 h-6 mr-3 text-wurkzi-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+          Full Job Description
+        </h2>
+        <div className="prose max-w-none">
+          <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
             {job.fullDescription}
           </p>
         </div>

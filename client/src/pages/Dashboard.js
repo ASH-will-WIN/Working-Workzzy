@@ -6,7 +6,7 @@ import {
   rejectApplication,
   withdrawApplication,
 } from "../api/applicationApi";
-import { getJobsByHirer, startJob, completeJob } from "../api/jobApi";
+import { getJobsByHirer, startJob, completeJob, deleteJob } from "../api/jobApi";
 import { getPaymentsForJob, markJobPaidInCash } from "../api/paymentApi";
 import { connectApi } from "../api/connectApi";
 import { useAuth } from "../context/AuthContext";
@@ -140,6 +140,20 @@ const Dashboard = () => {
       fetchHirerData(); // Refresh to get updated status
     } catch (error) {
       console.error("Failed to accept application:", error);
+    }
+  };
+
+  const handleDeleteJob = async (jobId) => {
+    if (window.confirm("Are you sure you want to delete this job? This will automatically refund all worker deposits and cannot be undone.")) {
+      try {
+        setLoading(true);
+        await deleteJob(jobId);
+        fetchHirerData();
+      } catch (error) {
+        alert(error.response?.data?.message || "Failed to delete job.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -990,6 +1004,7 @@ const Dashboard = () => {
                         setSelectedJob={setSelectedJob}
                         onAcceptApplication={handleAcceptApplication}
                         onRejectApplication={handleRejectApplication}
+                        onDeleteJob={handleDeleteJob}
                         onPaymentComplete={() => fetchHirerData()} // Refresh data after payment
                         onOpenChat={handleOpenChat}
                       />
@@ -1033,7 +1048,7 @@ const Dashboard = () => {
 
 // --- Sub-components to keep file clean ---
 
-const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, onRejectApplication, onPaymentComplete, onOpenChat, readOnly }) => {
+const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, onRejectApplication, onDeleteJob, onPaymentComplete, onOpenChat, readOnly }) => {
   const navigate = useNavigate();
   const isExpanded = selectedJob === job.id;
 
@@ -1049,12 +1064,29 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
           </div>
         </div>
         {!readOnly && (
-          <button
-            onClick={() => setSelectedJob(isExpanded ? null : job.id)}
-            className="btn btn-secondary btn-sm"
-          >
-            {isExpanded ? 'Hide' : 'View'}
-          </button>
+          <div className="flex gap-2">
+            {job.status === 'PENDING' && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDeleteJob(job.id);
+                }}
+                className="btn btn-danger btn-xs py-1 px-2 flex items-center bg-red-600/20 hover:bg-red-600 border border-red-500/30 text-red-500 hover:text-white transition-all duration-200"
+                title="Delete Job"
+              >
+                <svg className="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                Delete
+              </button>
+            )}
+            <button
+              onClick={() => setSelectedJob(isExpanded ? null : job.id)}
+              className="btn btn-secondary btn-sm"
+            >
+              {isExpanded ? 'Hide' : 'View'}
+            </button>
+          </div>
         )}
       </div>
 
