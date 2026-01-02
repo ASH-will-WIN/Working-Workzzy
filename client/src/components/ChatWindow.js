@@ -107,8 +107,8 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
 
   return (
     <div className="flex-1 flex flex-col">
-      {/* Chat Header */}
-      <div className="p-4 border-b border-slate-700 bg-slate-800">
+      {/* Chat Header - Sticky top */}
+      <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-wurkzi-400 to-wurkzi-600 rounded-full flex items-center justify-center text-white font-medium">
@@ -172,7 +172,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       </div>
 
       {/* Message Input */}
-      <div className="border-t border-slate-700 p-4 bg-slate-800">
+      <div className="sticky bottom-0 border-t border-slate-700 p-4 bg-slate-800 safe-area-bottom">
         <MessageInput
           value={newMessage}
           onChange={setNewMessage}

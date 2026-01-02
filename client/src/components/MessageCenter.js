@@ -193,17 +193,16 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
         <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
           <div
-            className="flex flex-col md:flex-row"
-            style={{ height: "calc(100vh - 200px)" }}
+            className="flex flex-col md:flex-row min-h-0"
+            style={{ height: "calc(100dvh - 200px)" }}
           >
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
-              className={`md:w-1/3 border-r border-slate-700 flex flex-col ${
+              className={`md:w-1/3 border-r border-slate-700 flex flex-col min-h-0 ${
                 selectedConversation ? "hidden md:flex" : "flex"
               }`}
-              style={{ minHeight: 0 }}
             >
-              <div className="p-4 border-b border-slate-700 bg-slate-800">
+              <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800 border-2 border-purple-500">
                 <h2 className="font-semibold text-white">Conversations</h2>
                 {conversations.length > 0 && (
                   <p className="text-sm text-slate-400 mt-1">
