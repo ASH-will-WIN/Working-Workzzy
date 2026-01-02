@@ -1421,7 +1421,7 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
     }
 
     if (!stripeStatus.exists) {
-      return "You need to set up a Stripe Connect account to receive payments.";
+      return "You need to set up a Stripe Connect account to receive payments and view available jobs.";
     }
 
     if (!stripeStatus.detailsSubmitted) {
