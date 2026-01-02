@@ -8,8 +8,18 @@ const {
 
 async function createJob(req, res) {
   try {
-    const { title, initialDescription, fullDescription, address, generalLocation, city, state, price, hirerId, estimatedTime } =
-      req.body;
+    const {
+      title,
+      initialDescription,
+      fullDescription,
+      address,
+      generalLocation,
+      city,
+      state,
+      price,
+      hirerId,
+      estimatedTime,
+    } = req.body;
 
     // Validate required fields
     if (
@@ -20,7 +30,8 @@ async function createJob(req, res) {
       !city ||
       !state ||
       !hirerId ||
-      price === undefined || price === null
+      price === undefined ||
+      price === null
     ) {
       return res.status(400).json({ error: "Missing required fields" });
     }
@@ -34,7 +45,10 @@ async function createJob(req, res) {
     }
 
     // Validate estimatedTime if provided
-    if (estimatedTime !== undefined && (isNaN(estimatedTime) || Number(estimatedTime) < 0)) {
+    if (
+      estimatedTime !== undefined &&
+      (isNaN(estimatedTime) || Number(estimatedTime) < 0)
+    ) {
       return res.status(400).json({
         error: "invalid_estimated_time",
         message: "Estimated time must be a valid positive number.",
@@ -69,6 +83,28 @@ async function createJob(req, res) {
 
 async function getJobs(req, res) {
   try {
+    // Check if user is a worker and verify Stripe onboarding status
+    if (req.user?.user_metadata?.role === "WORKER") {
+      // Check if user has a Stripe account
+      const stripeAccount = await prisma.stripeAccount.findUnique({
+        where: { userId: req.user.id },
+      });
+
+      // If no Stripe account or onboarding not completed, return onboarding required error
+      if (
+        !stripeAccount ||
+        !stripeAccount.detailsSubmitted ||
+        stripeAccount.requiresAction
+      ) {
+        return res.status(403).json({
+          error: "onboarding_required",
+          message:
+            "Stripe onboarding is required to view jobs. Please complete your Stripe account setup.",
+          requiresOnboarding: true,
+        });
+      }
+    }
+
     const jobs = await prisma.job.findMany({
       select: {
         id: true,
@@ -90,8 +126,8 @@ async function getJobs(req, res) {
             id: true,
             // url: true, // REMOVED FOR LAZY LOADING OPTIMIZATION
             caption: true,
-            isPublic: true
-          }
+            isPublic: true,
+          },
         },
       },
       where: {
@@ -231,14 +267,21 @@ async function deleteJob(req, res) {
 
     // 4. Refund Workers: Cancel all authorized deposits
     const refundPromises = job.applications
-      .filter((app) => app.depositId && app.depositStatus === DepositStatus.AUTHORIZED)
+      .filter(
+        (app) => app.depositId && app.depositStatus === DepositStatus.AUTHORIZED
+      )
       .map(async (app) => {
         try {
           const { stripeClient } = require("../db");
           await stripeClient.paymentIntents.cancel(app.depositId);
-          console.log(`Refunded deposit ${app.depositId} for worker ${app.workerId}`);
+          console.log(
+            `Refunded deposit ${app.depositId} for worker ${app.workerId}`
+          );
         } catch (stripeError) {
-          console.error(`Failed to refund deposit ${app.depositId}:`, stripeError.message);
+          console.error(
+            `Failed to refund deposit ${app.depositId}:`,
+            stripeError.message
+          );
           // We continue anyway to ensure the job can still be deleted if Stripe fails
         }
       });
@@ -255,7 +298,10 @@ async function deleteJob(req, res) {
       prisma.job.delete({ where: { id } }),
     ]);
 
-    res.json({ message: "Job deleted successfully and all worker deposits were refunded." });
+    res.json({
+      message:
+        "Job deleted successfully and all worker deposits were refunded.",
+    });
   } catch (error) {
     console.error("Job Deletion Error:", error.message);
     res.status(500).json({
@@ -369,11 +415,11 @@ async function getJobImages(req, res) {
     const images = canViewAllImages
       ? await prisma.jobImage.findMany({ where: { jobId: id } })
       : await prisma.jobImage.findMany({
-        where: {
-          jobId: id,
-          isPublic: true,
-        },
-      });
+          where: {
+            jobId: id,
+            isPublic: true,
+          },
+        });
 
     res.json(images);
   } catch (error) {
@@ -571,7 +617,6 @@ async function getJobsByHirer(req, res) {
     });
   }
 }
-
 
 module.exports = {
   createJob,

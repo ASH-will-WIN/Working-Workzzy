@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getJobs } from "../api/jobApi";
 import { useAuth } from "../context/AuthContext";
 import LazyJobImage from "../components/LazyJobImage";
@@ -8,6 +8,7 @@ const JobsList = () => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchJobs = async () => {
@@ -16,13 +17,17 @@ const JobsList = () => {
         setJobs(data);
       } catch (error) {
         console.error("Failed to fetch jobs:", error);
+        // Check if the error is related to onboarding requirement
+        if (error.response?.data?.requiresOnboarding) {
+          // Redirect worker to dashboard page which contains the Stripe onboarding component
+          navigate("/dashboard");
+        }
       } finally {
         setLoading(false);
       }
     };
     fetchJobs();
-  }, []);
-
+  }, [navigate]);
 
   if (loading) {
     return (
@@ -32,7 +37,10 @@ const JobsList = () => {
             <div className="h-10 bg-slate-800 rounded-lg w-1/3 mb-8"></div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               {[1, 2, 3, 4, 5, 6].map((i) => (
-                <div key={i} className="bg-slate-900 rounded-xl shadow-md p-6 border border-slate-800">
+                <div
+                  key={i}
+                  className="bg-slate-900 rounded-xl shadow-md p-6 border border-slate-800"
+                >
                   <div className="h-6 bg-slate-800 rounded w-2/3 mb-4"></div>
                   <div className="h-32 bg-slate-800 rounded mb-4"></div>
                   <div className="h-4 bg-slate-800 rounded w-full mb-2"></div>
@@ -212,4 +220,3 @@ const JobsList = () => {
 };
 
 export default JobsList;
-

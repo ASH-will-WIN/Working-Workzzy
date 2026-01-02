@@ -6,7 +6,12 @@ import {
   rejectApplication,
   withdrawApplication,
 } from "../api/applicationApi";
-import { getJobsByHirer, startJob, completeJob, deleteJob } from "../api/jobApi";
+import {
+  getJobsByHirer,
+  startJob,
+  completeJob,
+  deleteJob,
+} from "../api/jobApi";
 import { getPaymentsForJob, markJobPaidInCash } from "../api/paymentApi";
 import { connectApi } from "../api/connectApi";
 import { useAuth } from "../context/AuthContext";
@@ -20,7 +25,7 @@ import { getMyPayments } from "../api/paymentApi";
 const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState("overview");
   const [applications, setApplications] = useState([]);
   const [hirerJobs, setHirerJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -119,7 +124,11 @@ const Dashboard = () => {
   };
 
   const handleCashPayment = async (jobId) => {
-    if (window.confirm("Are you sure the client paid you in cash? This will mark the job as fully paid and complete.")) {
+    if (
+      window.confirm(
+        "Are you sure the client paid you in cash? This will mark the job as fully paid and complete."
+      )
+    ) {
       try {
         await markJobPaidInCash(jobId);
         if (isWorker) {
@@ -144,7 +153,11 @@ const Dashboard = () => {
   };
 
   const handleDeleteJob = async (jobId) => {
-    if (window.confirm("Are you sure you want to delete this job? This will automatically refund all worker deposits and cannot be undone.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this job? This will automatically refund all worker deposits and cannot be undone."
+      )
+    ) {
       try {
         setLoading(true);
         await deleteJob(jobId);
@@ -167,7 +180,11 @@ const Dashboard = () => {
   };
 
   const handleWithdrawApplication = async (applicationId) => {
-    if (window.confirm("Are you sure you want to withdraw your application? Your $5 deposit will be refunded.")) {
+    if (
+      window.confirm(
+        "Are you sure you want to withdraw your application? Your $5 deposit will be refunded."
+      )
+    ) {
       try {
         await withdrawApplication(applicationId);
         fetchWorkerData(); // Refresh list
@@ -189,7 +206,7 @@ const Dashboard = () => {
     // Use a slight delay to ensure state is updated before switching tabs
     setTimeout(() => {
       console.log("Switching to messages tab now...");
-      setActiveTab('messages');
+      setActiveTab("messages");
     }, 0);
   };
 
@@ -197,15 +214,18 @@ const Dashboard = () => {
     const statusColors = {
       PENDING: "bg-yellow-900/30 text-amber-300 border border-amber-500/30",
       COMMITTED: "bg-blue-900/30 text-blue-300 border border-blue-500/30",
-      IN_PROGRESS: "bg-orange-900/30 text-orange-300 border border-orange-500/30",
-      COMPLETED: "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30",
+      IN_PROGRESS:
+        "bg-orange-900/30 text-orange-300 border border-orange-500/30",
+      COMPLETED:
+        "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30",
       CANCELLED: "bg-red-900/30 text-red-300 border border-red-500/30",
     };
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
-          }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${
+          statusColors[status] || "bg-gray-100 text-gray-800"
+        }`}
       >
         {status.replace("_", " ")}
       </span>
@@ -215,15 +235,17 @@ const Dashboard = () => {
   const getApplicationStatusBadge = (status) => {
     const statusColors = {
       APPLIED: "bg-blue-900/30 text-blue-300 border border-blue-500/30",
-      ACCEPTED: "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30",
+      ACCEPTED:
+        "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30",
       REJECTED: "bg-red-900/30 text-red-300 border border-red-500/30",
       WITHDRAWN: "bg-slate-800 text-slate-400 border border-slate-600",
     };
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
-          }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${
+          statusColors[status] || "bg-gray-100 text-gray-800"
+        }`}
       >
         {status}
       </span>
@@ -270,17 +292,25 @@ const Dashboard = () => {
       (app) => app.status === "ACCEPTED"
     );
 
-    const activeAcceptedJobs = acceptedJobs.filter(app => {
+    const activeAcceptedJobs = acceptedJobs.filter((app) => {
       const isCompleted = app.job.status === "COMPLETED";
       // Check if there is a PAID final payment (or cash payment)
       // Note: applicationController now returns job with payments included
-      const isPaid = app.job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      const isPaid = app.job.payments?.some(
+        (p) =>
+          p.status === "PAID" &&
+          (p.amount > 5 || p.stripePaymentId.startsWith("CASH"))
+      );
       return !(isCompleted && isPaid);
     });
 
-    const pastAcceptedJobs = acceptedJobs.filter(app => {
+    const pastAcceptedJobs = acceptedJobs.filter((app) => {
       const isCompleted = app.job.status === "COMPLETED";
-      const isPaid = app.job.payments?.some(p => p.status === "PAID" && (p.amount > 5 || p.stripePaymentId.startsWith("CASH")));
+      const isPaid = app.job.payments?.some(
+        (p) =>
+          p.status === "PAID" &&
+          (p.amount > 5 || p.stripePaymentId.startsWith("CASH"))
+      );
       return isCompleted && isPaid;
     });
 
@@ -299,29 +329,32 @@ const Dashboard = () => {
           {/* Tabs Navigation */}
           <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
             <button
-              onClick={() => setActiveTab('overview')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'overview'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
+              onClick={() => setActiveTab("overview")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                activeTab === "overview"
+                  ? "bg-slate-800 text-white shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
             >
               Overview
             </button>
             <button
-              onClick={() => setActiveTab('payments')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'payments'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
+              onClick={() => setActiveTab("payments")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                activeTab === "payments"
+                  ? "bg-slate-800 text-white shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
             >
               Payments
             </button>
             <button
-              onClick={() => setActiveTab('messages')}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'messages'
-                ? 'bg-slate-800 text-white shadow-sm'
-                : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-                }`}
+              onClick={() => setActiveTab("messages")}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                activeTab === "messages"
+                  ? "bg-slate-800 text-white shadow-sm"
+                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
             >
               Messages
             </button>
@@ -329,9 +362,10 @@ const Dashboard = () => {
 
           {/* Tab Content */}
           <div className="min-h-[400px]">
-            {activeTab === 'overview' && (
+            {activeTab === "overview" && (
               <div className="animate-fade-in">
-                {activeAcceptedJobs.length === 0 && pastAcceptedJobs.length === 0 ? (
+                {activeAcceptedJobs.length === 0 &&
+                pastAcceptedJobs.length === 0 ? (
                   <div className="text-center py-16">
                     <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-800">
                       <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -353,8 +387,8 @@ const Dashboard = () => {
                         No accepted jobs yet
                       </p>
                       <p className="text-slate-400 mb-6">
-                        Once clients accept your applications, they'll appear here
-                        with payment tracking
+                        Once clients accept your applications, they'll appear
+                        here with payment tracking
                       </p>
                       <button
                         onClick={() => (window.location.href = "/")}
@@ -411,7 +445,10 @@ const Dashboard = () => {
                             </div>
                           </div>
                           <div className="flex space-x-2">
-                            <StatusBadge status={application.job.status} type="job" />
+                            <StatusBadge
+                              status={application.job.status}
+                              type="job"
+                            />
                             <StatusBadge
                               status={application.status}
                               type="application"
@@ -498,8 +535,8 @@ const Dashboard = () => {
                                     🎉 Application Accepted!
                                   </p>
                                   <p className="text-sm text-blue-300 mb-4">
-                                    Your application has been accepted! You can now
-                                    start the job when you're ready.
+                                    Your application has been accepted! You can
+                                    now start the job when you're ready.
                                   </p>
                                   <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                                     <button
@@ -526,7 +563,12 @@ const Dashboard = () => {
                                       Start Job
                                     </button>
                                     <button
-                                      onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
+                                      onClick={() =>
+                                        handleOpenChat(
+                                          application.job.hirerId,
+                                          application.job.id
+                                        )
+                                      }
                                       className="btn btn-secondary btn-sm"
                                     >
                                       <svg
@@ -573,8 +615,8 @@ const Dashboard = () => {
                                     🔄 Job In Progress
                                   </p>
                                   <p className="text-sm text-orange-200/80 mb-4">
-                                    You're currently working on this job. Mark it as
-                                    complete when you're finished.
+                                    You're currently working on this job. Mark
+                                    it as complete when you're finished.
                                   </p>
                                   <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
                                     <button
@@ -601,7 +643,12 @@ const Dashboard = () => {
                                       Mark as Complete
                                     </button>
                                     <button
-                                      onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
+                                      onClick={() =>
+                                        handleOpenChat(
+                                          application.job.hirerId,
+                                          application.job.id
+                                        )
+                                      }
                                       className="btn btn-primary btn-sm"
                                     >
                                       <svg
@@ -648,8 +695,9 @@ const Dashboard = () => {
                                     🎉 Job Completed Successfully!
                                   </p>
                                   <p className="text-sm text-emerald-200/80 mb-4">
-                                    Great work! The client will process the final
-                                    payment. You'll receive the full payment amount.
+                                    Great work! The client will process the
+                                    final payment. You'll receive the full
+                                    payment amount.
                                   </p>
                                   <div className="bg-slate-800 rounded-lg p-4 border border-emerald-500/30 mb-4">
                                     <PaymentStatusIndicator
@@ -660,16 +708,22 @@ const Dashboard = () => {
                                   </div>
 
                                   {/* Cash Payment Option */}
-                                  {(!getPaymentStatus(application.job.id) || getPaymentStatus(application.job.id)?.status !== 'PAID') && (
+                                  {(!getPaymentStatus(application.job.id) ||
+                                    getPaymentStatus(application.job.id)
+                                      ?.status !== "PAID") && (
                                     <div className="mt-2">
                                       <button
-                                        onClick={() => handleCashPayment(application.job.id)}
+                                        onClick={() =>
+                                          handleCashPayment(application.job.id)
+                                        }
                                         className="btn bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
                                       >
                                         Client Paid in Cash
                                       </button>
                                       <p className="text-xs text-emerald-400 mt-2">
-                                        Click this if the client has paid you directly in cash to mark the job as fully complete.
+                                        Click this if the client has paid you
+                                        directly in cash to mark the job as
+                                        fully complete.
                                       </p>
                                     </div>
                                   )}
@@ -685,16 +739,20 @@ const Dashboard = () => {
                               </span>
                               <div className="flex items-center">
                                 <span
-                                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${application.depositStatus === "CAPTURED"
-                                    ? "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30"
-                                    : application.depositStatus === "REFUNDED"
+                                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
+                                    application.depositStatus === "CAPTURED"
+                                      ? "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30"
+                                      : application.depositStatus === "REFUNDED"
                                       ? "bg-blue-900/30 text-blue-300 border border-blue-500/30"
                                       : "bg-yellow-900/30 text-amber-300 border border-amber-500/30"
-                                    }`}
+                                  }`}
                                 >
-                                  {application.depositStatus === "CAPTURED" && "✅"}
-                                  {application.depositStatus === "REFUNDED" && "💰"}
-                                  {application.depositStatus === "PENDING" && "⏳"}
+                                  {application.depositStatus === "CAPTURED" &&
+                                    "✅"}
+                                  {application.depositStatus === "REFUNDED" &&
+                                    "💰"}
+                                  {application.depositStatus === "PENDING" &&
+                                    "⏳"}
                                   <span className="ml-1">
                                     {application.depositStatus}
                                   </span>
@@ -706,14 +764,13 @@ const Dashboard = () => {
                                 📅 Applied Date
                               </span>
                               <div className="text-slate-400 font-medium">
-                                {new Date(application.createdAt).toLocaleDateString(
-                                  "en-US",
-                                  {
-                                    year: "numeric",
-                                    month: "short",
-                                    day: "numeric",
-                                  }
-                                )}
+                                {new Date(
+                                  application.createdAt
+                                ).toLocaleDateString("en-US", {
+                                  year: "numeric",
+                                  month: "short",
+                                  day: "numeric",
+                                })}
                               </div>
                             </div>
                           </div>
@@ -730,7 +787,12 @@ const Dashboard = () => {
                                 </p>
                               </div>
                               <button
-                                onClick={() => handleOpenChat(application.job.hirerId, application.job.id)}
+                                onClick={() =>
+                                  handleOpenChat(
+                                    application.job.hirerId,
+                                    application.job.id
+                                  )
+                                }
                                 className="btn btn-primary btn-sm"
                               >
                                 <svg
@@ -755,13 +817,22 @@ const Dashboard = () => {
                     ))}
                   </div>
                 )}
-
                 {/* Past Jobs Section for Worker */}
                 {pastAcceptedJobs.length > 0 && (
                   <div className="mt-12">
                     <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-                      <svg className="w-6 h-6 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      <svg
+                        className="w-6 h-6 mr-2 text-gray-500"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
                       </svg>
                       Past Jobs
                     </h2>
@@ -778,9 +849,13 @@ const Dashboard = () => {
                                   {application.job.title}
                                 </h2>
                                 <div className="flex items-center text-green-700 mt-1 font-medium">
-                                  <span className="mr-2">✅ Completed & Paid</span>
+                                  <span className="mr-2">
+                                    ✅ Completed & Paid
+                                  </span>
                                   <span className="text-slate-500 text-sm">
-                                    {new Date(application.job.updatedAt).toLocaleDateString()}
+                                    {new Date(
+                                      application.job.updatedAt
+                                    ).toLocaleDateString()}
                                   </span>
                                 </div>
                               </div>
@@ -796,7 +871,6 @@ const Dashboard = () => {
                     </div>
                   </div>
                 )}
-
                 {applications.length > acceptedJobs.length && (
                   <div className="mt-8">
                     <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
@@ -862,11 +936,15 @@ const Dashboard = () => {
                           <div className="card-footer flex justify-between items-center">
                             <div className="text-xs text-gray-500">
                               Applied:{" "}
-                              {new Date(application.createdAt).toLocaleDateString()}
+                              {new Date(
+                                application.createdAt
+                              ).toLocaleDateString()}
                             </div>
                             {application.status === "APPLIED" && (
                               <button
-                                onClick={() => handleWithdrawApplication(application.id)}
+                                onClick={() =>
+                                  handleWithdrawApplication(application.id)
+                                }
                                 className="btn btn-danger btn-xs"
                               >
                                 Withdraw
@@ -882,13 +960,13 @@ const Dashboard = () => {
               </div>
             )}
 
-            {activeTab === 'payments' && (
+            {activeTab === "payments" && (
               <div className="animate-fade-in">
                 <PaymentsList />
               </div>
             )}
 
-            {activeTab === 'messages' && (
+            {activeTab === "messages" && (
               <div className="animate-fade-in">
                 <MessageCenter
                   initialTargetUserId={targetUserIdForChat}
@@ -903,25 +981,26 @@ const Dashboard = () => {
   }
 
   // Calculate Active/Past Jobs for Hirer
-  const activeHirerJobs = hirerJobs.filter(job => {
+  const activeHirerJobs = hirerJobs.filter((job) => {
     const isCompleted = job.status === "COMPLETED";
     // Check for 'PAID' status or a payments array with a PAID record
-    const isPaid = job.status === "COMPLETED" && job.payments?.some(p => p.status === "PAID");
+    const isPaid =
+      job.status === "COMPLETED" &&
+      job.payments?.some((p) => p.status === "PAID");
     // Actually the logic was: if completed AND paid -> Past. Else -> Active.
     // Simplification: Active = Not (Completed AND Paid)
     return !(isCompleted && isPaid);
   });
 
-  const pastHirerJobs = hirerJobs.filter(job => {
+  const pastHirerJobs = hirerJobs.filter((job) => {
     const isCompleted = job.status === "COMPLETED";
-    const isPaid = job.payments?.some(p => p.status === "PAID");
+    const isPaid = job.payments?.some((p) => p.status === "PAID");
     return isCompleted && isPaid;
   });
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
@@ -937,8 +1016,18 @@ const Dashboard = () => {
               onClick={() => navigate("/jobs/new")}
               className="btn btn-primary flex items-center"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+              <svg
+                className="w-5 h-5 mr-2"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+                />
               </svg>
               Post a Job
             </button>
@@ -948,29 +1037,32 @@ const Dashboard = () => {
         {/* Tabs Navigation */}
         <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
           <button
-            onClick={() => setActiveTab('overview')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'overview'
-              ? 'bg-slate-800 text-white shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+            onClick={() => setActiveTab("overview")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              activeTab === "overview"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+            }`}
           >
             Overview
           </button>
           <button
-            onClick={() => setActiveTab('payments')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'payments'
-              ? 'bg-slate-800 text-white shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+            onClick={() => setActiveTab("payments")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              activeTab === "payments"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+            }`}
           >
             Payments
           </button>
           <button
-            onClick={() => setActiveTab('messages')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === 'messages'
-              ? 'bg-slate-800 text-white shadow-sm'
-              : 'text-slate-400 hover:text-white hover:bg-slate-800/50'
-              }`}
+            onClick={() => setActiveTab("messages")}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              activeTab === "messages"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+            }`}
           >
             Messages
           </button>
@@ -978,25 +1070,44 @@ const Dashboard = () => {
 
         {/* Tab Content */}
         <div className="min-h-[400px]">
-          {activeTab === 'overview' && (
+          {activeTab === "overview" && (
             <div className="animate-fade-in">
               {activeHirerJobs.length === 0 && pastHirerJobs.length === 0 ? (
                 <div className="text-center py-16">
                   <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-700">
                     <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
-                      <svg className="w-10 h-10 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z" />
+                      <svg
+                        className="w-10 h-10 text-purple-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 6V8a2 2 0 00-2-2H6a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2z"
+                        />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-semibold text-white mb-2">No Jobs Yet</h3>
-                    <p className="text-slate-400 mb-6">Post a job to get started!</p>
-                    <button onClick={() => navigate("/jobs/new")} className="btn btn-primary">Create Job</button>
+                    <h3 className="text-xl font-semibold text-white mb-2">
+                      No Jobs Yet
+                    </h3>
+                    <p className="text-slate-400 mb-6">
+                      Post a job to get started!
+                    </p>
+                    <button
+                      onClick={() => navigate("/jobs/new")}
+                      className="btn btn-primary"
+                    >
+                      Create Job
+                    </button>
                   </div>
                 </div>
               ) : (
                 <>
                   <div className="space-y-6">
-                    {activeHirerJobs.map(job => (
+                    {activeHirerJobs.map((job) => (
                       <HirerJobCard
                         key={job.id}
                         job={job}
@@ -1013,9 +1124,11 @@ const Dashboard = () => {
 
                   {pastHirerJobs.length > 0 && (
                     <div className="mt-12">
-                      <h2 className="text-xl font-bold text-slate-300 mb-6">Past Jobs</h2>
+                      <h2 className="text-xl font-bold text-slate-300 mb-6">
+                        Past Jobs
+                      </h2>
                       <div className="space-y-4 opacity-75">
-                        {pastHirerJobs.map(job => (
+                        {pastHirerJobs.map((job) => (
                           <HirerJobCard key={job.id} job={job} readOnly />
                         ))}
                       </div>
@@ -1026,13 +1139,13 @@ const Dashboard = () => {
             </div>
           )}
 
-          {activeTab === 'payments' && (
+          {activeTab === "payments" && (
             <div className="animate-fade-in">
               <PaymentsList />
             </div>
           )}
 
-          {activeTab === 'messages' && (
+          {activeTab === "messages" && (
             <div className="animate-fade-in">
               <MessageCenter
                 initialTargetUserId={targetUserIdForChat}
@@ -1048,24 +1161,40 @@ const Dashboard = () => {
 
 // --- Sub-components to keep file clean ---
 
-const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, onRejectApplication, onDeleteJob, onPaymentComplete, onOpenChat, readOnly }) => {
+const HirerJobCard = ({
+  job,
+  selectedJob,
+  setSelectedJob,
+  onAcceptApplication,
+  onRejectApplication,
+  onDeleteJob,
+  onPaymentComplete,
+  onOpenChat,
+  readOnly,
+}) => {
   const navigate = useNavigate();
   const isExpanded = selectedJob === job.id;
 
   return (
-    <div className={`card bg-slate-900 border border-slate-700 transition-all ${readOnly ? 'grayscale hover:grayscale-0' : ''}`}>
+    <div
+      className={`card bg-slate-900 border border-slate-700 transition-all ${
+        readOnly ? "grayscale hover:grayscale-0" : ""
+      }`}
+    >
       <div className="card-header flex justify-between items-start">
         <div>
           <h3 className="text-lg font-semibold text-white">{job.title}</h3>
           <p className="text-slate-400 text-sm">{job.address}</p>
           <div className="flex items-center gap-2 mt-2">
             <StatusBadge status={job.status} type="job" />
-            <span className="text-xs text-slate-500">{job.applications?.length || 0} applications</span>
+            <span className="text-xs text-slate-500">
+              {job.applications?.length || 0} applications
+            </span>
           </div>
         </div>
         {!readOnly && (
           <div className="flex gap-2">
-            {job.status === 'PENDING' && (
+            {job.status === "PENDING" && (
               <button
                 onClick={(e) => {
                   e.stopPropagation();
@@ -1074,8 +1203,18 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
                 className="btn btn-danger btn-xs py-1 px-2 flex items-center bg-red-600/20 hover:bg-red-600 border border-red-500/30 text-red-500 hover:text-white transition-all duration-200"
                 title="Delete Job"
               >
-                <svg className="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                <svg
+                  className="w-3.5 h-3.5 mr-1"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                  />
                 </svg>
                 Delete
               </button>
@@ -1084,7 +1223,7 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
               onClick={() => setSelectedJob(isExpanded ? null : job.id)}
               className="btn btn-secondary btn-sm"
             >
-              {isExpanded ? 'Hide' : 'View'}
+              {isExpanded ? "Hide" : "View"}
             </button>
           </div>
         )}
@@ -1101,27 +1240,49 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
           <div className="space-y-3">
             <h4 className="font-medium text-slate-200">Applications</h4>
             {job.applications?.length === 0 ? (
-              <p className="text-slate-500 text-sm italic">No applications yet.</p>
+              <p className="text-slate-500 text-sm italic">
+                No applications yet.
+              </p>
             ) : (
-              job.applications?.map(app => (
-                <div key={app.id} className="bg-slate-800 p-3 rounded-lg border border-slate-700">
+              job.applications?.map((app) => (
+                <div
+                  key={app.id}
+                  className="bg-slate-800 p-3 rounded-lg border border-slate-700"
+                >
                   <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-white">Worker Application</span>
+                    <span className="text-sm font-medium text-white">
+                      Worker Application
+                    </span>
                     <StatusBadge status={app.status} type="application" />
                   </div>
                   <p className="text-slate-400 text-sm mb-3">{app.message}</p>
 
-                  {app.status === 'APPLIED' && job.status === 'PENDING' && (
+                  {app.status === "APPLIED" && job.status === "PENDING" && (
                     <div className="flex gap-2">
-                      <button onClick={() => onAcceptApplication(app.id)} className="btn btn-success btn-xs">Accept</button>
-                      <button onClick={() => onRejectApplication(app.id)} className="btn btn-danger btn-xs">Reject</button>
+                      <button
+                        onClick={() => onAcceptApplication(app.id)}
+                        className="btn btn-success btn-xs"
+                      >
+                        Accept
+                      </button>
+                      <button
+                        onClick={() => onRejectApplication(app.id)}
+                        className="btn btn-danger btn-xs"
+                      >
+                        Reject
+                      </button>
                     </div>
                   )}
 
-                  {app.status === 'ACCEPTED' && (
+                  {app.status === "ACCEPTED" && (
                     <div className="text-xs text-emerald-400 mt-2">
                       You accepted this application.
-                      <button onClick={() => onOpenChat(app.workerId, job.id)} className="text-blue-400 ml-2 hover:underline">Message Worker</button>
+                      <button
+                        onClick={() => onOpenChat(app.workerId, job.id)}
+                        className="text-blue-400 ml-2 hover:underline"
+                      >
+                        Message Worker
+                      </button>
                     </div>
                   )}
                 </div>
@@ -1130,11 +1291,19 @@ const HirerJobCard = ({ job, selectedJob, setSelectedJob, onAcceptApplication, o
           </div>
 
           {/* Payment Action if Completed */}
-          {job.status === 'COMPLETED' && (
+          {job.status === "COMPLETED" && (
             <div className="mt-6 p-4 bg-emerald-900/20 border border-emerald-800 rounded-lg">
-              <h4 className="font-medium text-emerald-400 mb-2">Job Completed!</h4>
-              <p className="text-slate-400 text-sm mb-4">Review the work and release final payment.</p>
-              <FinalPaymentForm jobId={job.id} jobPrice={job.price} onPaymentComplete={onPaymentComplete} />
+              <h4 className="font-medium text-emerald-400 mb-2">
+                Job Completed!
+              </h4>
+              <p className="text-slate-400 text-sm mb-4">
+                Review the work and release final payment.
+              </p>
+              <FinalPaymentForm
+                jobId={job.id}
+                jobPrice={job.price}
+                onPaymentComplete={onPaymentComplete}
+              />
             </div>
           )}
         </div>
@@ -1161,30 +1330,51 @@ const PaymentsList = () => {
     loadPayments();
   }, []);
 
-  if (loading) return <div className="text-center py-8 text-slate-400">Loading payments...</div>;
-  if (payments.length === 0) return <div className="text-center py-8 text-slate-400">No payment history found.</div>;
+  if (loading)
+    return (
+      <div className="text-center py-8 text-slate-400">Loading payments...</div>
+    );
+  if (payments.length === 0)
+    return (
+      <div className="text-center py-8 text-slate-400">
+        No payment history found.
+      </div>
+    );
 
   return (
     <div className="space-y-4">
-      {payments.map(payment => (
-        <div key={payment.id} className="bg-slate-900 p-4 rounded-lg border border-slate-700 flex justify-between items-center">
+      {payments.map((payment) => (
+        <div
+          key={payment.id}
+          className="bg-slate-900 p-4 rounded-lg border border-slate-700 flex justify-between items-center"
+        >
           <div>
-            <p className="text-white font-medium">{payment.job?.title || "Payment"}</p>
-            <p className="text-slate-500 text-xs">{new Date(payment.createdAt).toLocaleDateString()}</p>
+            <p className="text-white font-medium">
+              {payment.job?.title || "Payment"}
+            </p>
+            <p className="text-slate-500 text-xs">
+              {new Date(payment.createdAt).toLocaleDateString()}
+            </p>
           </div>
           <div className="text-right">
-            <span className={`block font-bold ${payment.status === 'PAID' ? 'text-emerald-400' : 'text-amber-400'}`}>
+            <span
+              className={`block font-bold ${
+                payment.status === "PAID"
+                  ? "text-emerald-400"
+                  : "text-amber-400"
+              }`}
+            >
               ${payment.amount}
             </span>
-            <span className="text-xs text-slate-500 uppercase">{payment.status}</span>
+            <span className="text-xs text-slate-500 uppercase">
+              {payment.status}
+            </span>
           </div>
         </div>
       ))}
     </div>
   );
 };
-
-
 
 export default Dashboard;
 
@@ -1215,7 +1405,10 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
       // Try to get the detailed message from our new error response format
       const serverMessage = err.response?.data?.message;
       const stripeError = err.response?.data?.raw_error?.message;
-      const finalMessage = stripeError || serverMessage || "Failed to start onboarding. Please try again.";
+      const finalMessage =
+        stripeError ||
+        serverMessage ||
+        "Failed to start onboarding. Please try again.";
 
       setError(finalMessage);
       setLoading(false);
@@ -1232,7 +1425,7 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
     }
 
     if (!stripeStatus.detailsSubmitted) {
-      return "Your Stripe account setup is incomplete. Complete it now to start receiving payments.";
+      return "Your Stripe account setup is incomplete. Complete it now to start receiving payments and view available jobs.";
     }
 
     if (stripeStatus.requiresAction) {
