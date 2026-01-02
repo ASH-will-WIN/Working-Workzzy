@@ -23,11 +23,29 @@ const Register = () => {
       return;
     }
 
+    // Validate phone number
+    if (!phone) {
+      setError("Phone number is required.");
+      return;
+    }
+
+    // Basic phone number validation (at least 10 digits)
+    const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/;
+    if (!phoneRegex.test(phone)) {
+      setError("Please enter a valid phone number.");
+      return;
+    }
+
     try {
       await register(name, email, password, role, phone);
       navigate("/jobs");
     } catch (err) {
-      setError("Failed to register.");
+      // Display server error message if available
+      if (err.response && err.response.data && err.response.data.error) {
+        setError(err.response.data.error);
+      } else {
+        setError("Failed to register.");
+      }
       console.error(err);
     }
   };
@@ -45,7 +63,9 @@ const Register = () => {
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">Full Name</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              Full Name
+            </label>
             <input
               type="text"
               placeholder="John Doe"
@@ -58,7 +78,9 @@ const Register = () => {
           </div>
 
           <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">Email Address</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              Email Address
+            </label>
             <input
               type="email"
               placeholder="name@example.com"
@@ -71,7 +93,9 @@ const Register = () => {
           </div>
 
           <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">Phone Number (Optional)</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              Phone Number *
+            </label>
             <input
               type="tel"
               placeholder="+1 (555) 000-0000"
@@ -79,11 +103,14 @@ const Register = () => {
               onChange={(e) => setPhone(e.target.value)}
               autoComplete="tel"
               className="w-full px-4 py-3 bg-slate-950/50 border border-slate-700 rounded-xl focus:ring-2 focus:ring-wurkzi-500 focus:border-transparent outline-none transition-all text-white placeholder-slate-500"
+              required
             />
           </div>
 
           <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">Password</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              Password
+            </label>
             <input
               type="password"
               placeholder="Create a strong password"
@@ -96,25 +123,29 @@ const Register = () => {
           </div>
 
           <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">I want to...</label>
+            <label className="block text-sm font-medium text-slate-300 mb-1">
+              I want to...
+            </label>
             <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
                 onClick={() => setRole("WORKER")}
-                className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "WORKER"
-                  ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
-                  : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
-                  }`}
+                className={`px-4 py-3 rounded-xl border font-medium transition-all ${
+                  role === "WORKER"
+                    ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
+                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
               >
                 Find Work
               </button>
               <button
                 type="button"
                 onClick={() => setRole("CLIENT")}
-                className={`px-4 py-3 rounded-xl border font-medium transition-all ${role === "CLIENT"
-                  ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
-                  : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
-                  }`}
+                className={`px-4 py-3 rounded-xl border font-medium transition-all ${
+                  role === "CLIENT"
+                    ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
+                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
+                }`}
               >
                 Hire Talent
               </button>
@@ -136,7 +167,10 @@ const Register = () => {
             <div className="ml-3 text-sm">
               <label htmlFor="terms" className="text-slate-400">
                 I agree to the{" "}
-                <Link to="/terms" className="font-medium text-wurkzi-400 hover:text-wurkzi-300 hover:underline">
+                <Link
+                  to="/terms"
+                  className="font-medium text-wurkzi-400 hover:text-wurkzi-300 hover:underline"
+                >
                   Terms and Conditions
                 </Link>
               </label>
@@ -161,12 +195,18 @@ const Register = () => {
         <div className="mt-8 pt-6 border-t border-slate-700/50">
           <p className="text-slate-400">
             Already have an account?{" "}
-            <Link to="/login" className="text-wurkzi-400 hover:text-white font-medium transition-colors">
+            <Link
+              to="/login"
+              className="text-wurkzi-400 hover:text-white font-medium transition-colors"
+            >
               Sign in
             </Link>
           </p>
           <div className="mt-4">
-            <Link to="/" className="text-sm text-slate-500 hover:text-slate-300 transition-colors">
+            <Link
+              to="/"
+              className="text-sm text-slate-500 hover:text-slate-300 transition-colors"
+            >
               ← Back to Home
             </Link>
           </div>

@@ -3,6 +3,17 @@ const { supabase, prisma } = require("../../db");
 const registerUser = async (req, res) => {
   const { email, password, name, role, phone } = req.body;
 
+  // Validate required fields
+  if (!phone) {
+    return res.status(400).json({ error: "Phone number is required" });
+  }
+
+  // Basic phone number validation (at least 10 digits)
+  const phoneRegex = /^\+?[\d\s\-\(\)]{10,}$/;
+  if (!phoneRegex.test(phone)) {
+    return res.status(400).json({ error: "Please enter a valid phone number" });
+  }
+
   try {
     const { data, error } = await supabase.auth.signUp({
       email,
@@ -19,8 +30,8 @@ const registerUser = async (req, res) => {
       return res.status(500).json({ error: error.message });
     }
 
-    // Save phone number to user profile if provided
-    if (phone && data.user) {
+    // Save phone number to user profile (now required)
+    if (data.user) {
       console.log("Saving phone number to user profile:", {
         userId: data.user.id,
         phone,
@@ -35,13 +46,14 @@ const registerUser = async (req, res) => {
         console.log("Successfully saved user profile with phone number");
       } catch (profileError) {
         console.error("Error saving user profile:", profileError);
-        // Don't fail the registration if profile creation fails
+        // If we can't save the profile with phone number, we should fail the registration
+        return res.status(500).json({ error: "Failed to create user profile" });
       }
     } else {
-      console.log("Phone number not provided or user data missing:", {
-        phone,
+      console.log("User data missing:", {
         userId: data?.user?.id,
       });
+      return res.status(500).json({ error: "Failed to create user" });
     }
 
     res.status(201).json(data);
@@ -73,7 +85,9 @@ const loginUser = async (req, res) => {
 // Send password reset email
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const redirectTo = `${process.env.CLIENT_URL || "http://localhost:3000"}/reset-password`;
+  const redirectTo = `${
+    process.env.CLIENT_URL || "http://localhost:3000"
+  }/reset-password`;
 
   try {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
