@@ -192,17 +192,14 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
         </div>
 
         <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
-          <div
-            className="flex flex-col md:flex-row min-h-0"
-            style={{ height: "calc(100dvh - 200px)" }}
-          >
+          <div className="flex flex-col md:flex-row min-h-0 flex-1">
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
               className={`md:w-1/3 border-r border-slate-700 flex flex-col min-h-0 ${
                 selectedConversation ? "hidden md:flex" : "flex"
               }`}
             >
-              <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800 border-2 border-purple-500">
+              <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800">
                 <h2 className="font-semibold text-white">Conversations</h2>
                 {conversations.length > 0 && (
                   <p className="text-sm text-slate-400 mt-1">
@@ -214,12 +211,14 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
                   </p>
                 )}
               </div>
-              <div className="flex-1 overflow-y-auto">
-                <ConversationList
-                  conversations={conversations}
-                  selectedConversation={selectedConversation}
-                  onSelectConversation={handleSelectConversation}
-                />
+              <div className="flex flex-col min-h-0 overflow-hidden">
+                <div className="flex-1 min-h-0 overflow-y-auto">
+                  <ConversationList
+                    conversations={conversations}
+                    selectedConversation={selectedConversation}
+                    onSelectConversation={handleSelectConversation}
+                  />
+                </div>
               </div>
             </div>
 
