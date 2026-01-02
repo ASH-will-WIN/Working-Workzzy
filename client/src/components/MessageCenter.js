@@ -21,14 +21,19 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
   // Fetch conversations on component mount
   useEffect(() => {
-    console.log("MessageCenter useEffect triggered", { initialTargetUserId, initialTargetJobId, locationState: location.state });
+    console.log("MessageCenter useEffect triggered", {
+      initialTargetUserId,
+      initialTargetJobId,
+      locationState: location.state,
+    });
     const fetchConversations = async () => {
       try {
         const data = await getConversations();
         setConversations(data);
 
         // Determine target from navigation state OR props
-        const targetUserId = initialTargetUserId || location.state?.targetUserId;
+        const targetUserId =
+          initialTargetUserId || location.state?.targetUserId;
         const targetJobId = initialTargetJobId || location.state?.jobId;
         const targetConvId = location.state?.conversationId;
 
@@ -58,7 +63,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
               jobId: targetJobId,
               isVirtual: true,
               latestMessage: "",
-              unreadCount: 0
+              unreadCount: 0,
             };
             setSelectedConversation(virtualConv);
             setMessages([]);
@@ -130,7 +135,9 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
       setTimeout(async () => {
         const data = await getConversations();
         setConversations(data);
-        const realConv = data.find(c => c.conversationId === newMessage.conversationId);
+        const realConv = data.find(
+          (c) => c.conversationId === newMessage.conversationId
+        );
         if (realConv) setSelectedConversation(realConv);
       }, 500);
     } else {
@@ -139,10 +146,10 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
         prev.map((conv) =>
           conv.conversationId === selectedConversation.conversationId
             ? {
-              ...conv,
-              latestMessage: newMessage.content,
-              latestMessageTime: newMessage.createdAt,
-            }
+                ...conv,
+                latestMessage: newMessage.content,
+                latestMessageTime: newMessage.createdAt,
+              }
             : conv
         )
       );
@@ -185,11 +192,16 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
         </div>
 
         <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
-          <div className="flex flex-col md:flex-row h-[600px]">
+          <div
+            className="flex flex-col md:flex-row"
+            style={{ height: "calc(100vh - 200px)" }}
+          >
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
-              className={`md:w-1/3 border-r border-slate-700 flex flex-col ${selectedConversation ? "hidden md:flex" : "flex"
-                }`}
+              className={`md:w-1/3 border-r border-slate-700 flex flex-col ${
+                selectedConversation ? "hidden md:flex" : "flex"
+              }`}
+              style={{ minHeight: 0 }}
             >
               <div className="p-4 border-b border-slate-700 bg-slate-800">
                 <h2 className="font-semibold text-white">Conversations</h2>
@@ -214,8 +226,10 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
             {/* Chat Window - Full width on mobile when selected, main area on desktop */}
             <div
-              className={`flex-1 flex flex-col ${selectedConversation ? "flex" : "hidden md:flex"
-                }`}
+              className={`flex-1 flex flex-col ${
+                selectedConversation ? "flex" : "hidden md:flex"
+              }`}
+              style={{ minHeight: 0 }}
             >
               {selectedConversation ? (
                 <>

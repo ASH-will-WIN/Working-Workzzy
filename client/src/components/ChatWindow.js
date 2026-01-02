@@ -19,7 +19,12 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
 
   // Scroll to bottom when new messages arrive
   useEffect(() => {
-    scrollToBottom();
+    // Add a small delay to ensure DOM is ready
+    const timer = setTimeout(() => {
+      scrollToBottom();
+    }, 100);
+
+    return () => clearTimeout(timer);
   }, [localMessages]);
 
   // Load messages once when conversation is selected
@@ -51,7 +56,17 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   }, [conversation]);
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      try {
+        messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+      } catch (err) {
+        // Fallback: manually scroll the messages container
+        const messagesContainer = messagesEndRef.current?.parentElement;
+        if (messagesContainer) {
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+      }
+    }
   };
 
   const handleSendMessage = async (content) => {
@@ -114,7 +129,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       {/* Messages Area */}
       <div
         className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900"
-        style={{ WebkitOverflowScrolling: "touch" }}
+        style={{
+          WebkitOverflowScrolling: "touch",
+          maxHeight: "calc(100vh - 200px)",
+        }}
       >
         {localMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
