@@ -108,7 +108,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   return (
     <div className="flex-1 flex flex-col">
       {/* Chat Header */}
-      <div className="flex-shrink-0 p-4 border-b border-slate-700 bg-slate-800">
+      <div className="p-4 border-b border-slate-700 bg-slate-800">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 bg-gradient-to-br from-wurkzi-400 to-wurkzi-600 rounded-full flex items-center justify-center text-white font-medium">
@@ -131,6 +131,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
         className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900"
         style={{
           WebkitOverflowScrolling: "touch",
+          maxHeight: "calc(100vh - 200px)",
         }}
       >
         {localMessages.length === 0 ? (
