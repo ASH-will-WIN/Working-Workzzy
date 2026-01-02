@@ -112,7 +112,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900">
+      <div
+        className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900"
+        style={{ WebkitOverflowScrolling: "touch" }}
+      >
         {localMessages.length === 0 ? (
           <div className="flex flex-col items-center justify-center h-full text-center">
             <div className="w-16 h-16 text-slate-600 mb-4">
@@ -141,8 +144,8 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
               showTime={
                 index === 0 ||
                 new Date(message.createdAt).getTime() -
-                new Date(localMessages[index - 1].createdAt).getTime() >
-                300000
+                  new Date(localMessages[index - 1].createdAt).getTime() >
+                  300000
               }
             />
           ))

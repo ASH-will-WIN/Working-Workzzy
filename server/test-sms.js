@@ -6,7 +6,7 @@ async function testSMS() {
 
   // Test sending a direct SMS (if Twilio is configured)
   try {
-    const result = await sendSMS("+12487640275", "Test message from Workzzy");
+    const result = await sendSMS("12487640275", "Test message from Workzzy");
     console.log("Direct SMS test result:", result);
   } catch (error) {
     console.error("Error in direct SMS test:", error);
