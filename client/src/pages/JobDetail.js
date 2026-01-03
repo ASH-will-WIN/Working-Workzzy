@@ -196,11 +196,11 @@ const JobDetail = () => {
   }
 
   const hasApplied = job?.applications?.some(
-    (app) => app.workerId === user?.id
+    (app) => app.workerId === user?.id && app.status !== "WITHDRAWN"
   );
 
   const currentUserApplication = job?.applications?.find(
-    (app) => app.workerId === user?.id
+    (app) => app.workerId === user?.id && app.status !== "WITHDRAWN"
   );
 
 
@@ -528,73 +528,60 @@ const JobDetail = () => {
           <>
             {/* Add messaging button for workers who have already applied */}
             {!isHirer && hasApplied && (
-              currentUserApplication?.status === "WITHDRAWN" ? (
-                <div className="card mb-6 bg-slate-800 border border-slate-700">
-                  <div className="card-header">
-                    <h3 className="text-lg font-semibold text-slate-400">Application Withdrawn</h3>
-                  </div>
-                  <div className="card-body">
-                    <p className="text-slate-500">
-                      You have withdrawn your application for this job. You can no longer chat with the client.
-                    </p>
-                  </div>
+              <div className="card mb-6">
+                <div className="card-header">
+                  <h3 className="text-lg font-semibold text-white">
+                    Contact Job Client
+                  </h3>
                 </div>
-              ) : (
-                <div className="card mb-6">
-                  <div className="card-header">
-                    <h3 className="text-lg font-semibold text-white">
-                      Contact Job Client
-                    </h3>
-                  </div>
-                  <div className="card-body">
-                    <p className="text-slate-400 mb-4">
-                      Have questions about this job? Message the client directly.
-                    </p>
-                    {/* Chat Button for workers who have applied */}
-                    {user &&
-                      user.id !== job?.hirerId &&
-                      job?.status === "PENDING" && (
-                        <div className="mt-4 flex justify-end">
-                          <button
-                            onClick={handleStartChat}
-                            disabled={startingChat || !job}
-                            className="btn btn-primary flex items-center"
-                          >
-                            {startingChat ? (
-                              <>
-                                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                Starting Chat...
-                              </>
-                            ) : (
-                              <>
-                                <svg
-                                  className="w-4 h-4 mr-2"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
-                                  />
-                                </svg>
-                                Chat with Client
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      )}
-
-                    {chatError && (
-                      <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                        <p className="text-red-300 text-sm">{chatError}</p>
+                <div className="card-body">
+                  <p className="text-slate-400 mb-4">
+                    Have questions about this job? Message the client directly.
+                  </p>
+                  {/* Chat Button for workers who have applied */}
+                  {user &&
+                    user.id !== job?.hirerId &&
+                    job?.status === "PENDING" && (
+                      <div className="mt-4 flex justify-end">
+                        <button
+                          onClick={handleStartChat}
+                          disabled={startingChat || !job}
+                          className="btn btn-primary flex items-center"
+                        >
+                          {startingChat ? (
+                            <>
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                              Starting Chat...
+                            </>
+                          ) : (
+                            <>
+                              <svg
+                                className="w-4 h-4 mr-2"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                                />
+                              </svg>
+                              Chat with Client
+                            </>
+                          )}
+                        </button>
                       </div>
                     )}
-                  </div>
+
+                  {chatError && (
+                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                      <p className="text-red-300 text-sm">{chatError}</p>
+                    </div>
+                  )}
                 </div>
-              )
+              </div>
             )}
 
             {job.status === "PENDING" && !showPaymentForm && !hasApplied && (

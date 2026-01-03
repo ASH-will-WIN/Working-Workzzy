@@ -46,10 +46,17 @@ async function createApplication(req, res) {
     }
 
     if (existingApplication) {
-      return res.status(400).json({
-        error: "duplicate_application",
-        message: "You have already applied for this job",
-      });
+      if (existingApplication.status === ApplicationStatus.WITHDRAWN) {
+        // If they withdrew before, delete the old record so they can re-apply fresh
+        await prisma.jobApplication.delete({
+          where: { id: existingApplication.id },
+        });
+      } else {
+        return res.status(400).json({
+          error: "duplicate_application",
+          message: "You have already applied for this job",
+        });
+      }
     }
 
 
