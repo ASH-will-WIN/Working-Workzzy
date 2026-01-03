@@ -18,15 +18,12 @@ const sendMessage = async (req, res) => {
       [senderId, receiverId].sort().join("-") + (jobId ? `-job-${jobId}` : "");
 
     // If jobId is provided, validate the users can message about this job
+    // If jobId is provided, validate the users can message about this job
     if (jobId) {
       const job = await prisma.job.findUnique({
         where: { id: jobId },
         include: {
-          applications: {
-            where: {
-              status: "ACCEPTED",
-            },
-          },
+          applications: true, // Fetch all applications to check status
         },
       });
 
@@ -34,10 +31,37 @@ const sendMessage = async (req, res) => {
         return res.status(404).json({ error: "Job not found" });
       }
 
-      // Allow messaging if:
-      // 1. The sender is the hirer and receiver is any user, OR
-      // 2. The receiver is the hirer and sender is any user (for pending jobs)
-      // 3. Both users are accepted workers on the job (for committed/in-progress jobs)
+      // 1. Block if job is completed or cancelled
+      if (["COMPLETED", "CANCELLED"].includes(job.status)) {
+        return res.status(403).json({
+          error: "Messaging is disabled for completed or cancelled jobs",
+        });
+      }
+
+      // 2. Block if the sender is a worker who has withdrawn
+      // Find sender's application if they are not the hirer
+      if (job.hirerId !== senderId) {
+        const senderApp = job.applications.find(
+          (app) => app.workerId === senderId
+        );
+        if (senderApp && senderApp.status === "WITHDRAWN") {
+          return res.status(403).json({
+            error: "You cannot message about a job you have withdrawn from",
+          });
+        }
+      }
+
+      // Check if receiver has withdrawn
+      if (job.hirerId !== receiverId) {
+        const receiverApp = job.applications.find(
+          (app) => app.workerId === receiverId
+        );
+        if (receiverApp && receiverApp.status === "WITHDRAWN") {
+          return res.status(403).json({
+            error: "You cannot message a worker who has withdrawn from the job",
+          });
+        }
+      }
 
       const isSenderHirer = job.hirerId === senderId;
       const isReceiverHirer = job.hirerId === receiverId;
@@ -52,12 +76,16 @@ const sendMessage = async (req, res) => {
       }
       // For non-pending jobs, use the original logic
       else {
-        const isSenderAuthorized =
-          isSenderHirer ||
-          job.applications.some((app) => app.workerId === senderId);
-        const isReceiverAuthorized =
-          isReceiverHirer ||
-          job.applications.some((app) => app.workerId === receiverId);
+        // Re-implementing authorization check with the new `applications` array
+        const isSenderValidWorker = job.applications.some(
+          (app) => app.workerId === senderId && app.status === "ACCEPTED"
+        );
+        const isReceiverValidWorker = job.applications.some(
+          (app) => app.workerId === receiverId && app.status === "ACCEPTED"
+        );
+
+        const isSenderAuthorized = isSenderHirer || isSenderValidWorker;
+        const isReceiverAuthorized = isReceiverHirer || isReceiverValidWorker;
 
         if (!isSenderAuthorized || !isReceiverAuthorized) {
           return res.status(403).json({
@@ -122,6 +150,27 @@ const getConversations = async (req, res) => {
     // Get the latest message and unread count for each conversation
     const conversationDetails = await Promise.all(
       conversations.map(async (conv) => {
+        // If there is a jobId, check if the conversation should be hidden
+        if (conv.jobId) {
+          const job = await prisma.job.findUnique({
+            where: { id: conv.jobId },
+            include: { applications: true }
+          });
+
+          // If job doesn't exist (maybe deleted), or is completed/cancelled, hide it
+          if (!job || ["COMPLETED", "CANCELLED"].includes(job.status)) {
+            return null;
+          }
+
+          // If user is a worker and has withdrawn, hide it
+          if (job.hirerId !== userId) {
+            const userApp = job.applications.find(app => app.workerId === userId);
+            if (userApp && userApp.status === "WITHDRAWN") {
+              return null;
+            }
+          }
+        }
+
         // FIX: Use prisma instead of db
         const latestMessage = await prisma.message.findFirst({
           where: { conversationId: conv.conversationId },
@@ -154,7 +203,10 @@ const getConversations = async (req, res) => {
       })
     );
 
-    res.json(conversationDetails);
+    // Filter out nulls (hidden conversations)
+    const filteredConversations = conversationDetails.filter(c => c !== null);
+
+    res.json(filteredConversations);
   } catch (error) {
     console.error("Error getting conversations:", error);
     res.status(500).json({ error: "Failed to get conversations" });
