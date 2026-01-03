@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
@@ -25,6 +25,18 @@ import ResetPassword from "./pages/ResetPassword";
 import "./App.css";
 
 function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check for Supabase password reset token in the URL hash
+    const hash = window.location.hash;
+    if (hash && hash.includes("access_token") && (hash.includes("type=recovery") || hash.includes("type=magiclink") || !hash.includes("type="))) {
+      console.log("Detected password reset token, redirecting to reset-password page");
+      // Redirect to reset password page, preserving the hash so the page can parse the token
+      navigate(`/reset-password${hash}`);
+    }
+  }, [navigate]);
+
   return (
     <div className="App flex flex-col min-h-screen bg-slate-950">
       <Navbar />

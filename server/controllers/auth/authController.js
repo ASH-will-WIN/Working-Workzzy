@@ -85,9 +85,12 @@ const loginUser = async (req, res) => {
 // Send password reset email
 const forgotPassword = async (req, res) => {
   const { email } = req.body;
-  const redirectTo = `${
-    process.env.CLIENT_URL || "http://localhost:3000"
-  }/reset-password`;
+  // Determine client URL: Use env var, fallback to request origin, then default to localhost
+  const origin = req.get('origin');
+  const clientUrl = (process.env.CLIENT_URL || origin || "http://localhost:3000").replace(/\/$/, "");
+  const redirectTo = `${clientUrl}/reset-password`;
+
+  console.log("Forgot Password Request:", { email, clientUrl, redirectTo, headersOrigin: origin });
 
   try {
     const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
@@ -109,13 +112,24 @@ const resetPassword = async (req, res) => {
   const { password, access_token } = req.body;
 
   try {
-    // We can use the access_token directly to update the user's password
-    const { data, error } = await supabase.auth.updateUser(
-      { password },
+    // Create a temporary Supabase client authenticated as the user
+    // This requires importing createClient from @supabase/supabase-js
+    const { createClient } = require("@supabase/supabase-js");
+    const tempSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_KEY,
       {
-        accessToken: access_token,
+        global: {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+        },
       }
     );
+
+    const { data, error } = await tempSupabase.auth.updateUser({
+      password: password,
+    });
 
     if (error) {
       return res.status(500).json({ error: error.message });

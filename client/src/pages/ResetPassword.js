@@ -15,7 +15,11 @@ const ResetPassword = () => {
     const getAccessToken = () => {
         const hash = location.hash;
         if (!hash) return null;
-        const params = new URLSearchParams(hash.substring(1));
+
+        // Remove the leading '#'
+        const updateHash = hash.substring(1);
+        const params = new URLSearchParams(updateHash);
+
         return params.get("access_token");
     };
 
