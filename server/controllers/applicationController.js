@@ -14,6 +14,15 @@ async function createApplication(req, res) {
     // Use user_id from Supabase user object if available, fallback to id
     const workerId = req.user?.id;
 
+    // Check if user is a WORKER
+    const userRole = req.user?.user_metadata?.role;
+    if (userRole !== "WORKER") {
+      return res.status(403).json({
+        error: "role_restricted",
+        message: "Only registered workers can apply for jobs.",
+      });
+    }
+
     // Verify job existence and lack of duplicate application in parallel
     const [job, existingApplication] = await Promise.all([
       prisma.job.findUnique({ where: { id: jobId } }),

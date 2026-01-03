@@ -586,92 +586,112 @@ const JobDetail = () => {
                   Apply for this Job
                 </h3>
 
-                {/* PROMINENT PAYMENT NOTICE */}
-                <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-2 border-amber-500/50 rounded-xl p-5 mb-6">
-                  <div className="flex items-start">
-                    <div className="flex-shrink-0 w-12 h-12 bg-amber-500/30 rounded-full flex items-center justify-center mr-4">
-                      <svg
-                        className="w-6 h-6 text-amber-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
+                {/* Client Restriction Check */}
+                {user?.user_metadata?.role === "CLIENT" ? (
+                  <div className="bg-slate-800 rounded-lg p-6 text-center border border-slate-700">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                      <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                       </svg>
                     </div>
-                    <div className="flex-1">
-                      <h4 className="text-lg font-bold text-amber-300 mb-2">
-                        💰 $5 Refundable Deposit Required
-                      </h4>
-                      <p className="text-amber-200/80 mb-3">
-                        To apply for this job, you must pay a <span className="font-bold text-white">$5 deposit</span> upfront.
-                        Your application will only be submitted after payment is complete.
-                      </p>
-                      <div className="bg-slate-900/50 rounded-lg p-3">
-                        <p className="text-sm text-slate-300 font-medium mb-2">What happens to your deposit:</p>
-                        <ul className="text-sm text-slate-400 space-y-1">
-                          <li className="flex items-center">
-                            <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                            <span><strong className="text-emerald-400">Refunded</strong> if your application is rejected</span>
-                          </li>
-                          <li className="flex items-center">
-                            <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                            </svg>
-                            <span><strong className="text-emerald-400">Platform Fee</strong> kept on successful job</span>
-                          </li>
-                        </ul>
+                    <h4 className="text-lg font-medium text-white mb-2">Client Account Detected</h4>
+                    <p className="text-slate-400 mb-4">
+                      You are currently logged in as a Client. Only registered Workers can apply for jobs.
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      To apply for jobs, please sign out and creates a Worker account.
+                    </p>
+                  </div>
+                ) : (
+                  <>
+                    {/* PROMINENT PAYMENT NOTICE */}
+                    <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-2 border-amber-500/50 rounded-xl p-5 mb-6">
+                      <div className="flex items-start">
+                        <div className="flex-shrink-0 w-12 h-12 bg-amber-500/30 rounded-full flex items-center justify-center mr-4">
+                          <svg
+                            className="w-6 h-6 text-amber-400"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                            />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="text-lg font-bold text-amber-300 mb-2">
+                            💰 $5 Refundable Deposit Required
+                          </h4>
+                          <p className="text-amber-200/80 mb-3">
+                            To apply for this job, you must pay a <span className="font-bold text-white">$5 deposit</span> upfront.
+                            Your application will only be submitted after payment is complete.
+                          </p>
+                          <div className="bg-slate-900/50 rounded-lg p-3">
+                            <p className="text-sm text-slate-300 font-medium mb-2">What happens to your deposit:</p>
+                            <ul className="text-sm text-slate-400 space-y-1">
+                              <li className="flex items-center">
+                                <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span><strong className="text-emerald-400">Refunded</strong> if your application is rejected</span>
+                              </li>
+                              <li className="flex items-center">
+                                <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span><strong className="text-emerald-400">Platform Fee</strong> kept on successful job</span>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
 
-                <form onSubmit={handleApply} className="space-y-6">
-                  <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-slate-300 mb-2"
-                    >
-                      Why are you interested in this job? (Optional)
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={4}
-                      className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
-                      placeholder="Tell the client why you're a great fit for this job..."
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                    />
-                  </div>
+                    <form onSubmit={handleApply} className="space-y-6">
+                      <div>
+                        <label
+                          htmlFor="message"
+                          className="block text-sm font-medium text-slate-300 mb-2"
+                        >
+                          Why are you interested in this job? (Optional)
+                        </label>
+                        <textarea
+                          id="message"
+                          rows={4}
+                          className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+                          placeholder="Tell the client why you're a great fit for this job..."
+                          value={message}
+                          onChange={(e) => setMessage(e.target.value)}
+                        />
+                      </div>
 
-                  <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-amber-500/25 transition-all duration-200 flex items-center justify-center text-lg">
-                    <svg
-                      className="w-6 h-6 mr-3"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
-                      />
-                    </svg>
-                    Pay $5 Deposit & Apply
-                  </button>
+                      <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-amber-500/25 transition-all duration-200 flex items-center justify-center text-lg">
+                        <svg
+                          className="w-6 h-6 mr-3"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                          />
+                        </svg>
+                        Pay $5 Deposit & Apply
+                      </button>
 
-                  <p className="text-center text-xs text-slate-500">
-                    You will be redirected to a secure payment page to complete your deposit.
-                  </p>
-                </form>
+                      <p className="text-center text-xs text-slate-500">
+                        You will be redirected to a secure payment page to complete your deposit.
+                      </p>
+                    </form>
+                  </>
+                )}
               </div>
             )}
 
