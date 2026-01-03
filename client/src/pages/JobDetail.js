@@ -599,7 +599,7 @@ const JobDetail = () => {
                       You are currently logged in as a Client. Only registered Workers can apply for jobs.
                     </p>
                     <p className="text-sm text-slate-500">
-                      To apply for jobs, please sign out and creates a Worker account.
+                      To apply for jobs, please sign out and create a Worker account.
                     </p>
                   </div>
                 ) : (
