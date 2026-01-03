@@ -109,24 +109,27 @@ const forgotPassword = async (req, res) => {
 
 // Reset password with token
 const resetPassword = async (req, res) => {
-  const { password, access_token } = req.body;
+  const { password, access_token, refresh_token } = req.body;
 
   try {
-    // Create a temporary Supabase client authenticated as the user
-    // This requires importing createClient from @supabase/supabase-js
+    // Create a temporary Supabase client
     const { createClient } = require("@supabase/supabase-js");
     const tempSupabase = createClient(
       process.env.SUPABASE_URL,
-      process.env.SUPABASE_KEY,
-      {
-        global: {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-        },
-      }
+      process.env.SUPABASE_KEY
     );
 
+    // Authenticate the user with the tokens
+    const { error: sessionError } = await tempSupabase.auth.setSession({
+      access_token,
+      refresh_token,
+    });
+
+    if (sessionError) {
+      return res.status(500).json({ error: "Failed to establish session: " + sessionError.message });
+    }
+
+    // Now update the user's password
     const { data, error } = await tempSupabase.auth.updateUser({
       password: password,
     });

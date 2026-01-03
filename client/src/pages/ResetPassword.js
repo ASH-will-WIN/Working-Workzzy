@@ -11,8 +11,8 @@ const ResetPassword = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Supabase appends the access_token in the URL fragment (hash)
-    const getAccessToken = () => {
+    // Supabase appends the access_token and refresh_token in the URL fragment (hash)
+    const getTokens = () => {
         const hash = location.hash;
         if (!hash) return null;
 
@@ -20,7 +20,10 @@ const ResetPassword = () => {
         const updateHash = hash.substring(1);
         const params = new URLSearchParams(updateHash);
 
-        return params.get("access_token");
+        return {
+            access_token: params.get("access_token"),
+            refresh_token: params.get("refresh_token")
+        };
     };
 
     const handleSubmit = async (e) => {
@@ -37,15 +40,19 @@ const ResetPassword = () => {
             return;
         }
 
-        const accessToken = getAccessToken();
-        if (!accessToken) {
+        const tokens = getTokens();
+        if (!tokens || !tokens.access_token || !tokens.refresh_token) {
             setError("Invalid or expired reset link. Please request a new one.");
             return;
         }
 
         setLoading(true);
         try {
-            await resetPassword({ password, access_token: accessToken });
+            await resetPassword({
+                password,
+                access_token: tokens.access_token,
+                refresh_token: tokens.refresh_token
+            });
             setSuccess(true);
             setTimeout(() => navigate("/login"), 3000);
         } catch (err) {
