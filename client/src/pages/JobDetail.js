@@ -254,20 +254,29 @@ const JobDetail = () => {
       </div>
 
       {/* Job Overview Section */}
+      {/* Job Overview Section - REMOVED (Consolidated into main description) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        <div className="md:col-span-2 card p-6 bg-slate-900 border border-slate-800">
-          <h2 className="text-lg font-bold text-white mb-4 flex items-center">
-            <svg className="w-5 h-5 mr-2 text-wurkzi-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            Job Overview
-          </h2>
-          <p className="text-slate-200 text-lg leading-relaxed font-medium">
-            {job.initialDescription}
-          </p>
-        </div>
+        {/* Switched card to span full width if overview is gone, or just kept location separate? 
+            Original layout: 2 cols overview, 1 col location. 
+            If I remove overview, location looks lonely. 
+            Maybe move location to side of full description? 
+            Or just keep Location as a single full width or separate card.
+            Let's keep Location in the grid but make it full width or better yet, 
+            put it above or below description.
+            
+            Actually, the user wants "one description". 
+            Let's remove the "Job Overview" card entirely.
+            And maybe make Location a small card or move it.
+            
+            Let's just keep Location card and maybe make it full width or 1/3 and leave space?
+            Or better: Move Location into the sidebar of description if possible.
+            
+            Simplest: Remove Overview col, keep Location col.
+            But Grid is 3 cols. 
+            If I remove col-span-2, Location (1 col) will be left.
+        */}
 
-        <div className="card p-6 bg-slate-900 border border-slate-800">
+        <div className="md:col-span-3 card p-6 bg-slate-900 border border-slate-800">
           <h2 className="text-lg font-bold text-white mb-4 flex items-center">
             <svg className="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -288,13 +297,13 @@ const JobDetail = () => {
         </div>
       </div>
 
-      {/* Full Description Section */}
+      {/* Description Section */}
       <div className="card mb-6 p-8 bg-slate-900 border border-slate-800">
         <h2 className="text-xl font-bold text-white mb-6 flex items-center border-b border-slate-800 pb-4">
           <svg className="w-6 h-6 mr-3 text-wurkzi-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
-          Full Job Description
+          Job Description
         </h2>
         <div className="prose max-w-none">
           <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">

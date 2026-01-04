@@ -6,7 +6,7 @@ import ImageUpload from "../components/ImageUpload";
 
 const CreateJob = () => {
   const [title, setTitle] = useState("");
-  const [initialDescription, setInitialDescription] = useState("");
+  const [title, setTitle] = useState("");
   const [fullDescription, setFullDescription] = useState("");
   const [address, setAddress] = useState("");
   const [generalLocation, setGeneralLocation] = useState("");
@@ -88,7 +88,7 @@ const CreateJob = () => {
 
     const jobData = {
       title,
-      initialDescription,
+      initialDescription: fullDescription, // Use full description for both fields
       fullDescription,
       address,
       generalLocation,
@@ -175,28 +175,10 @@ const CreateJob = () => {
 
           <div>
             <label
-              htmlFor="initialDescription"
-              className="block text-sm font-medium text-slate-300 mb-2"
-            >
-              Short Description *
-            </label>
-            <input
-              id="initialDescription"
-              type="text"
-              placeholder="Brief description that will appear in job listings"
-              value={initialDescription}
-              onChange={(e) => setInitialDescription(e.target.value)}
-              required
-              className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
-            />
-          </div>
-
-          <div>
-            <label
               htmlFor="fullDescription"
               className="block text-sm font-medium text-slate-300 mb-2"
             >
-              Full Job Description *
+              Job Description *
             </label>
             <textarea
               id="fullDescription"
