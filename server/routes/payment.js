@@ -12,6 +12,9 @@ router.get("/", authMiddleware, paymentController.getPayments); // ADD MIDDLEWAR
 // Get my payments (for dashboard)
 router.get("/my-payments", authMiddleware, paymentController.getMyPayments);
 
+// Get total worker earnings
+router.get("/earnings", authMiddleware, paymentController.getWorkerEarnings);
+
 router.get("/:id", authMiddleware, paymentController.getPayment); // ADD MIDDLEWARE
 router.patch("/:id", authMiddleware, paymentController.updatePayment); // ADD MIDDLEWARE
 router.delete("/:id", authMiddleware, paymentController.deletePayment); // ADD MIDDLEWARE

@@ -12,7 +12,7 @@ import {
   completeJob,
   deleteJob,
 } from "../api/jobApi";
-import { getPaymentsForJob, markJobPaidInCash } from "../api/paymentApi";
+import { getPaymentsForJob, markJobPaidInCash, getWorkerEarnings } from "../api/paymentApi"; // Import getWorkerEarnings
 import { connectApi } from "../api/connectApi";
 import { useAuth } from "../context/AuthContext";
 import StatusBadge from "../components/StatusBadge";
@@ -34,6 +34,7 @@ const Dashboard = () => {
   const [stripeLoading, setStripeLoading] = useState(true);
   const [targetUserIdForChat, setTargetUserIdForChat] = useState(null);
   const [targetJobIdForChat, setTargetJobIdForChat] = useState(null);
+  const [totalEarnings, setTotalEarnings] = useState(0); // Add state for earnings
   const isWorker = user?.user_metadata?.role === "WORKER";
   const needsStripeSetup = user?.user_metadata?.role === "WORKER";
 
@@ -67,10 +68,14 @@ const Dashboard = () => {
 
   const fetchWorkerData = async () => {
     try {
-      const data = await getMyApplications();
-      setApplications(data);
+      const [appData, earningsData] = await Promise.all([
+        getMyApplications(),
+        getWorkerEarnings(),
+      ]);
+      setApplications(appData);
+      setTotalEarnings(earningsData.totalEarnings || 0);
     } catch (error) {
-      console.error("Failed to fetch applications:", error);
+      console.error("Failed to fetch worker data:", error);
     } finally {
       setLoading(false);
     }
@@ -223,9 +228,8 @@ const Dashboard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${
-          statusColors[status] || "bg-gray-100 text-gray-800"
-        }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
+          }`}
       >
         {status.replace("_", " ")}
       </span>
@@ -243,9 +247,8 @@ const Dashboard = () => {
 
     return (
       <span
-        className={`px-2 py-1 rounded-full text-xs font-medium ${
-          statusColors[status] || "bg-gray-100 text-gray-800"
-        }`}
+        className={`px-2 py-1 rounded-full text-xs font-medium ${statusColors[status] || "bg-gray-100 text-gray-800"
+          }`}
       >
         {status}
       </span>
@@ -326,35 +329,51 @@ const Dashboard = () => {
             </p>
           </div>
 
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="card p-6 bg-slate-900 border border-slate-800 bg-gradient-to-br from-emerald-900/20 to-slate-900">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-slate-400 font-medium">Total Earnings</h3>
+                <div className="w-10 h-10 bg-emerald-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-6 h-6 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <p className="text-3xl font-bold text-white mb-1">
+                ${totalEarnings.toFixed(2)}
+              </p>
+              <p className="text-sm text-emerald-400 font-medium">
+                Lifetime Earnings
+              </p>
+            </div>
+          </div>
+
           {/* Tabs Navigation */}
           <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
             <button
               onClick={() => setActiveTab("overview")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeTab === "overview"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "overview"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                }`}
             >
               Overview
             </button>
             <button
               onClick={() => setActiveTab("payments")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeTab === "payments"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "payments"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                }`}
             >
               Payments
             </button>
             <button
               onClick={() => setActiveTab("messages")}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                activeTab === "messages"
-                  ? "bg-slate-800 text-white shadow-sm"
-                  : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-              }`}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "messages"
+                ? "bg-slate-800 text-white shadow-sm"
+                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+                }`}
             >
               Messages
             </button>
@@ -365,7 +384,7 @@ const Dashboard = () => {
             {activeTab === "overview" && (
               <div className="animate-fade-in">
                 {activeAcceptedJobs.length === 0 &&
-                pastAcceptedJobs.length === 0 ? (
+                  pastAcceptedJobs.length === 0 ? (
                   <div className="text-center py-16">
                     <div className="bg-slate-900 rounded-2xl shadow-lg p-12 max-w-lg mx-auto border border-slate-800">
                       <div className="w-20 h-20 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -711,22 +730,22 @@ const Dashboard = () => {
                                   {(!getPaymentStatus(application.job.id) ||
                                     getPaymentStatus(application.job.id)
                                       ?.status !== "PAID") && (
-                                    <div className="mt-2">
-                                      <button
-                                        onClick={() =>
-                                          handleCashPayment(application.job.id)
-                                        }
-                                        className="btn bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
-                                      >
-                                        Client Paid in Cash
-                                      </button>
-                                      <p className="text-xs text-emerald-400 mt-2">
-                                        Click this if the client has paid you
-                                        directly in cash to mark the job as
-                                        fully complete.
-                                      </p>
-                                    </div>
-                                  )}
+                                      <div className="mt-2">
+                                        <button
+                                          onClick={() =>
+                                            handleCashPayment(application.job.id)
+                                          }
+                                          className="btn bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
+                                        >
+                                          Client Paid in Cash
+                                        </button>
+                                        <p className="text-xs text-emerald-400 mt-2">
+                                          Click this if the client has paid you
+                                          directly in cash to mark the job as
+                                          fully complete.
+                                        </p>
+                                      </div>
+                                    )}
                                 </div>
                               </div>
                             </div>
@@ -739,13 +758,12 @@ const Dashboard = () => {
                               </span>
                               <div className="flex items-center">
                                 <span
-                                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${
-                                    application.depositStatus === "CAPTURED"
-                                      ? "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30"
-                                      : application.depositStatus === "REFUNDED"
+                                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${application.depositStatus === "CAPTURED"
+                                    ? "bg-emerald-900/30 text-emerald-300 border border-emerald-500/30"
+                                    : application.depositStatus === "REFUNDED"
                                       ? "bg-blue-900/30 text-blue-300 border border-blue-500/30"
                                       : "bg-yellow-900/30 text-amber-300 border border-amber-500/30"
-                                  }`}
+                                    }`}
                                 >
                                   {application.depositStatus === "CAPTURED" &&
                                     "✅"}
@@ -1038,31 +1056,28 @@ const Dashboard = () => {
         <div className="flex space-x-1 bg-slate-900 p-1 rounded-xl mb-8 w-fit border border-slate-800">
           <button
             onClick={() => setActiveTab("overview")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-              activeTab === "overview"
-                ? "bg-slate-800 text-white shadow-sm"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "overview"
+              ? "bg-slate-800 text-white shadow-sm"
+              : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
           >
             Overview
           </button>
           <button
             onClick={() => setActiveTab("payments")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-              activeTab === "payments"
-                ? "bg-slate-800 text-white shadow-sm"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "payments"
+              ? "bg-slate-800 text-white shadow-sm"
+              : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
           >
             Payments
           </button>
           <button
             onClick={() => setActiveTab("messages")}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-              activeTab === "messages"
-                ? "bg-slate-800 text-white shadow-sm"
-                : "text-slate-400 hover:text-white hover:bg-slate-800/50"
-            }`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${activeTab === "messages"
+              ? "bg-slate-800 text-white shadow-sm"
+              : "text-slate-400 hover:text-white hover:bg-slate-800/50"
+              }`}
           >
             Messages
           </button>
@@ -1177,9 +1192,8 @@ const HirerJobCard = ({
 
   return (
     <div
-      className={`card bg-slate-900 border border-slate-700 transition-all ${
-        readOnly ? "grayscale hover:grayscale-0" : ""
-      }`}
+      className={`card bg-slate-900 border border-slate-700 transition-all ${readOnly ? "grayscale hover:grayscale-0" : ""
+        }`}
     >
       <div className="card-header flex justify-between items-start">
         <div>
@@ -1358,11 +1372,10 @@ const PaymentsList = () => {
           </div>
           <div className="text-right">
             <span
-              className={`block font-bold ${
-                payment.status === "PAID"
-                  ? "text-emerald-400"
-                  : "text-amber-400"
-              }`}
+              className={`block font-bold ${payment.status === "PAID"
+                ? "text-emerald-400"
+                : "text-amber-400"
+                }`}
             >
               ${payment.amount}
             </span>
