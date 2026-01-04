@@ -409,6 +409,34 @@ async function markJobPaidInCash(req, res) {
   }
 }
 
+async function getWorkerEarnings(req, res) {
+  try {
+    const workerId = req.user.id;
+
+    // Sum all payments where the user is the worker and status is PAID
+    const payments = await prisma.payment.aggregate({
+      _sum: {
+        workerAmount: true,
+      },
+      where: {
+        workerId: workerId,
+        status: "PAID",
+      },
+    });
+
+    const totalEarnings = payments._sum.workerAmount || 0;
+
+    res.json({ totalEarnings });
+  } catch (error) {
+    console.error("Get Worker Earnings Error:", error.message);
+    res.status(500).json({
+      error: "earnings_retrieval_failed",
+      message: "Failed to retrieve worker earnings",
+      details: error.message,
+    });
+  }
+}
+
 module.exports = {
   createPayment,
   getPayments,
@@ -416,8 +444,8 @@ module.exports = {
   updatePayment,
   deletePayment,
   createFinalPayment,
-  createFinalPayment,
   confirmFinalPayment,
   markJobPaidInCash,
   getMyPayments,
+  getWorkerEarnings,
 };
