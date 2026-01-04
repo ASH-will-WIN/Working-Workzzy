@@ -27,6 +27,13 @@ async function createApplication(req, res) {
       return res.status(400).json({ error: "Message is required" });
     }
 
+    if (/\d/.test(message)) {
+      return res.status(400).json({
+        error: "invalid_message",
+        message: "Message cannot contain numbers."
+      });
+    }
+
     // Verify job existence and lack of duplicate application in parallel
     const [job, existingApplication] = await Promise.all([
       prisma.job.findUnique({ where: { id: jobId } }),

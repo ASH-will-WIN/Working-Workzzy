@@ -123,6 +123,11 @@ const JobDetail = () => {
       return;
     }
 
+    if (/\d/.test(message)) {
+      alert("Application messages cannot contain numbers. Please describe your experience without using digits.");
+      return;
+    }
+
     try {
       // Step 1: Create the application on your backend
       const applicationData = await createApplication({ jobId: id, message });
