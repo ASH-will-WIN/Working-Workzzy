@@ -78,6 +78,11 @@ const CreateJob = () => {
       return;
     }
 
+    if (Number(price) < 25) {
+      setError("Minimum job price is $25.00");
+      return;
+    }
+
     setIsSubmitting(true);
     setError("");
 

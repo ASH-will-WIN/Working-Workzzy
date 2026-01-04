@@ -36,11 +36,11 @@ async function createJob(req, res) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    // Validate price must be a positive number
-    if (isNaN(price) || Number(price) <= 0) {
+    // Validate price must be a positive number and at least 25
+    if (isNaN(price) || Number(price) < 25) {
       return res.status(400).json({
         error: "invalid_price",
-        message: "Price must be a valid positive number.",
+        message: "Price must be at least $25.00",
       });
     }
 
@@ -415,11 +415,11 @@ async function getJobImages(req, res) {
     const images = canViewAllImages
       ? await prisma.jobImage.findMany({ where: { jobId: id } })
       : await prisma.jobImage.findMany({
-          where: {
-            jobId: id,
-            isPublic: true,
-          },
-        });
+        where: {
+          jobId: id,
+          isPublic: true,
+        },
+      });
 
     res.json(images);
   } catch (error) {

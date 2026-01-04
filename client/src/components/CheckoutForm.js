@@ -78,7 +78,7 @@ const CheckoutForm = ({ clientSecret, onPaymentSuccess, onPaymentError, isFinalP
             <span className="text-2xl font-bold text-emerald-400">${amount}</span>
           </div>
           <p className="text-xs text-slate-500 mt-2 text-center italic">
-            Worker receives: ${(amount * 0.9 + 5).toFixed(2)} (90% + $5 deposit refund)
+            Worker receives: ${Number(amount).toFixed(2)} (The worker gets the full amount)
           </p>
         </div>
 
