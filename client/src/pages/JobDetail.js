@@ -117,6 +117,12 @@ const JobDetail = () => {
   // --- MODIFIED APPLICATION HANDLER ---
   const handleApply = async (e) => {
     e.preventDefault();
+
+    if (!message || message.trim() === "") {
+      alert("Please enter a reason for your application.");
+      return;
+    }
+
     try {
       // Step 1: Create the application on your backend
       const applicationData = await createApplication({ jobId: id, message });
@@ -253,7 +259,6 @@ const JobDetail = () => {
         )}
       </div>
 
-      {/* Job Overview Section */}
       {/* Job Overview Section - REMOVED (Consolidated into main description) */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
         {/* Switched card to span full width if overview is gone, or just kept location separate? 
@@ -670,11 +675,12 @@ const JobDetail = () => {
                           htmlFor="message"
                           className="block text-sm font-medium text-slate-300 mb-2"
                         >
-                          Why are you interested in this job? (Optional)
+                          Why are you interested in this job? *
                         </label>
                         <textarea
                           id="message"
                           rows={4}
+                          required
                           className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
                           placeholder="Tell the client why you're a great fit for this job..."
                           value={message}

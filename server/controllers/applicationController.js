@@ -23,6 +23,10 @@ async function createApplication(req, res) {
       });
     }
 
+    if (!message || message.trim() === "") {
+      return res.status(400).json({ error: "Message is required" });
+    }
+
     // Verify job existence and lack of duplicate application in parallel
     const [job, existingApplication] = await Promise.all([
       prisma.job.findUnique({ where: { id: jobId } }),
