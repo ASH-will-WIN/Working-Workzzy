@@ -6,7 +6,7 @@ import ImageUpload from "../components/ImageUpload";
 
 const CreateJob = () => {
   const [title, setTitle] = useState("");
-  const [title, setTitle] = useState("");
+
   const [fullDescription, setFullDescription] = useState("");
   const [address, setAddress] = useState("");
   const [generalLocation, setGeneralLocation] = useState("");
