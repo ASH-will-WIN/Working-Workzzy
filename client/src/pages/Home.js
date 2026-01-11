@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { Capacitor } from "@capacitor/core";
+import { useAuth } from "../context/AuthContext";
 import logo from "../assets/logo.png";
 
 const RevealOnScroll = ({ children, delay = 0 }) => {
@@ -44,7 +46,65 @@ const RevealOnScroll = ({ children, delay = 0 }) => {
   );
 };
 
+const NativeWelcome = () => (
+  <div className="min-h-screen flex flex-col items-center justify-center bg-slate-950 px-6 text-center relative overflow-hidden">
+    {/* Background Elements */}
+    <div className="absolute top-[-20%] left-[-20%] w-[400px] h-[400px] bg-wurkzi-600/20 rounded-full blur-3xl opacity-30 animate-blob"></div>
+    <div className="absolute bottom-[-20%] right-[-20%] w-[400px] h-[400px] bg-purple-600/20 rounded-full blur-3xl opacity-30 animate-blob animation-delay-2000"></div>
+
+    <div className="relative z-10 w-full max-w-sm">
+      <div className="mb-10 flex justify-center">
+        <div className="relative">
+          <div className="absolute inset-0 bg-wurkzi-500/30 blur-2xl rounded-full"></div>
+          <img src={logo} alt="Wurkzi Logo" className="w-24 h-24 object-contain relative z-10 drop-shadow-2xl" />
+        </div>
+      </div>
+
+      <h1 className="text-4xl font-black text-white mb-2 tracking-tight">
+        Wurkzi
+      </h1>
+      <p className="text-lg text-slate-400 mb-12 font-medium">
+        Local Gigs. Secure Payments.
+      </p>
+
+      <div className="space-y-4">
+        <Link
+          to="/login"
+          className="block w-full py-4 px-6 bg-wurkzi-600 hover:bg-wurkzi-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-wurkzi-500/25 transition-all active:scale-95"
+        >
+          Sign In
+        </Link>
+        <Link
+          to="/register"
+          className="block w-full py-4 px-6 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold text-lg border border-slate-700 transition-all active:scale-95"
+        >
+          Create Account
+        </Link>
+      </div>
+
+      <p className="mt-8 text-xs text-slate-500">
+        By continuing, you agree to our Terms & Privacy Policy.
+      </p>
+    </div>
+  </div>
+);
+
 const Home = () => {
+  const { isAuthenticated } = useAuth(); // Assuming useAuth is available
+  const navigate = useNavigate();
+  const isNative = Capacitor.isNativePlatform();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/dashboard");
+    }
+  }, [isAuthenticated, navigate]);
+
+  // If on native platform, show simplified welcome screen
+  if (isNative) {
+    return <NativeWelcome />;
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 overflow-hidden relative">
       {/* Dynamic Background Effects */}
