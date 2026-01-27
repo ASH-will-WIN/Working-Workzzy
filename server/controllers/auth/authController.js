@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
       options: {
         data: {
           name,
-          role,
+          role: role || "MEMBER", // Default to MEMBER if not specified
         },
       },
     });

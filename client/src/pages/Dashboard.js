@@ -26,6 +26,7 @@ const Dashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("overview");
+  const [viewMode, setViewMode] = useState("working"); // "working" or "hiring"
   const [applications, setApplications] = useState([]);
   const [hirerJobs, setHirerJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,36 +36,35 @@ const Dashboard = () => {
   const [targetUserIdForChat, setTargetUserIdForChat] = useState(null);
   const [targetJobIdForChat, setTargetJobIdForChat] = useState(null);
   const [totalEarnings, setTotalEarnings] = useState(0); // Add state for earnings
-  const isWorker = user?.user_metadata?.role === "WORKER";
-  const needsStripeSetup = user?.user_metadata?.role === "WORKER";
+
+  // Disclaimer Modal State
+  const [showScopeDisclaimer, setShowScopeDisclaimer] = useState(false);
+  const [pendingStartJobId, setPendingStartJobId] = useState(null);
+
+  // Unified Role: Check onboarding only if they are trying to do worker stuff?
+  // We can just keep the check but make it non-blocking as per previous step.
+  const needsStripeSetup = true; // Everyone might need it eventually
 
   useEffect(() => {
     const fetchData = async () => {
-      // Check Stripe status for users who need it
-      if (needsStripeSetup) {
-        try {
-          const status = await connectApi.getStripeAccount();
-          setStripeStatus(status);
-        } catch (error) {
-          console.error("Failed to fetch Stripe status:", error);
-          setStripeStatus({ exists: false, error: true });
-        } finally {
-          setStripeLoading(false);
-        }
-      } else {
+      // Check Stripe status
+      try {
+        const status = await connectApi.getStripeAccount();
+        setStripeStatus(status);
+      } catch (error) {
+        console.error("Failed to fetch Stripe status:", error);
+        setStripeStatus({ exists: false, error: true });
+      } finally {
         setStripeLoading(false);
       }
 
-      // Fetch job/application data
-      if (isWorker) {
-        fetchWorkerData();
-      } else {
-        fetchHirerData();
-      }
+      // Fetch ALL data (User can be both)
+      await Promise.all([fetchWorkerData(), fetchHirerData()]);
+      setLoading(false);
     };
 
     fetchData();
-  }, [isWorker, needsStripeSetup]);
+  }, []);
 
   const fetchWorkerData = async () => {
     try {
@@ -76,8 +76,6 @@ const Dashboard = () => {
       setTotalEarnings(earningsData.totalEarnings || 0);
     } catch (error) {
       console.error("Failed to fetch worker data:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -87,8 +85,6 @@ const Dashboard = () => {
       setHirerJobs(data);
     } catch (error) {
       console.error("Failed to fetch hirer jobs:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -102,27 +98,31 @@ const Dashboard = () => {
     }
   };
 
-  const handleStartJob = async (jobId) => {
+  const handleStartJob = (jobId) => {
+    setPendingStartJobId(jobId);
+    setShowScopeDisclaimer(true);
+  };
+
+  const confirmStartJob = async () => {
+    if (!pendingStartJobId) return;
+
     try {
-      await startJob(jobId);
-      if (isWorker) {
-        fetchWorkerData();
-      } else {
-        fetchHirerData();
-      }
+      await startJob(pendingStartJobId);
+      fetchWorkerData();
+      fetchHirerData();
     } catch (error) {
       console.error("Failed to start job:", error);
+    } finally {
+      setShowScopeDisclaimer(false);
+      setPendingStartJobId(null);
     }
   };
 
   const handleCompleteJob = async (jobId) => {
     try {
       await completeJob(jobId);
-      if (isWorker) {
-        fetchWorkerData();
-      } else {
-        fetchHirerData();
-      }
+      fetchWorkerData();
+      fetchHirerData();
     } catch (error) {
       console.error("Failed to complete job:", error);
     }
@@ -136,11 +136,8 @@ const Dashboard = () => {
     ) {
       try {
         await markJobPaidInCash(jobId);
-        if (isWorker) {
-          fetchWorkerData();
-        } else {
-          fetchHirerData();
-        }
+        fetchWorkerData();
+        fetchHirerData();
       } catch (error) {
         console.error("Failed to mark as paid in cash:", error);
         alert("Failed to update status. Please try again.");
@@ -284,12 +281,41 @@ const Dashboard = () => {
     );
   }
 
-  // Show Stripe Connect onboarding if needed
-  if (needsStripeSetup && stripeStatus && !stripeStatus.detailsSubmitted) {
-    return <StripeOnboardingCard stripeStatus={stripeStatus} />;
-  }
+  // Show Stripe Connect onboarding banner if needed (non-blocking)
+  const showOnboardingBanner = needsStripeSetup && stripeStatus && !stripeStatus.detailsSubmitted;
 
-  if (isWorker) {
+  const ViewSwitcher = () => (
+    <div className="flex justify-center mb-8">
+      <div className="bg-slate-900/80 p-1.5 rounded-xl border border-slate-700/50 inline-flex shadow-lg backdrop-blur-sm">
+        <button
+          onClick={() => setViewMode("working")}
+          className={`flex items-center px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${viewMode === "working"
+            ? "bg-gradient-to-r from-wurkzi-600 to-wurkzi-500 text-white shadow-md shadow-wurkzi-500/20"
+            : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          </svg>
+          Find Work
+        </button>
+        <button
+          onClick={() => setViewMode("hiring")}
+          className={`flex items-center px-6 py-2.5 rounded-lg text-sm font-bold transition-all duration-300 ${viewMode === "hiring"
+            ? "bg-gradient-to-r from-purple-600 to-purple-500 text-white shadow-md shadow-purple-500/20"
+            : "text-slate-400 hover:text-white hover:bg-slate-800"
+            }`}
+        >
+          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+          Hire Talent
+        </button>
+      </div>
+    </div>
+  );
+
+  if (viewMode === "working") {
     // Worker Dashboard
     const acceptedJobs = applications.filter(
       (app) => app.status === "ACCEPTED"
@@ -320,6 +346,85 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen bg-slate-950 text-slate-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <ViewSwitcher />
+
+          {/* Job Scope Disclaimer Modal */}
+          {showScopeDisclaimer && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
+              <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl animate-scale-in relative overflow-hidden">
+                {/* Decorative background blob */}
+                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-wurkzi-500/20 rounded-full blur-2xl"></div>
+
+                <div className="relative z-10 text-center">
+                  <div className="w-16 h-16 bg-slate-800 rounded-full flex items-center justify-center mx-auto mb-6 border border-slate-700">
+                    <svg className="w-8 h-8 text-wurkzi-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-white mb-2">Scope of Work</h3>
+
+                  <div className="bg-slate-800/50 rounded-xl p-4 mb-6 border border-slate-700/50">
+                    <p className="text-slate-300 text-sm leading-relaxed">
+                      You are only required to perform the work that was explicitly outlined in the job description and <span className="font-bold text-white">nothing more</span>.
+                    </p>
+                  </div>
+
+                  <p className="text-slate-400 text-xs mb-6">
+                    By proceeding, you acknowledge that you understand your responsibilities and boundaries for this job.
+                  </p>
+
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={() => setShowScopeDisclaimer(false)}
+                      className="flex-1 px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl font-medium transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmStartJob}
+                      className="flex-1 px-4 py-2 bg-wurkzi-600 hover:bg-wurkzi-500 text-white rounded-xl font-bold shadow-lg shadow-wurkzi-500/20 transition-all hover:-translate-y-0.5"
+                    >
+                      I Understand
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Optional Stripe Onboarding Banner */}
+          {showOnboardingBanner && (
+            <div className="mb-8 animate-fade-in">
+              <div className="bg-gradient-to-r from-purple-900/40 to-blue-900/40 border border-purple-500/30 rounded-xl p-6 relative overflow-hidden">
+                <div className="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 bg-purple-500/20 rounded-full blur-2xl"></div>
+
+                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 relative z-10">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center flex-shrink-0">
+                      <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-bold text-white mb-1">Set up Payouts</h3>
+                      <p className="text-slate-300 max-w-xl">
+                        To receive payments directly to your bank account for card-paid jobs, you need to connect your payout details. Cash jobs rely on direct payment.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => window.location.href = "/onboarding"}
+                    className="btn bg-white text-purple-900 hover:bg-slate-100 font-bold px-6 py-3 rounded-lg shadow-lg whitespace-nowrap transition-transform active:scale-95"
+                  >
+                    Connect Bank Account
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           <div className="mb-8">
             <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-wurkzi-400 to-purple-400 bg-clip-text text-transparent">
               My Accepted Jobs
@@ -1019,6 +1124,23 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <ViewSwitcher />
+
+        {/* Job Editing Policy Disclaimer */}
+        <div className="mb-8 bg-blue-900/30 border border-blue-500/30 rounded-xl p-4 flex items-start animate-fade-in">
+          <svg className="w-5 h-5 text-blue-400 mt-0.5 mr-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <div>
+            <h4 className="text-blue-300 font-medium text-sm mb-1">Job Editing Policy</h4>
+            <p className="text-blue-200/80 text-sm">
+              To protect the integrity of agreements with workers, <strong>jobs cannot be edited</strong> once posted.
+              If you made a mistake or need to change details, please <strong className="text-white">delete the job</strong> and create a new one.
+              This prevents "bait-and-switch" scenarios and ensures fairness.
+            </p>
+          </div>
+        </div>
+
         {/* Header Section */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">

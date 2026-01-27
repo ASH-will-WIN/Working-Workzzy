@@ -14,14 +14,8 @@ async function createApplication(req, res) {
     // Use user_id from Supabase user object if available, fallback to id
     const workerId = req.user?.id;
 
-    // Check if user is a WORKER
-    const userRole = req.user?.user_metadata?.role;
-    if (userRole !== "WORKER") {
-      return res.status(403).json({
-        error: "role_restricted",
-        message: "Only registered workers can apply for jobs.",
-      });
-    }
+    // Unified Role: Allow any authenticated user to apply
+    // Removed strict WORKER role check
 
     if (!message || message.trim() === "") {
       return res.status(400).json({ error: "Message is required" });

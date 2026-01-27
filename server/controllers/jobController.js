@@ -84,26 +84,8 @@ async function createJob(req, res) {
 async function getJobs(req, res) {
   try {
     // Check if user is a worker and verify Stripe onboarding status
-    if (req.user?.user_metadata?.role === "WORKER") {
-      // Check if user has a Stripe account
-      const stripeAccount = await prisma.stripeAccount.findUnique({
-        where: { userId: req.user.id },
-      });
-
-      // If no Stripe account or onboarding not completed, return onboarding required error
-      if (
-        !stripeAccount ||
-        !stripeAccount.detailsSubmitted ||
-        stripeAccount.requiresAction
-      ) {
-        return res.status(403).json({
-          error: "onboarding_required",
-          message:
-            "Stripe onboarding is required to view jobs. Please complete your Stripe account setup.",
-          requiresOnboarding: true,
-        });
-      }
-    }
+    // Unified Role: Removed strict WORKER onboarding check for viewing jobs.
+    // Users can view jobs freely; onboarding is only prompted when they want payouts (Dashboard).
 
     const jobs = await prisma.job.findMany({
       select: {

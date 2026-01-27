@@ -113,7 +113,7 @@ const Navbar = () => {
                   Jobs
                 </Link>
 
-                {user?.user_metadata?.role === "HIRER" || user?.user_metadata?.role === "CLIENT" && (
+                {(
                   <Link
                     to="/jobs/new"
                     className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/jobs/new') ? 'text-white' : 'text-slate-400'}`}
@@ -235,7 +235,7 @@ const Navbar = () => {
                 >
                   Jobs
                 </Link>
-                {(user?.user_metadata?.role === "HIRER" || user?.user_metadata?.role === "CLIENT") && (
+                {(
                   <Link
                     to="/jobs/new"
                     className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/jobs/new') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}

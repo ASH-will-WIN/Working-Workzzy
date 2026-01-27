@@ -7,7 +7,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
-  const [role, setRole] = useState("WORKER"); // Default role
+  const [role] = useState("MEMBER"); // Default role (hidden from user)
   const [error, setError] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
   const { register } = useAuth();
@@ -121,36 +121,7 @@ const Register = () => {
               required
             />
           </div>
-
-          <div className="text-left">
-            <label className="block text-sm font-medium text-slate-300 mb-1">
-              I want to...
-            </label>
-            <div className="grid grid-cols-2 gap-4">
-              <button
-                type="button"
-                onClick={() => setRole("WORKER")}
-                className={`px-4 py-3 rounded-xl border font-medium transition-all ${
-                  role === "WORKER"
-                    ? "bg-wurkzi-600 border-wurkzi-500 text-white shadow-lg shadow-wurkzi-900/20"
-                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
-                }`}
-              >
-                Find Work
-              </button>
-              <button
-                type="button"
-                onClick={() => setRole("CLIENT")}
-                className={`px-4 py-3 rounded-xl border font-medium transition-all ${
-                  role === "CLIENT"
-                    ? "bg-purple-600 border-purple-500 text-white shadow-lg shadow-purple-900/20"
-                    : "bg-slate-950/50 border-slate-700 text-slate-400 hover:bg-slate-800"
-                }`}
-              >
-                Hire Talent
-              </button>
-            </div>
-          </div>
+          {/* Removed User Role Toggle Section */}
 
           {/* Terms and Conditions */}
           <div className="flex items-start mt-4">
