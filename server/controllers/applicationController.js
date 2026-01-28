@@ -300,53 +300,7 @@ async function rejectApplication(req, res) {
   }
 }
 
-async function confirmApplicationPayment(req, res) {
-  try {
-    const { id } = req.params;
 
-    // Get the application
-    const application = await prisma.jobApplication.findUnique({
-      where: { id },
-    });
-
-    if (!application) {
-      return res.status(404).json({ error: "Application not found" });
-    }
-
-    if (application.status !== ApplicationStatus.APPLIED) {
-      return res.status(400).json({
-        error: "invalid_status",
-        message: "Application is not in a state that can be confirmed",
-      });
-    }
-
-    // Confirm the PaymentIntent with ONLY valid parameters
-    const confirmedIntent = await stripeClient.paymentIntents.confirm(
-      application.depositId,
-      {
-        payment_method: "pm_card_visa", // Test card for development
-        return_url: `${process.env.CLIENT_URL}/payment-complete`,
-      }
-    );
-
-    // Update application status
-    const updatedApplication = await prisma.jobApplication.update({
-      where: { id },
-      data: {
-        depositStatus: DepositStatus.AUTHORIZED,
-      },
-    });
-
-    res.json(updatedApplication);
-  } catch (error) {
-    console.error("Confirm Application Payment Error:", error.message);
-    res.status(500).json({
-      error: "application_payment_confirmation_failed",
-      message: "Failed to confirm application payment",
-      details: error.message,
-    });
-  }
-}
 
 async function withdrawApplication(req, res) {
   try {
@@ -411,7 +365,7 @@ module.exports = {
   getJobApplications,
   acceptApplication,
   rejectApplication,
-  confirmApplicationPayment,
+
   withdrawApplication,
 };
 

@@ -24,7 +24,26 @@ const Terms = () => {
           <hr className="my-6 border-slate-700" />
 
           <h2 className="text-xl font-semibold mt-6 mb-2 text-wurkzi-400">
-            2. Platform Overview
+            2. End User License Agreement (EULA) & Objectionable Content
+          </h2>
+          <p className="text-slate-400 mb-4">
+            As a user of Wurkzi, you agree to our <strong>Zero Tolerance Policy</strong> regarding objectionable content and abusive behavior.
+          </p>
+          <ul className="list-disc pl-6 mb-4 space-y-2 text-slate-400">
+            <li>You will not post content that is offensive, insensitive, upsetting, intended to disgust, or in exceptionally poor taste.</li>
+            <li>You will not engage in harassment, bullying, or abusive behavior towards other users.</li>
+            <li>You will not post content that is pornographic, hate speech, or incites violence.</li>
+          </ul>
+          <p className="text-slate-400 mb-4">
+            <strong>Enforcement:</strong> Users found violating this policy will have their content removed immediately and will be <strong>permanently banned</strong> from the platform.
+            Users can report objectional content or behavior via the "Report" function on job posts or by contacting support.
+            We will act on all reports of objectionable content within 24 hours by removing the content and ejecting the user who provided the offending content.
+          </p>
+
+          <hr className="my-6 border-slate-700" />
+
+          <h2 className="text-xl font-semibold mt-6 mb-2 text-wurkzi-400">
+            3. Platform Overview
           </h2>
           <p className="text-slate-400 mb-4">
             Workzy connects clients with local teen service providers aged 15+

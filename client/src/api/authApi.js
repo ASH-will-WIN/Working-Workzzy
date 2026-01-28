@@ -15,7 +15,13 @@ export const forgotPassword = async (email) => {
   return response.data;
 };
 
+
 export const resetPassword = async (data) => {
   const response = await apiClient.post("/auth/reset-password", data);
+  return response.data;
+};
+
+export const deleteAccount = async () => {
+  const response = await apiClient.delete("/auth/delete");
   return response.data;
 };

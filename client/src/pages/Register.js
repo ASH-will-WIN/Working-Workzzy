@@ -142,7 +142,7 @@ const Register = () => {
                   to="/terms"
                   className="font-medium text-wurkzi-400 hover:text-wurkzi-300 hover:underline"
                 >
-                  Terms and Conditions
+                  Terms, EULA & Zero Tolerance Policy
                 </Link>
               </label>
             </div>

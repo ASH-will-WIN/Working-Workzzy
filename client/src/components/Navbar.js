@@ -147,6 +147,26 @@ const Navbar = () => {
                   >
                     Sign Out
                   </button>
+
+                  {/* Desktop Delete Account option (hidden behind a small trigger or just put it clearly for compliance) */}
+                  {/* For better UX, usually this is in a Settings page, but for compliance speed, we add a small icon or link */}
+                  <button
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+                        import("../api/authApi").then(({ deleteAccount }) => {
+                          deleteAccount().then(() => {
+                            logout();
+                            navigate("/");
+                            alert("Your account has been deleted.");
+                          }).catch(err => alert("Failed to delete account."));
+                        });
+                      }
+                    }}
+                    className="text-xs font-medium text-red-900/50 hover:text-red-500 transition-colors ml-2"
+                    title="Delete Account"
+                  >
+                    ✕
+                  </button>
                 </div>
               </div>
             ) : (
@@ -256,31 +276,57 @@ const Navbar = () => {
           </div>
           <div className="pt-4 pb-4 border-t border-slate-800 px-4">
             {isAuthenticated ? (
-              <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                  <div className="flex-shrink-0">
-                    <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-slate-700">
-                      {getUserInitials()}
+              <>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <div className="flex-shrink-0">
+                      <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-slate-700">
+                        {getUserInitials()}
+                      </div>
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-base font-medium text-white">{user?.email}</div>
+                      <div className="text-sm font-medium text-slate-500 capitalize">{getUserRole()} Account</div>
                     </div>
                   </div>
-                  <div className="ml-3">
-                    <div className="text-base font-medium text-white">{user?.email}</div>
-                    <div className="text-sm font-medium text-slate-500 capitalize">{getUserRole()} Account</div>
-                  </div>
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }}
+                    className="bg-slate-800 p-2 rounded-full text-slate-400 hover:text-white focus:outline-none hover:bg-slate-700 transition-colors"
+                  >
+                    <span className="sr-only">Sign out</span>
+                    <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                    </svg>
+                  </button>
                 </div>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setIsMenuOpen(false);
-                  }}
-                  className="bg-slate-800 p-2 rounded-full text-slate-400 hover:text-white focus:outline-none hover:bg-slate-700 transition-colors"
-                >
-                  <span className="sr-only">Sign out</span>
-                  <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                  </svg>
-                </button>
-              </div>
+
+                {/* Account Deletion (Danger Zone) */}
+                <div className="mt-6 pt-4 border-t border-slate-800">
+                  <button
+                    onClick={() => {
+                      if (window.confirm("Are you sure you want to delete your account? This action cannot be undone and will remove all your data.")) {
+                        import("../api/authApi").then(({ deleteAccount }) => {
+                          deleteAccount().then(() => {
+                            logout();
+                            navigate("/");
+                            alert("Your account has been deleted.");
+                          }).catch(err => {
+                            console.error(err);
+                            alert("Failed to delete account. Please try again.");
+                          });
+                        });
+                      }
+                      setIsMenuOpen(false);
+                    }}
+                    className="block w-full text-left px-4 py-2 text-sm text-red-500 hover:text-red-400 hover:bg-slate-800 rounded transition-colors"
+                  >
+                    Delete Account
+                  </button>
+                </div>
+              </>
             ) : (
               <div className="mt-3 space-y-3">
                 <Link

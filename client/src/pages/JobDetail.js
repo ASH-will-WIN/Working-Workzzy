@@ -245,28 +245,52 @@ const JobDetail = () => {
                 : `Restricted - ${job.city}, ${job.state}`}
             </div>
           </div>
-          <StatusBadge status={job.status} type="job" />
         </div>
-
-        {/* Delete Job Button for Hirer */}
-        {isHirer && job.status === "PENDING" && (
-          <div className="mt-4 flex justify-end">
+        <div className="flex flex-col items-end gap-2">
+          <StatusBadge status={job.status} type="job" />
+          {/* Report Job Button (Compliance) */}
+          {user && (
             <button
-              onClick={handleDeleteJob}
-              className="btn btn-danger flex items-center bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 shadow-lg shadow-red-900/20"
+              onClick={() => {
+                const reason = window.prompt("Please provide a reason for reporting this job:");
+                if (reason) {
+                  import("../api/reportApi").then(({ createReport }) => {
+                    createReport({ jobId: job.id, reason }).then(() => {
+                      alert("Thank you. We have received your report and will review it shortly.");
+                    }).catch(err => {
+                      console.error(err);
+                      alert("Failed to submit report.");
+                    });
+                  });
+                }
+              }}
+              className="text-xs text-slate-500 hover:text-red-400 underline transition-colors"
             >
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-              </svg>
-              Delete Job
+              Report Job
             </button>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      {/* Job Overview Section - REMOVED (Consolidated into main description) */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-        {/* Switched card to span full width if overview is gone, or just kept location separate? 
+      {/* Delete Job Button for Hirer */}
+      {isHirer && job.status === "PENDING" && (
+        <div className="mt-4 flex justify-end">
+          <button
+            onClick={handleDeleteJob}
+            className="btn btn-danger flex items-center bg-red-600 hover:bg-red-700 text-white font-medium px-4 py-2 rounded-lg transition-colors duration-200 shadow-lg shadow-red-900/20"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+            Delete Job
+          </button>
+        </div>
+      )}
+    </div>
+
+      <>
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    {/* Switched card to span full width if overview is gone, or just kept location separate? 
             Original layout: 2 cols overview, 1 col location. 
             If I remove overview, location looks lonely. 
             Maybe move location to side of full description? 
@@ -286,416 +310,123 @@ const JobDetail = () => {
             If I remove col-span-2, Location (1 col) will be left.
         */}
 
-        <div className="md:col-span-3 card p-6 bg-slate-900 border border-slate-800">
-          <h2 className="text-lg font-bold text-white mb-4 flex items-center">
-            <svg className="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
-            Location
-          </h2>
-          <div className="space-y-1">
-            <p className="text-white font-semibold">
-              {job.city}, {job.state}
-            </p>
-            {job.generalLocation && (
-              <p className="text-slate-400 text-sm italic">
-                {job.generalLocation}
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Description Section */}
-      <div className="card mb-6 p-8 bg-slate-900 border border-slate-800">
-        <h2 className="text-xl font-bold text-white mb-6 flex items-center border-b border-slate-800 pb-4">
-          <svg className="w-6 h-6 mr-3 text-wurkzi-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-          Job Description
-        </h2>
-        <div className="prose max-w-none">
-          <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
-            {job.fullDescription}
+    <div className="md:col-span-3 card p-6 bg-slate-900 border border-slate-800">
+      <h2 className="text-lg font-bold text-white mb-4 flex items-center">
+        <svg className="w-5 h-5 mr-2 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+        Location
+      </h2>
+      <div className="space-y-1">
+        <p className="text-white font-semibold">
+          {job.city}, {job.state}
+        </p>
+        {job.generalLocation && (
+          <p className="text-slate-400 text-sm italic">
+            {job.generalLocation}
           </p>
-        </div>
+        )}
       </div>
+    </div>
+  </div>
 
-      {/* Job Images Section */}
-      {
-        (images.length > 0 || imagesLoading) && (
-          <div className="card mb-6">
-            <div className="card-header">
-              <h2 className="text-xl font-semibold text-white">Job Images</h2>
-              {imagesLoading && (
-                <div className="flex items-center text-gray-500">
-                  <svg
-                    className="animate-spin w-4 h-4 mr-2"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Loading images...
-                </div>
-              )}
+  {/* Description Section */}
+  <div className="card mb-6 p-8 bg-slate-900 border border-slate-800">
+    <h2 className="text-xl font-bold text-white mb-6 flex items-center border-b border-slate-800 pb-4">
+      <svg className="w-6 h-6 mr-3 text-wurkzi-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+      </svg>
+      Job Description
+    </h2>
+    <div className="prose max-w-none">
+      <p className="text-slate-300 leading-relaxed text-lg whitespace-pre-wrap">
+        {job.fullDescription}
+      </p>
+    </div>
+  </div>
+      </>
+
+  {/* Job Images Section */ }
+  {
+    (images.length > 0 || imagesLoading) && (
+      <div className="card mb-6">
+        <div className="card-header">
+          <h2 className="text-xl font-semibold text-white">Job Images</h2>
+          {imagesLoading && (
+            <div className="flex items-center text-gray-500">
+              <svg
+                className="animate-spin w-4 h-4 mr-2"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Loading images...
             </div>
+          )}
+        </div>
 
-            {isHirer || hasApplied ? (
-              <ImageGallery images={images} className="mt-4" />
-            ) : (
-              <div className="text-center py-8">
-                <svg
-                  className="w-16 h-16 text-gray-300 mx-auto mb-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-                  />
-                </svg>
-                <p className="text-slate-400 text-lg">Job images are restricted</p>
-                <p className="text-slate-500 text-sm mt-1">
-                  Your application must be accepted to view images
-                </p>
-              </div>
-            )}
-          </div>
-        )
-      }
-      {
-        isHirer ? (
-          <div className="card">
-            <h3 className="text-xl font-semibold text-white mb-6">
-              Applications for this Job ({applications.length})
-            </h3>
-
-            {applications.length > 0 ? (
-              <div className="space-y-4">
-                {applications.map((app) => (
-                  <div
-                    key={app.id}
-                    className="border border-slate-700 rounded-lg p-5 bg-slate-800"
-                  >
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex-1">
-                        <div className="flex items-center mb-2">
-                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                            <svg
-                              className="w-5 h-5 text-blue-600"
-                              width="20"
-                              height="20"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                              />
-                            </svg>
-                          </div>
-                          <div>
-                            <p className="font-medium text-white">
-                              Worker Application
-                            </p>
-                            <p className="text-sm text-slate-500">
-                              ID: {app.workerId.substring(0, 8)}...
-                            </p>
-                          </div>
-                        </div>
-
-                        {app.message && (
-                          <div className="mt-3 p-3 bg-slate-900 rounded-md border border-slate-700">
-                            <p className="text-sm text-slate-300">
-                              <span className="font-medium text-white">
-                                Message:
-                              </span>{" "}
-                              {app.message}
-                            </p>
-                          </div>
-                        )}
-
-                        <div className="mt-3 text-sm text-slate-500">
-                          Applied: {new Date(app.createdAt).toLocaleDateString()}
-                        </div>
-                      </div>
-
-                      <div className="ml-4">
-                        <StatusBadge status={app.status} type="application" />
-                      </div>
-                    </div>
-
-                    {job.status === "PENDING" && app.status === "APPLIED" && (
-                      <div className="flex space-x-3 pt-4 border-t border-slate-700">
-                        <button
-                          onClick={() => handleAccept(app.id)}
-                          className="btn btn-success btn-sm"
-                        >
-                          Accept Application
-                        </button>
-                        <button
-                          onClick={() => handleReject(app.id)}
-                          className="btn btn-danger btn-sm"
-                        >
-                          Reject Application
-                        </button>
-                        {/* Removed job-specific conversation button */}
-                      </div>
-                    )}
-
-                    {app.status === "ACCEPTED" && (
-                      <div className="mt-4 p-3 bg-emerald-900/30 border border-emerald-500/30 rounded-md">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <svg
-                              className="w-5 h-5 text-emerald-400 mr-2"
-                              width="20"
-                              height="20"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                              />
-                            </svg>
-                            <p className="text-sm text-emerald-300 font-medium">
-                              Application accepted! Waiting for worker to start
-                              the job.
-                            </p>
-                          </div>
-                          {/* Removed job-specific conversation button */}
-                        </div>
-                      </div>
-                    )}
-
-                    {app.status === "REJECTED" && (
-                      <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md">
-                        <div className="flex items-center">
-                          <svg
-                            className="w-5 h-5 text-red-400 mr-2"
-                            width="20"
-                            height="20"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                          <p className="text-sm text-red-300">
-                            Application rejected. $5 deposit has been refunded.
-                          </p>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-8">
-                <svg
-                  className="w-16 h-16 text-slate-700 mx-auto mb-4"
-                  width="64"
-                  height="64"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                <p className="text-slate-400 text-lg">No applications yet</p>
-                <p className="text-slate-500 text-sm mt-1">
-                  Applications will appear here when workers apply
-                </p>
-              </div>
-            )}
-          </div>
+        {isHirer || hasApplied ? (
+          <ImageGallery images={images} className="mt-4" />
         ) : (
-          <>
-            {/* Add messaging button for workers who have already applied */}
-            {!isHirer && hasApplied && (
-              <div className="card mb-6">
-                <div className="card-header">
-                  <h3 className="text-lg font-semibold text-white">
-                    Contact Job Client
-                  </h3>
-                </div>
-                <div className="card-body">
-                  <p className="text-slate-400 mb-4">
-                    Have questions about this job? Message the client directly.
-                  </p>
-                  {/* Chat Button for workers who have applied */}
-                  {user &&
-                    user.id !== job?.hirerId &&
-                    job?.status === "PENDING" && (
-                      <div className="mt-4 flex justify-end">
-                        <button
-                          onClick={handleStartChat}
-                          disabled={startingChat || !job}
-                          className="btn btn-primary flex items-center"
-                        >
-                          {startingChat ? (
-                            <>
-                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                              Starting Chat...
-                            </>
-                          ) : (
-                            <>
-                              <svg
-                                className="w-4 h-4 mr-2"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                              >
-                                <path
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  strokeWidth={2}
-                                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
-                                />
-                              </svg>
-                              Chat with Client
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    )}
+          <div className="text-center py-8">
+            <svg
+              className="w-16 h-16 text-gray-300 mx-auto mb-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+              />
+            </svg>
+            <p className="text-slate-400 text-lg">Job images are restricted</p>
+            <p className="text-slate-500 text-sm mt-1">
+              Your application must be accepted to view images
+            </p>
+          </div>
+        )}
+      </div>
+    )
+  }
+  {
+    isHirer ? (
+      <div className="card">
+        <h3 className="text-xl font-semibold text-white mb-6">
+          Applications for this Job ({applications.length})
+        </h3>
 
-                  {chatError && (
-                    <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
-                      <p className="text-red-300 text-sm">{chatError}</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {job.status === "PENDING" && !showPaymentForm && !hasApplied && (
-              <div className="card">
-                <h3 className="text-xl font-semibold text-white mb-6">
-                  Apply for this Job
-                </h3>
-
-                {/* Client Restriction Check */}
-                {user?.user_metadata?.role === "CLIENT" ? (
-                  <div className="bg-slate-800 rounded-lg p-6 text-center border border-slate-700">
-                    <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
-                    </div>
-                    <h4 className="text-lg font-medium text-white mb-2">Client Account Detected</h4>
-                    <p className="text-slate-400 mb-4">
-                      You are currently logged in as a Client. Only registered Workers can apply for jobs.
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      To apply for jobs, please sign out and create a Worker account.
-                    </p>
-                  </div>
-                ) : (
-                  <>
-                    {/* PROMINENT PAYMENT NOTICE */}
-                    <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-2 border-amber-500/50 rounded-xl p-5 mb-6">
-                      <div className="flex items-start">
-                        <div className="flex-shrink-0 w-12 h-12 bg-amber-500/30 rounded-full flex items-center justify-center mr-4">
-                          <svg
-                            className="w-6 h-6 text-amber-400"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                            />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="text-lg font-bold text-amber-300 mb-2">
-                            💰 $5 Refundable Deposit Required
-                          </h4>
-                          <p className="text-amber-200/80 mb-3">
-                            To apply for this job, you must pay a <span className="font-bold text-white">$5 deposit</span> upfront.
-                            Your application will only be submitted after payment is complete.
-                          </p>
-                          <div className="bg-slate-900/50 rounded-lg p-3">
-                            <p className="text-sm text-slate-300 font-medium mb-2">What happens to your deposit:</p>
-                            <ul className="text-sm text-slate-400 space-y-1">
-                              <li className="flex items-center">
-                                <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                                <span><strong className="text-emerald-400">Refunded</strong> if your application is rejected</span>
-                              </li>
-                              <li className="flex items-center">
-                                <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                                <span><strong className="text-emerald-400">Platform Fee</strong> kept on successful job</span>
-                              </li>
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <form onSubmit={handleApply} className="space-y-6">
-                      <div>
-                        <label
-                          htmlFor="message"
-                          className="block text-sm font-medium text-slate-300 mb-2"
-                        >
-                          Why are you interested in this job? *
-                        </label>
-                        <textarea
-                          id="message"
-                          rows={4}
-                          required
-                          className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
-                          placeholder="Tell the client why you're a great fit for this job..."
-                          value={message}
-                          onChange={(e) => setMessage(e.target.value)}
-                        />
-                      </div>
-
-                      <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-amber-500/25 transition-all duration-200 flex items-center justify-center text-lg">
+        {applications.length > 0 ? (
+          <div className="space-y-4">
+            {applications.map((app) => (
+              <div
+                key={app.id}
+                className="border border-slate-700 rounded-lg p-5 bg-slate-800"
+              >
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <div className="flex items-center mb-2">
+                      <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center mr-3">
                         <svg
-                          className="w-6 h-6 mr-3"
+                          className="w-5 h-5 text-blue-600"
+                          width="20"
+                          height="20"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -704,39 +435,95 @@ const JobDetail = () => {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                           />
                         </svg>
-                        Pay $5 Deposit & Apply
-                      </button>
+                      </div>
+                      <div>
+                        <p className="font-medium text-white">
+                          Worker Application
+                        </p>
+                        <p className="text-sm text-slate-500">
+                          ID: {app.workerId.substring(0, 8)}...
+                        </p>
+                      </div>
+                    </div>
 
-                      <p className="text-center text-xs text-slate-500">
-                        You will be redirected to a secure payment page to complete your deposit.
-                      </p>
-                    </form>
-                  </>
+                    {app.message && (
+                      <div className="mt-3 p-3 bg-slate-900 rounded-md border border-slate-700">
+                        <p className="text-sm text-slate-300">
+                          <span className="font-medium text-white">
+                            Message:
+                          </span>{" "}
+                          {app.message}
+                        </p>
+                      </div>
+                    )}
+
+                    <div className="mt-3 text-sm text-slate-500">
+                      Applied: {new Date(app.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+
+                  <div className="ml-4">
+                    <StatusBadge status={app.status} type="application" />
+                  </div>
+                </div>
+
+                {job.status === "PENDING" && app.status === "APPLIED" && (
+                  <div className="flex space-x-3 pt-4 border-t border-slate-700">
+                    <button
+                      onClick={() => handleAccept(app.id)}
+                      className="btn btn-success btn-sm"
+                    >
+                      Accept Application
+                    </button>
+                    <button
+                      onClick={() => handleReject(app.id)}
+                      className="btn btn-danger btn-sm"
+                    >
+                      Reject Application
+                    </button>
+                    {/* Removed job-specific conversation button */}
+                  </div>
                 )}
-              </div>
-            )}
 
-            {hasApplied && (
-              <div className="card p-6 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-6">
-                <p className="text-amber-300 font-medium">
-                  You have already applied for this job. Please wait for the hirer to review your application.
-                </p>
-              </div>
-            )}
+                {app.status === "ACCEPTED" && (
+                  <div className="mt-4 p-3 bg-emerald-900/30 border border-emerald-500/30 rounded-md">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center">
+                        <svg
+                          className="w-5 h-5 text-emerald-400 mr-2"
+                          width="20"
+                          height="20"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                          />
+                        </svg>
+                        <p className="text-sm text-emerald-300 font-medium">
+                          Application accepted! Waiting for worker to start
+                          the job.
+                        </p>
+                      </div>
+                      {/* Removed job-specific conversation button */}
+                    </div>
+                  </div>
+                )}
 
-            {showPaymentForm && clientSecret && (
-              <div className="card">
-                <h3 className="text-xl font-semibold text-white mb-6">
-                  Complete Your Payment
-                </h3>
-                <div className="mb-6">
-                  <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
-                    <div className="flex items-center text-amber-400 mb-2">
+                {app.status === "REJECTED" && (
+                  <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-md">
+                    <div className="flex items-center">
                       <svg
-                        className="w-5 h-5 mr-2"
+                        className="w-5 h-5 text-red-400 mr-2"
+                        width="20"
+                        height="20"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -745,36 +532,236 @@ const JobDetail = () => {
                           strokeLinecap="round"
                           strokeLinejoin="round"
                           strokeWidth={2}
-                          d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                          d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                         />
                       </svg>
-                      <span className="font-medium">
-                        Almost there! Payment required to submit.
-                      </span>
+                      <p className="text-sm text-red-300">
+                        Application rejected. $5 deposit has been refunded.
+                      </p>
                     </div>
-                    <p className="text-slate-400 text-sm">
-                      Your application will <strong className="text-white">NOT be submitted</strong> until you complete the $5 deposit payment below.
-                    </p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-8">
+            <svg
+              className="w-16 h-16 text-slate-700 mx-auto mb-4"
+              width="64"
+              height="64"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            <p className="text-slate-400 text-lg">No applications yet</p>
+            <p className="text-slate-500 text-sm mt-1">
+              Applications will appear here when workers apply
+            </p>
+          </div>
+        )}
+      </div>
+    ) : (
+      <>
+        {/* Add messaging button for workers who have already applied */}
+        {!isHirer && hasApplied && (
+          <div className="card mb-6">
+            <div className="card-header">
+              <h3 className="text-lg font-semibold text-white">
+                Contact Job Client
+              </h3>
+            </div>
+            <div className="card-body">
+              <p className="text-slate-400 mb-4">
+                Have questions about this job? Message the client directly.
+              </p>
+              {/* Chat Button for workers who have applied */}
+              {user &&
+                user.id !== job?.hirerId &&
+                job?.status === "PENDING" && (
+                  <div className="mt-4 flex justify-end">
+                    <button
+                      onClick={handleStartChat}
+                      disabled={startingChat || !job}
+                      className="btn btn-primary flex items-center"
+                    >
+                      {startingChat ? (
+                        <>
+                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                          Starting Chat...
+                        </>
+                      ) : (
+                        <>
+                          <svg
+                            className="w-4 h-4 mr-2"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.418 8-9 8a9.013 9.013 0 01-5.314-1.757l-3.42 1.026a.756.756 0 01-.932-.932l1.026-3.42A9.013 9.013 0 013 12c0-4.962 4.037-9 9-9s9 4.037 9 9z"
+                            />
+                          </svg>
+                          Chat with Client
+                        </>
+                      )}
+                    </button>
+                  </div>
+                )}
+
+              {chatError && (
+                <div className="mt-4 p-3 bg-red-500/10 border border-red-500/30 rounded-lg">
+                  <p className="text-red-300 text-sm">{chatError}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {job.status === "PENDING" && !showPaymentForm && !hasApplied && (
+          <div className="card">
+            <h3 className="text-xl font-semibold text-white mb-6">
+              Apply for this Job
+            </h3>
+
+            {/* Client Restriction Check */}
+            {user?.user_metadata?.role === "CLIENT" ? (
+              <div className="bg-slate-800 rounded-lg p-6 text-center border border-slate-700">
+                <div className="w-12 h-12 bg-purple-500/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <h4 className="text-lg font-medium text-white mb-2">Client Account Detected</h4>
+                <p className="text-slate-400 mb-4">
+                  You are currently logged in as a Client. Only registered Workers can apply for jobs.
+                </p>
+                <p className="text-sm text-slate-500">
+                  To apply for jobs, please sign out and create a Worker account.
+                </p>
+              </div>
+            ) : (
+              <>
+                {/* PROMINENT PAYMENT NOTICE */}
+                <div className="bg-gradient-to-r from-amber-500/20 to-orange-500/20 border-2 border-amber-500/50 rounded-xl p-5 mb-6">
+                  <div className="flex items-start">
+                    <div className="flex-shrink-0 w-12 h-12 bg-amber-500/30 rounded-full flex items-center justify-center mr-4">
+                      <svg
+                        className="w-6 h-6 text-amber-400"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="text-lg font-bold text-amber-300 mb-2">
+                        💰 $5 Refundable Deposit Required
+                      </h4>
+                      <p className="text-amber-200/80 mb-3">
+                        To apply for this job, you must pay a <span className="font-bold text-white">$5 deposit</span> upfront.
+                        Your application will only be submitted after payment is complete.
+                      </p>
+                      <div className="bg-slate-900/50 rounded-lg p-3">
+                        <p className="text-sm text-slate-300 font-medium mb-2">What happens to your deposit:</p>
+                        <ul className="text-sm text-slate-400 space-y-1">
+                          <li className="flex items-center">
+                            <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                            <span><strong className="text-emerald-400">Refunded</strong> if your application is rejected</span>
+                          </li>
+                          <li className="flex items-center">
+                            <svg className="w-4 h-4 text-emerald-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                            </svg>
+                            <span><strong className="text-emerald-400">Platform Fee</strong> kept on successful job</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <Elements stripe={stripePromise} options={{ clientSecret }}>
-                  <CheckoutForm
-                    clientSecret={clientSecret}
-                    onPaymentSuccess={onPaymentSuccess}
-                    onPaymentError={onPaymentError}
-                  />
-                </Elements>
-              </div>
-            )}
+                <form onSubmit={handleApply} className="space-y-6">
+                  <div>
+                    <label
+                      htmlFor="message"
+                      className="block text-sm font-medium text-slate-300 mb-2"
+                    >
+                      Why are you interested in this job? *
+                    </label>
+                    <textarea
+                      id="message"
+                      rows={4}
+                      required
+                      className="w-full px-3 py-2 border border-slate-700 rounded-md bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500"
+                      placeholder="Tell the client why you're a great fit for this job..."
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                    />
+                  </div>
 
-            {job.status !== "PENDING" && (
-              <div className="card">
-                <div className="text-center py-8">
+                  <button type="submit" className="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-4 px-6 rounded-lg shadow-lg hover:shadow-amber-500/25 transition-all duration-200 flex items-center justify-center text-lg">
+                    <svg
+                      className="w-6 h-6 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                      />
+                    </svg>
+                    Pay $5 Deposit & Apply
+                  </button>
+
+                  <p className="text-center text-xs text-slate-500">
+                    You will be redirected to a secure payment page to complete your deposit.
+                  </p>
+                </form>
+              </>
+            )}
+          </div>
+        )}
+
+        {hasApplied && (
+          <div className="card p-6 bg-amber-500/10 border border-amber-500/30 rounded-lg mb-6">
+            <p className="text-amber-300 font-medium">
+              You have already applied for this job. Please wait for the hirer to review your application.
+            </p>
+          </div>
+        )}
+
+        {showPaymentForm && clientSecret && (
+          <div className="card">
+            <h3 className="text-xl font-semibold text-white mb-6">
+              Complete Your Payment
+            </h3>
+            <div className="mb-6">
+              <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-4 mb-4">
+                <div className="flex items-center text-amber-400 mb-2">
                   <svg
-                    className="w-16 h-16 text-slate-700 mx-auto mb-4"
-                    width="40"
-                    height="40"
+                    className="w-5 h-5 mr-2"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -783,21 +770,59 @@ const JobDetail = () => {
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                     />
                   </svg>
-                  <p className="text-slate-400 text-lg font-medium">
-                    Applications Closed
-                  </p>
-                  <p className="text-slate-500 text-sm mt-1">
-                    This job is no longer accepting applications
-                  </p>
+                  <span className="font-medium">
+                    Almost there! Payment required to submit.
+                  </span>
                 </div>
+                <p className="text-slate-400 text-sm">
+                  Your application will <strong className="text-white">NOT be submitted</strong> until you complete the $5 deposit payment below.
+                </p>
               </div>
-            )}
-          </>
-        )
-      }
+            </div>
+
+            <Elements stripe={stripePromise} options={{ clientSecret }}>
+              <CheckoutForm
+                clientSecret={clientSecret}
+                onPaymentSuccess={onPaymentSuccess}
+                onPaymentError={onPaymentError}
+              />
+            </Elements>
+          </div>
+        )}
+
+        {job.status !== "PENDING" && (
+          <div className="card">
+            <div className="text-center py-8">
+              <svg
+                className="w-16 h-16 text-slate-700 mx-auto mb-4"
+                width="40"
+                height="40"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                />
+              </svg>
+              <p className="text-slate-400 text-lg font-medium">
+                Applications Closed
+              </p>
+              <p className="text-slate-500 text-sm mt-1">
+                This job is no longer accepting applications
+              </p>
+            </div>
+          </div>
+        )}
+      </>
+    )
+  }
     </div >
   );
 };

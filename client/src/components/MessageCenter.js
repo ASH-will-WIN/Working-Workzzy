@@ -29,7 +29,12 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
     const fetchConversations = async () => {
       try {
         const data = await getConversations();
-        setConversations(data);
+
+        // Filter out blocked users (client-side for now)
+        const blockedUsers = JSON.parse(localStorage.getItem("blockedUsers") || "[]");
+        const filteredData = data.filter(conv => !blockedUsers.includes(conv.otherParticipantId));
+
+        setConversations(filteredData);
 
         // Determine target from navigation state OR props
         const targetUserId =
@@ -38,7 +43,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
         const targetConvId = location.state?.conversationId;
 
         if (targetConvId) {
-          const targetConversation = data.find(
+          const targetConversation = filteredData.find(
             (conv) => conv.conversationId === targetConvId
           );
           if (targetConversation) {
@@ -46,7 +51,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
           }
         } else if (targetUserId) {
           // Find existing conversation with this user (and job if specified)
-          const existingConv = data.find(
+          const existingConv = filteredData.find(
             (conv) =>
               conv.otherParticipantId === targetUserId &&
               (!targetJobId || conv.jobId === targetJobId)
@@ -146,10 +151,10 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
         prev.map((conv) =>
           conv.conversationId === selectedConversation.conversationId
             ? {
-                ...conv,
-                latestMessage: newMessage.content,
-                latestMessageTime: newMessage.createdAt,
-              }
+              ...conv,
+              latestMessage: newMessage.content,
+              latestMessageTime: newMessage.createdAt,
+            }
             : conv
         )
       );
@@ -195,9 +200,8 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
           <div className="flex flex-col md:flex-row min-h-0 flex-1">
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
-              className={`md:w-1/3 border-r border-slate-700 flex flex-col min-h-0 ${
-                selectedConversation ? "hidden md:flex" : "flex"
-              }`}
+              className={`md:w-1/3 border-r border-slate-700 flex flex-col min-h-0 ${selectedConversation ? "hidden md:flex" : "flex"
+                }`}
             >
               <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800">
                 <h2 className="font-semibold text-white">Conversations</h2>
@@ -224,9 +228,8 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
             {/* Chat Window - Full width on mobile when selected, main area on desktop */}
             <div
-              className={`flex-1 flex flex-col ${
-                selectedConversation ? "flex" : "hidden md:flex"
-              }`}
+              className={`flex-1 flex flex-col ${selectedConversation ? "flex" : "hidden md:flex"
+                }`}
               style={{ minHeight: 0 }}
             >
               {selectedConversation ? (

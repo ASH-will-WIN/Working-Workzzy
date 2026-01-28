@@ -39,11 +39,6 @@ const StartConversation = ({
   };
 
   const getButtonText = () => {
-    if (otherUserRole === "CLIENT") {
-      return "Message Client";
-    } else if (otherUserRole === "WORKER") {
-      return "Message Worker";
-    }
     return "Send Message";
   };
 

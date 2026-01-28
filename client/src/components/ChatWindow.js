@@ -11,6 +11,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   const messagesEndRef = useRef(null);
   const [localMessages, setLocalMessages] = useState(messages);
   const [messagesLoading, setMessagesLoading] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   // Update local messages when props change
   useEffect(() => {
@@ -97,6 +98,41 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
     }
   };
 
+  const handleReportUser = async () => {
+    setShowMenu(false);
+    const reason = window.prompt("Please provide a reason for reporting this user:");
+    if (reason) {
+      try {
+        const { createReport } = await import("../api/reportApi");
+        await createReport({ reportedId: conversation.otherParticipantId, reason });
+        alert("Thank you. We have received your report and will review it shortly.");
+      } catch (err) {
+        console.error(err);
+        alert("Failed to submit report.");
+      }
+    }
+  };
+
+  const handleBlockUser = async () => {
+    setShowMenu(false);
+    if (window.confirm("Are you sure you want to block this user? You will no longer be able to message each other.")) {
+      try {
+        // Store blocked users in localStorage for now (simple client-side solution)
+        const blockedUsers = JSON.parse(localStorage.getItem("blockedUsers") || "[]");
+        if (!blockedUsers.includes(conversation.otherParticipantId)) {
+          blockedUsers.push(conversation.otherParticipantId);
+          localStorage.setItem("blockedUsers", JSON.stringify(blockedUsers));
+        }
+        alert("User has been blocked. This conversation will be hidden.");
+        // Notify parent or refresh conversations
+        window.location.href = "/messages";
+      } catch (err) {
+        console.error(err);
+        alert("Failed to block user.");
+      }
+    }
+  };
+
   if (loading || messagesLoading) {
     return (
       <div className="flex-1 flex items-center justify-center">
@@ -122,9 +158,48 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
             </div>
           </div>
 
-          {/* Job-specific features removed for core messaging simplification */}
+          {/* Menu Dropdown */}
+          <div className="relative">
+            <button
+              onClick={() => setShowMenu(!showMenu)}
+              className="p-2 rounded-full hover:bg-slate-700 text-slate-400 hover:text-white transition-colors"
+              title="Options"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
+              </svg>
+            </button>
+
+            {showMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-lg overflow-hidden z-20">
+                <button
+                  onClick={handleReportUser}
+                  className="block w-full text-left px-4 py-3 text-sm text-slate-300 hover:bg-slate-700 hover:text-white transition-colors"
+                >
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 mr-3 text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    Report User
+                  </div>
+                </button>
+                <button
+                  onClick={handleBlockUser}
+                  className="block w-full text-left px-4 py-3 text-sm text-red-400 hover:bg-slate-700 hover:text-red-300 transition-colors border-t border-slate-700"
+                >
+                  <div className="flex items-center">
+                    <svg className="w-4 h-4 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636" />
+                    </svg>
+                    Block User
+                  </div>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
+
 
       {/* Messages Area */}
       <div
@@ -162,8 +237,8 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
               showTime={
                 index === 0 ||
                 new Date(message.createdAt).getTime() -
-                  new Date(localMessages[index - 1].createdAt).getTime() >
-                  300000
+                new Date(localMessages[index - 1].createdAt).getTime() >
+                300000
               }
             />
           ))
