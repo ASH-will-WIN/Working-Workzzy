@@ -144,14 +144,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-module.exports = {
-  registerUser,
-  loginUser,
-  forgotPassword,
-  resetPassword,
-  deleteAccount
-};
-
 // Delete user account
 const deleteAccount = async (req, res) => {
   const userId = req.user.id;
@@ -223,4 +215,12 @@ const deleteAccount = async (req, res) => {
     console.error("Delete Account Error:", error);
     res.status(500).json({ error: "Failed to delete account" });
   }
+};
+
+module.exports = {
+  registerUser,
+  loginUser,
+  forgotPassword,
+  resetPassword,
+  deleteAccount
 };

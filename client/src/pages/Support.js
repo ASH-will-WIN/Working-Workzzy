@@ -188,6 +188,7 @@ const Support = () => {
                                     className="w-full px-4 py-3 bg-slate-800 border border-slate-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-wurkzi-400 focus:border-transparent transition-all"
                                 >
                                     <option value="">Select a topic</option>
+                                    <option value="report">Report Abuse / Objectionable Content</option>
                                     <option value="account">Account Issues</option>
                                     <option value="payment">Payment Questions</option>
                                     <option value="job">Job Related</option>

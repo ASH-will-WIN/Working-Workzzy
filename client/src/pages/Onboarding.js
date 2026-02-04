@@ -11,8 +11,8 @@ const Onboarding = () => {
   useEffect(() => {
     const createOnboardingLink = async () => {
       try {
-        const { url } = await connectApi.createStripeAccountLink();
-        setStripeUrl(url);
+        const { onboardingUrl } = await connectApi.createStripeAccountLink();
+        setStripeUrl(onboardingUrl);
         setLoading(false);
       } catch (err) {
         console.error("Failed to create onboarding link:", err);

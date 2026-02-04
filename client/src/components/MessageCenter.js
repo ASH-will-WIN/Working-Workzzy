@@ -92,7 +92,9 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
     const interval = setInterval(async () => {
       try {
         const data = await getConversations();
-        setConversations(data);
+        const blockedUsers = JSON.parse(localStorage.getItem("blockedUsers") || "[]");
+        const filteredData = data.filter(conv => !blockedUsers.includes(conv.otherParticipantId));
+        setConversations(filteredData);
       } catch (error) {
         console.error("Failed to refresh conversations:", error);
       }

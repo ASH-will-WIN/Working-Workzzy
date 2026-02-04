@@ -515,7 +515,7 @@ const Dashboard = () => {
                         here with payment tracking
                       </p>
                       <button
-                        onClick={() => (window.location.href = "/")}
+                        onClick={() => navigate("/jobs")}
                         className="btn btn-primary btn-lg"
                       >
                         Browse Available Jobs
@@ -842,12 +842,12 @@ const Dashboard = () => {
                                           }
                                           className="btn bg-emerald-600 text-white hover:bg-emerald-700 w-full sm:w-auto"
                                         >
-                                          Client Paid in Cash
+                                          Client Paid in Cash or Other Method
                                         </button>
                                         <p className="text-xs text-emerald-400 mt-2">
                                           Click this if the client has paid you
-                                          directly in cash to mark the job as
-                                          fully complete.
+                                          directly via cash or another method to
+                                          mark the job as fully complete.
                                         </p>
                                       </div>
                                     )}
@@ -1656,7 +1656,7 @@ const StripeOnboardingCard = ({ stripeStatus }) => {
             <button
               onClick={handleStartOnboarding}
               disabled={loading}
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <div className="flex items-center">

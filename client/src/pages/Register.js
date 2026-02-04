@@ -38,7 +38,7 @@ const Register = () => {
 
     try {
       await register(name, email, password, role, phone);
-      navigate("/jobs");
+      navigate("/dashboard");
     } catch (err) {
       // Display server error message if available
       if (err.response && err.response.data && err.response.data.error) {

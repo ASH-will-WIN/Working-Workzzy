@@ -16,8 +16,8 @@ const createReport = async (req, res) => {
         const report = await prisma.report.create({
             data: {
                 reporterId,
-                reportedId,
-                jobId,
+                reportedId: reportedId || null,
+                jobId: jobId || null,
                 reason,
                 status: "PENDING",
             },
