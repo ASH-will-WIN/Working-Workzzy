@@ -92,6 +92,7 @@ model JobImage {
 model Message {
   id             String   @id @default(cuid())
   content        String
+  imageUrl       String?  @map("image_url")
   senderId       String   @map("sender_id")    // Supabase user ID
   receiverId     String   @map("receiver_id")  // Supabase user ID
   jobId          String?  @map("job_id")       // Optional: link to specific job

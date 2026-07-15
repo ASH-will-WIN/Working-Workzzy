@@ -4,13 +4,13 @@ const { getUserPhoneNumber, sendSMS } = require("../services/smsService");
 // Send a new message
 const sendMessage = async (req, res) => {
   try {
-    const { content, receiverId, jobId } = req.body;
+    const { content, imageUrl, receiverId, jobId } = req.body;
     const senderId = req.user.id;
 
-    if (!content || !receiverId) {
+    if ((!content && !imageUrl) || !receiverId) {
       return res
         .status(400)
-        .json({ error: "Content and receiver ID are required" });
+        .json({ error: "A message or image and receiver ID are required" });
     }
 
     // Generate conversation ID (consistent regardless of who sends first)
@@ -97,7 +97,8 @@ const sendMessage = async (req, res) => {
 
     const message = await prisma.message.create({
       data: {
-        content,
+        content: content || "",
+        imageUrl: imageUrl || null,
         senderId,
         receiverId,
         jobId: jobId || null,
@@ -111,10 +112,11 @@ const sendMessage = async (req, res) => {
       const receiverPhone = await getUserPhoneNumber(receiverId, prisma);
       if (receiverPhone) {
         const senderName = req.user.user_metadata?.name || "Someone";
-        const smsContent = `New message from ${senderName}: ${content.substring(
+        const smsPreview = content || "📷 Sent a photo";
+        const smsContent = `New message from ${senderName}: ${smsPreview.substring(
           0,
           100
-        )}${content.length > 100 ? "..." : ""}`;
+        )}${smsPreview.length > 100 ? "..." : ""}`;
         await sendSMS(receiverPhone, smsContent);
       }
     } catch (smsError) {
@@ -196,7 +198,7 @@ const getConversations = async (req, res) => {
           conversationId: conv.conversationId,
           otherParticipantId,
           jobId: conv.jobId,
-          latestMessage: latestMessage.content,
+          latestMessage: latestMessage.content || "📷 Photo",
           latestMessageTime: latestMessage.createdAt,
           unreadCount,
         };

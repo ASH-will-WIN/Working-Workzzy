@@ -4,7 +4,6 @@ import {
   getConversations,
   getConversationMessages,
   markConversationAsRead,
-  createConversation,
 } from "../api/messageApi";
 import ConversationList from "./ConversationList";
 import ChatWindow from "./ChatWindow";
@@ -87,7 +86,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
   // Remove the useEffect for user search
 
-  // Refresh conversations periodically for real-time updates
+  // Keep conversation previews and unread counts current without a manual refresh.
   useEffect(() => {
     const interval = setInterval(async () => {
       try {
@@ -98,7 +97,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
       } catch (error) {
         console.error("Failed to refresh conversations:", error);
       }
-    }, 10000); // Refresh every 10 seconds
+    }, 2000);
 
     return () => clearInterval(interval);
   }, []);
@@ -154,7 +153,7 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
           conv.conversationId === selectedConversation.conversationId
             ? {
               ...conv,
-              latestMessage: newMessage.content,
+              latestMessage: newMessage.content || "📷 Photo",
               latestMessageTime: newMessage.createdAt,
             }
             : conv

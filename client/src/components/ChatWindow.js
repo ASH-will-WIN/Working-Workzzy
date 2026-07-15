@@ -8,7 +8,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   const { user } = useAuth();
   const [newMessage, setNewMessage] = useState("");
   const [sending, setSending] = useState(false);
-  const messagesEndRef = useRef(null);
+  const messagesContainerRef = useRef(null);
   const [localMessages, setLocalMessages] = useState(messages);
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -28,20 +28,21 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
     return () => clearTimeout(timer);
   }, [localMessages]);
 
-  // Load messages once when conversation is selected
+  // Load messages when a conversation is selected and keep the open chat current.
   useEffect(() => {
     if (!conversation || conversation.conversationId === "new") {
       setLocalMessages([]);
       return;
     }
 
-    const loadMessages = async () => {
+    let isActive = true;
+    const loadMessages = async ({ showLoading = false } = {}) => {
       try {
-        setMessagesLoading(true);
+        if (showLoading) setMessagesLoading(true);
         const messagesData = await getConversationMessages(
           conversation.conversationId
         );
-        setLocalMessages(messagesData.messages || []);
+        if (isActive) setLocalMessages(messagesData.messages || []);
       } catch (error) {
         console.error("Failed to load messages:", error);
         // Don't show an alert for empty conversations
@@ -49,34 +50,35 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
           alert("Failed to load messages. Please try again.");
         }
       } finally {
-        setMessagesLoading(false);
+        if (isActive && showLoading) setMessagesLoading(false);
       }
     };
 
-    loadMessages();
+    loadMessages({ showLoading: true });
+    const interval = window.setInterval(() => {
+      if (document.visibilityState === "visible") loadMessages();
+    }, 2000);
+
+    return () => {
+      isActive = false;
+      window.clearInterval(interval);
+    };
   }, [conversation]);
 
   const scrollToBottom = () => {
-    if (messagesEndRef.current) {
-      try {
-        messagesEndRef.current.scrollIntoView({ behavior: "auto" });
-      } catch (err) {
-        // Fallback: manually scroll the messages container
-        const messagesContainer = messagesEndRef.current?.parentElement;
-        if (messagesContainer) {
-          messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        }
-      }
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
     }
   };
 
-  const handleSendMessage = async (content) => {
-    if (!content.trim() || sending) return;
+  const handleSendMessage = async ({ content, imageUrl }) => {
+    if ((!content.trim() && !imageUrl) || sending) return;
 
     setSending(true);
     try {
       const messageData = {
         content: content.trim(),
+        imageUrl,
         receiverId: conversation.otherParticipantId,
         jobId: conversation.jobId || null,
       };
@@ -90,9 +92,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       onMessageSent(sentMessage);
 
       setNewMessage("");
+      return sentMessage;
     } catch (error) {
       console.error("Failed to send message:", error);
-      // TODO: Show error toast
+      throw error;
     } finally {
       setSending(false);
     }
@@ -204,9 +207,10 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       {/* Messages Area */}
       <div
         className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-900"
+        ref={messagesContainerRef}
         style={{
           WebkitOverflowScrolling: "touch",
-          maxHeight: "calc(100vh - 200px)",
+          minHeight: 0,
         }}
       >
         {localMessages.length === 0 ? (
@@ -243,7 +247,6 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
             />
           ))
         )}
-        <div ref={messagesEndRef} />
       </div>
 
       {/* Message Input */}
@@ -253,7 +256,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
           onChange={setNewMessage}
           onSend={handleSendMessage}
           disabled={sending}
-          placeholder="Type your message..."
+          placeholder="Type a message or attach a photo..."
         />
       </div>
     </div>

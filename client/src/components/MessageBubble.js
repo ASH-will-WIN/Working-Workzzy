@@ -41,6 +41,14 @@ const MessageBubble = ({ message, isOwn, showTime }) => {
           <p className="text-sm whitespace-pre-wrap break-words">
             {message.content}
           </p>
+          {message.imageUrl && (
+            <img
+              src={message.imageUrl}
+              alt="Message attachment"
+              className={`mt-2 max-h-72 w-full rounded-xl object-cover ${message.content ? "" : "mt-0"}`}
+              loading="lazy"
+            />
+          )}
         </div>
 
         <div
