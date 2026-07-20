@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Login from "./pages/Login";
@@ -22,10 +22,15 @@ import Support from "./pages/Support"; // Added import for Support page
 import Footer from "./components/Footer"; // Added import for Footer
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Staging from "./pages/Staging";
 import "./App.css";
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const isStagingPath = location.pathname === "/staging" || location.pathname.startsWith("/staging/");
+  const isStagingHost = window.location.hostname === "staging.wurkzi.com";
+  const isStaging = isStagingPath || isStagingHost;
 
   useEffect(() => {
     // Check for Supabase password reset token in the URL hash
@@ -38,10 +43,15 @@ function App() {
   }, [navigate]);
 
   return (
-    <div className="App flex flex-col min-h-screen bg-slate-950">
-      <Navbar />
-      <main className="flex-grow pt-20">
-        <Routes>
+    <div className={isStaging ? "App" : "App flex flex-col min-h-screen bg-slate-950"}>
+      {!isStaging && <Navbar />}
+      <main className={isStaging ? "" : "flex-grow pt-20"}>
+        {isStaging ? (
+          <Routes>
+            <Route path="*" element={<Staging />} />
+          </Routes>
+        ) : (
+          <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -105,9 +115,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
+          </Routes>
+        )}
       </main>
-      <Footer />
+      {!isStaging && <Footer />}
     </div>
   );
 }
