@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { sendMessage } from "../api/messageApi";
 import StatusBadge from "../components/StatusBadge";
 import ImageGallery from "../components/ImageGallery";
+import { getReviewsForJob, createReview } from "../api/reviewApi";
 // Removed job-specific StartConversation import
 // --- STRIPE IMPORTS ---
 import { loadStripe } from "@stripe/stripe-js";
@@ -34,6 +35,11 @@ const JobDetail = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const [startingChat, setStartingChat] = useState(false);
   const [chatError, setChatError] = useState("");
+  const [reviews, setReviews] = useState([]);
+  const [reviewRating, setReviewRating] = useState(5);
+  const [reviewComment, setReviewComment] = useState("");
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewError, setReviewError] = useState("");
 
   const handleStartChat = async () => {
     if (!user) {
@@ -78,6 +84,9 @@ const JobDetail = () => {
       // Fetch job data first to check hirer status
       const jobData = await getJobById(id);
       setJob(jobData);
+      if (jobData.status === "COMPLETED") {
+        setReviews(await getReviewsForJob(id));
+      }
 
       // Fetch applications and images in parallel
       const promises = [fetchJobImages(id)];
@@ -95,6 +104,25 @@ const JobDetail = () => {
     } finally {
       setLoading(false);
       setImagesLoading(false);
+    }
+  };
+
+  const canReview = job?.status === "COMPLETED" &&
+    (job?.hirerId === user?.id || job?.applications?.some((app) => app.workerId === user?.id && app.status === "ACCEPTED"));
+  const hasReviewed = reviews.some((review) => review.reviewerId === user?.id);
+
+  const handleReviewSubmit = async (event) => {
+    event.preventDefault();
+    setReviewSubmitting(true);
+    setReviewError("");
+    try {
+      const review = await createReview(id, { rating: reviewRating, comment: reviewComment });
+      setReviews((current) => [...current, review]);
+      setReviewComment("");
+    } catch (error) {
+      setReviewError(error.response?.data?.message || "Could not submit your review.");
+    } finally {
+      setReviewSubmitting(false);
     }
   };
 
@@ -217,6 +245,33 @@ const JobDetail = () => {
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8 min-h-screen bg-slate-950">
+      {job.status === "COMPLETED" && (
+        <div className="card p-6 mb-6 border border-emerald-500/30">
+          <h2 className="text-xl font-semibold text-white mb-2">Job reviews</h2>
+          {reviews.length > 0 && (
+            <div className="space-y-3 mb-5">
+              {reviews.map((review) => (
+                <div key={review.id} className="bg-slate-800/60 rounded-lg p-3">
+                  <div className="text-amber-400">{"★".repeat(review.rating)}{"☆".repeat(5 - review.rating)}</div>
+                  {review.comment && <p className="text-slate-300 mt-1">{review.comment}</p>}
+                </div>
+              ))}
+            </div>
+          )}
+          {canReview && !hasReviewed ? (
+            <form onSubmit={handleReviewSubmit} className="space-y-3">
+              <label className="block text-slate-300">Your rating
+                <select value={reviewRating} onChange={(e) => setReviewRating(Number(e.target.value))} className="ml-3 bg-slate-800 text-white rounded px-2 py-1">
+                  {[5, 4, 3, 2, 1].map((value) => <option key={value} value={value}>{value} / 5</option>)}
+                </select>
+              </label>
+              <textarea value={reviewComment} onChange={(e) => setReviewComment(e.target.value)} maxLength={1000} placeholder="Share your experience (optional)" className="w-full bg-slate-800 border border-slate-700 text-white rounded-lg p-3" />
+              {reviewError && <p className="text-red-400 text-sm">{reviewError}</p>}
+              <button disabled={reviewSubmitting} className="btn btn-primary">{reviewSubmitting ? "Submitting..." : "Leave review"}</button>
+            </form>
+          ) : canReview ? <p className="text-slate-400">You have submitted your review for this job.</p> : <p className="text-slate-400">Reviews are available to the poster and accepted worker.</p>}
+        </div>
+      )}
       {/* Job Header */}
       <div className="card mb-6">
         <div className="card-header">
@@ -343,6 +398,18 @@ const JobDetail = () => {
             {job.fullDescription}
           </p>
         </div>
+      </div>
+
+      <div className="card mb-6 p-6 bg-slate-900 border border-slate-800">
+        <h2 className="text-xl font-bold text-white mb-2">Resources</h2>
+        {job.providesResources ? (
+          <p className="text-emerald-300">The poster will provide the resources needed for this job.</p>
+        ) : (
+          <>
+            <p className="text-amber-300 mb-2">The worker will need to provide the following resources:</p>
+            <p className="text-slate-300 whitespace-pre-wrap">{job.requiredResources}</p>
+          </>
+        )}
       </div>
 
       {/* Job Images Section */}

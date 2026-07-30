@@ -22,6 +22,8 @@ model Job {
 
   price              Int
   estimatedTime      Int?          @map("estimated_time") // In minutes
+  providesResources  Boolean       @default(true) @map("provides_resources")
+  requiredResources  String?       @map("required_resources")
 
   hirerId           String        @map("hirer_id")
   createdAt         DateTime      @default(now()) @map("createdAt")
@@ -30,6 +32,7 @@ model Job {
   jobImages         JobImage[]
   applications      JobApplication[]
   messages          Message[]
+  reviews           Review[]
   @@map("jobs")
 }
 model Payment {
@@ -153,4 +156,20 @@ model Report {
   updatedAt   DateTime  @updatedAt
 
   @@map("reports")
+}
+
+model Review {
+  id         String   @id @default(cuid())
+  jobId      String   @map("job_id")
+  job        Job      @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  reviewerId String   @map("reviewer_id")
+  revieweeId String   @map("reviewee_id")
+  rating     Int
+  comment    String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@unique([jobId, reviewerId])
+  @@index([revieweeId])
+  @@map("reviews")
 }

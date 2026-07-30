@@ -17,6 +17,8 @@ const CreateJob = () => {
   const [price, setPrice] = useState("");
   const [hours, setHours] = useState("");
   const [minutes, setMinutes] = useState("");
+  const [providesResources, setProvidesResources] = useState(true);
+  const [requiredResources, setRequiredResources] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -83,6 +85,11 @@ const CreateJob = () => {
       return;
     }
 
+    if (!providesResources && !requiredResources.trim()) {
+      setError("Please list the resources the worker will need to bring.");
+      return;
+    }
+
     setIsSubmitting(true);
     setError("");
 
@@ -96,6 +103,8 @@ const CreateJob = () => {
       state,
       price: Number(price),
       estimatedTime: (Number(hours || 0) * 60) + Number(minutes || 0),
+      providesResources,
+      requiredResources: providesResources ? null : requiredResources.trim(),
       hirerId: user.id,
     };
 
@@ -324,6 +333,51 @@ const CreateJob = () => {
               />
             </div>
           </div>
+
+          <fieldset className="border border-slate-700 rounded-lg p-4">
+            <legend className="px-2 text-sm font-medium text-slate-300">
+              Will you provide the resources needed for this job? *
+            </legend>
+            <div className="flex flex-col sm:flex-row gap-4 mt-2">
+              <label className="flex items-center text-slate-200 cursor-pointer">
+                <input
+                  type="radio"
+                  name="providesResources"
+                  checked={providesResources}
+                  onChange={() => setProvidesResources(true)}
+                  className="mr-2"
+                />
+                Yes, I will provide them
+              </label>
+              <label className="flex items-center text-slate-200 cursor-pointer">
+                <input
+                  type="radio"
+                  name="providesResources"
+                  checked={!providesResources}
+                  onChange={() => setProvidesResources(false)}
+                  className="mr-2"
+                />
+                No, the worker needs to bring them
+              </label>
+            </div>
+
+            {!providesResources && (
+              <div className="mt-4">
+                <label htmlFor="requiredResources" className="block text-sm font-medium text-slate-300 mb-2">
+                  Resources the worker needs to bring *
+                </label>
+                <textarea
+                  id="requiredResources"
+                  rows={3}
+                  value={requiredResources}
+                  onChange={(e) => setRequiredResources(e.target.value)}
+                  placeholder="e.g., ladder, paintbrushes, gloves, lawn mower"
+                  required
+                  className="w-full px-4 py-3 border border-slate-700 rounded-lg bg-slate-800 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-wurkzi-500 focus:border-wurkzi-500 resize-vertical"
+                />
+              </div>
+            )}
+          </fieldset>
 
           {/* Image Upload Section */}
           <div>

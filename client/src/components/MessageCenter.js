@@ -7,10 +7,13 @@ import {
 } from "../api/messageApi";
 import ConversationList from "./ConversationList";
 import ChatWindow from "./ChatWindow";
+import { connectMessageRealtime, disconnectMessageRealtime } from "../api/messageRealtime";
+import { useAuth } from "../context/AuthContext";
 // Remove the import for searchUsers since it's no longer used
 
 const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
   const location = useLocation();
+  const { token } = useAuth();
   const [conversations, setConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -86,9 +89,9 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
 
   // Remove the useEffect for user search
 
-  // Keep conversation previews and unread counts current without a manual refresh.
+  // Deliver incoming messages immediately, with a slower fallback refresh.
   useEffect(() => {
-    const interval = setInterval(async () => {
+    const refreshConversations = async () => {
       try {
         const data = await getConversations();
         const blockedUsers = JSON.parse(localStorage.getItem("blockedUsers") || "[]");
@@ -97,10 +100,29 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
       } catch (error) {
         console.error("Failed to refresh conversations:", error);
       }
-    }, 2000);
+    };
 
-    return () => clearInterval(interval);
-  }, []);
+    const socket = connectMessageRealtime(token);
+    const handleIncomingMessage = (message) => {
+      if (message.conversationId === selectedConversation?.conversationId) {
+        setMessages((current) =>
+          current.some((item) => item.id === message.id)
+            ? current
+            : [...current, message]
+        );
+      }
+      refreshConversations();
+    };
+
+    socket?.on("message:new", handleIncomingMessage);
+    const interval = setInterval(refreshConversations, 4000);
+
+    return () => {
+      socket?.off("message:new", handleIncomingMessage);
+      clearInterval(interval);
+      disconnectMessageRealtime();
+    };
+  }, [token, selectedConversation?.conversationId]);
 
   // Handle conversation selection
   const handleSelectConversation = async (conversation) => {
@@ -190,15 +212,15 @@ const MessageCenter = ({ initialTargetUserId, initialTargetJobId }) => {
   }
 
   return (
-    <div className="min-h-screen bg-slate-950">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+    <div className="h-[100dvh] bg-slate-950 md:min-h-screen md:h-auto">
+      <div className="h-full max-w-7xl mx-auto px-0 md:px-4 md:sm:px-6 md:lg:px-8 py-0 md:py-8 flex flex-col">
+        <div className="hidden md:block mb-8">
           <h1 className="text-3xl font-bold text-white mb-2">Messages</h1>
           <p className="text-slate-400">Communicate with users</p>
         </div>
 
-        <div className="bg-slate-900 rounded-xl shadow-lg border border-slate-700 overflow-hidden">
-          <div className="flex flex-col md:flex-row min-h-0 flex-1">
+        <div className="flex-1 min-h-0 bg-slate-900 md:rounded-xl shadow-lg md:border border-slate-700 overflow-hidden">
+          <div className="h-full flex flex-col md:flex-row min-h-0">
             {/* Conversation List - Stacked on mobile, sidebar on desktop */}
             <div
               className={`md:w-1/3 border-r border-slate-700 flex flex-col min-h-0 ${selectedConversation ? "hidden md:flex" : "flex"

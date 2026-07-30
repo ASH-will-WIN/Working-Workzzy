@@ -19,6 +19,8 @@ async function createJob(req, res) {
       price,
       hirerId,
       estimatedTime,
+      providesResources,
+      requiredResources,
     } = req.body;
 
     // Validate required fields
@@ -34,6 +36,20 @@ async function createJob(req, res) {
       price === null
     ) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    if (typeof providesResources !== "boolean") {
+      return res.status(400).json({
+        error: "missing_resource_preference",
+        message: "Please indicate whether you will provide the resources.",
+      });
+    }
+
+    if (!providesResources && !requiredResources?.trim()) {
+      return res.status(400).json({
+        error: "missing_required_resources",
+        message: "Please list the resources the worker will need to bring.",
+      });
     }
 
     // Validate price must be a positive number and at least 25
@@ -67,6 +83,8 @@ async function createJob(req, res) {
         hirerId, // Directly use the provided Supabase UID
         price,
         estimatedTime: estimatedTime ? Number(estimatedTime) : null,
+        providesResources,
+        requiredResources: providesResources ? null : requiredResources.trim(),
         status: JobStatus.PENDING,
       },
     });
@@ -99,6 +117,8 @@ async function getJobs(req, res) {
         state: true,
         status: true,
         price: true,
+        providesResources: true,
+        requiredResources: true,
         createdAt: true,
         estimatedTime: true,
         jobImages: {

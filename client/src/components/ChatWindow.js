@@ -57,7 +57,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
     loadMessages({ showLoading: true });
     const interval = window.setInterval(() => {
       if (document.visibilityState === "visible") loadMessages();
-    }, 2000);
+    }, 4000);
 
     return () => {
       isActive = false;
@@ -145,7 +145,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
   }
 
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex-1 min-h-0 flex flex-col">
       {/* Chat Header - Sticky top */}
       <div className="sticky top-0 z-10 p-4 border-b border-slate-700 bg-slate-800">
         <div className="flex items-center justify-between">
@@ -250,7 +250,7 @@ const ChatWindow = ({ conversation, messages, loading, onMessageSent }) => {
       </div>
 
       {/* Message Input */}
-      <div className="sticky bottom-0 border-t border-slate-700 p-4 bg-slate-800 safe-area-bottom">
+      <div className="sticky bottom-0 border-t border-slate-700 p-3 md:p-4 pb-[calc(0.75rem+env(safe-area-inset-bottom))] md:pb-4 bg-slate-800">
         <MessageInput
           value={newMessage}
           onChange={setNewMessage}

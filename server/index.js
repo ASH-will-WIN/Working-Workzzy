@@ -1,11 +1,14 @@
 require("dotenv").config();
 const express = require("express");
+const http = require("http");
 const cors = require("cors");
+const { Server } = require("socket.io");
 const { createClient } = require("@supabase/supabase-js");
-const db = require("./db");
+const { supabase } = require("./db");
 const path = require("path");
 
 const app = express();
+const server = http.createServer(app);
 const PORT = process.env.PORT || 5000;
 
 const jobRoutes = require("./routes/job");
@@ -16,6 +19,7 @@ const connectRoutes = require("./routes/connect");
 const webhookRoutes = require("./routes/webhook");
 const messageRoutes = require("./routes/message");
 const reportRoutes = require("./routes/report");
+const reviewRoutes = require("./routes/review");
 
 // Webhook routes (must be before express.json middleware)
 app.use("/api/webhooks", webhookRoutes);
@@ -57,6 +61,26 @@ app.use(
   })
 );
 
+const io = new Server(server, {
+  cors: { origin: allowedOrigins, credentials: true },
+});
+
+io.use(async (socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) return next(new Error("Unauthorized"));
+
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data?.user) return next(new Error("Unauthorized"));
+  socket.userId = data.user.id;
+  next();
+});
+
+io.on("connection", (socket) => {
+  socket.join(socket.userId);
+});
+
+app.set("io", io);
+
 // Increase payload size limit for Base64-encoded images
 // Base64 encoding increases size by ~33%, so 10MB images become ~13MB
 // Allow up to 50MB to handle multiple large images
@@ -71,6 +95,7 @@ app.use("/api/applications", applicationRoutes);
 app.use("/api/connect", connectRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/reports", reportRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");
@@ -82,7 +107,7 @@ app.get("/", (req, res) => {
 //   res.sendFile(path.join(__dirname, "../client/build", "index.html"));
 // });
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 

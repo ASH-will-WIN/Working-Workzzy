@@ -107,6 +107,8 @@ const sendMessage = async (req, res) => {
       },
     });
 
+    req.app.get("io")?.to(receiverId).to(senderId).emit("message:new", message);
+
     // Send SMS notification to receiver if they have a phone number
     try {
       const receiverPhone = await getUserPhoneNumber(receiverId, prisma);
