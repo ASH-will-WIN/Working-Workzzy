@@ -20,6 +20,7 @@ const webhookRoutes = require("./routes/webhook");
 const messageRoutes = require("./routes/message");
 const reportRoutes = require("./routes/report");
 const reviewRoutes = require("./routes/review");
+const referralRoutes = require("./routes/referral");
 
 // Webhook routes (must be before express.json middleware)
 app.use("/api/webhooks", webhookRoutes);
@@ -96,6 +97,7 @@ app.use("/api/connect", connectRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/reports", reportRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/referrals", referralRoutes);
 
 app.get("/", (req, res) => {
   res.send("Workzzy API is running");

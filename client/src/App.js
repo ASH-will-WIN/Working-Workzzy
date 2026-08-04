@@ -22,6 +22,7 @@ import Support from "./pages/Support"; // Added import for Support page
 import Footer from "./components/Footer"; // Added import for Footer
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Referrals from "./pages/Referrals";
 import Staging from "./pages/Staging";
 import "./App.css";
 
@@ -113,6 +114,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/referrals"
+            element={
+              <ProtectedRoute>
+                <Referrals />
               </ProtectedRoute>
             }
           />

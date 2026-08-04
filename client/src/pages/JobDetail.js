@@ -159,10 +159,14 @@ const JobDetail = () => {
     try {
       // Step 1: Create the application on your backend
       const applicationData = await createApplication({ jobId: id, message });
-      // Step 2: Get the client_secret from the backend response
-      // NOTE: The backend needs to be updated to return `{ clientSecret: depositIntent.client_secret }`
-      setClientSecret(applicationData.clientSecret); // Get secret from backend response
-      setShowPaymentForm(true); // Show the payment form
+      if (applicationData.clientSecret) {
+        setClientSecret(applicationData.clientSecret);
+        setShowPaymentForm(true);
+      } else {
+        alert("Application submitted using your $5 referral credit.");
+        setMessage("");
+        fetchJobAndApps();
+      }
     } catch (error) {
       alert(
         `Error: ${error.response?.data?.message ||

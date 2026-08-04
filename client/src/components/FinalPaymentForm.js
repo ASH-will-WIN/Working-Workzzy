@@ -102,7 +102,7 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
             onPaymentSuccess={onPaymentSuccess}
             onPaymentError={onPaymentError}
             isFinalPayment={true}
-            amount={amount}
+            amount={currentPayment?.amount || amount}
           />
         </Elements>
       </div>
@@ -146,7 +146,8 @@ const FinalPaymentForm = ({ jobId, onPaymentComplete, jobPrice }) => {
             />
           </div>
           <p className="text-sm text-slate-500 mt-2">
-            The total agreed price for this job.
+            The total agreed price. The 10% platform fee and any referral rewards
+            are calculated securely when you create the payment.
           </p>
         </div>
 

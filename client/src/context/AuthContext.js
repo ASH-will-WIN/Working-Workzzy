@@ -35,13 +35,14 @@ export const AuthProvider = ({ children }) => {
     // Note: Onboarding status will be checked on Dashboard load
   };
 
-  const register = async (name, email, password, role, phone) => {
+  const register = async (name, email, password, role, phone, referralCode) => {
     const { user, session } = await registerUser({
       name,
       email,
       password,
       role,
       phone,
+      referralCode,
     });
     localStorage.setItem("token", session.access_token);
     localStorage.setItem("user", JSON.stringify(user));

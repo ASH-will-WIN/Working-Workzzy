@@ -1,4 +1,7 @@
 const { prisma, stripeClient } = require("../db");
+const { awardReferralRewardsForJob } = require("../services/referralService");
+
+const PLATFORM_FEE_RATE = 0.1;
 
 async function createPayment(req, res) {
   let paymentIntent;
@@ -183,6 +186,10 @@ async function createFinalPayment(req, res) {
       return res.status(404).json({ error: "Job not found" });
     }
 
+    if (job.hirerId !== req.user.id) {
+      return res.status(403).json({ error: "not_authorized", message: "Only the poster can make the final payment." });
+    }
+
     if (job.status !== "COMPLETED") {
       return res.status(400).json({
         error: "job_not_completed",
@@ -200,15 +207,18 @@ async function createFinalPayment(req, res) {
     const workerId = job.applications[0].workerId;
     const hirerId = job.hirerId;
 
-    // Calculate platform fee (10%) and worker amount (90%)
-    // const platformFee = Math.round(amount * 0.1 * 100) / 100;
-    // const workerAmount = Math.round(amount * 0.9 * 100) / 100;
-
-    // Worker also gets their $5 deposit refunded
-    // const depositRefund = 5.0;
-    // const totalWorkerAmount = workerAmount + depositRefund;
-    const amount = job.price; // Enforce price from DB
-    const workerAmount = amount;
+    const listedAmountCents = Math.round(job.price * 100);
+    const platformFeeCents = Math.round(listedAmountCents * PLATFORM_FEE_RATE);
+    const workerAmountCents = listedAmountCents - platformFeeCents;
+    const hirerProfile = await prisma.userProfile.findUnique({ where: { userId: hirerId } });
+    const referralCreditAppliedCents = Math.min(hirerProfile?.platformCreditCents || 0, platformFeeCents);
+    // A discount never reduces the worker's payout. If a $5 credit already
+    // consumes the fee, keep the one-time discount for a future payment.
+    const referralDiscountCents = hirerProfile?.postingDiscountCount > 0
+      ? Math.min(Math.round(platformFeeCents * 0.1), platformFeeCents - referralCreditAppliedCents)
+      : 0;
+    const chargedAmountCents = listedAmountCents - referralCreditAppliedCents - referralDiscountCents;
+    const platformFeeAfterRewardsCents = platformFeeCents - referralCreditAppliedCents - referralDiscountCents;
 
     // Verify worker has a connected account with payouts enabled
     const stripeAccount = await prisma.stripeAccount.findUnique({
@@ -231,32 +241,42 @@ async function createFinalPayment(req, res) {
     }
 
     // Create PaymentIntent with application fee and transfer to worker (destination charge)
-    const amountInCents = Math.round(amount * 100);
-    // const applicationFeeAmount = Math.round(platformFee * 100);
-
     const paymentIntent = await stripeClient.paymentIntents.create({
-      amount: amountInCents,
+      amount: chargedAmountCents,
       currency: "usd",
       payment_method_types: ["card"],
       transfer_data: {
-        destination: stripeAccount.accountId, // funds (less application fee) go to worker account
+        destination: stripeAccount.accountId,
+        amount: workerAmountCents,
       },
-      metadata: { jobId, hirerId, workerId, type: "FINAL_PAYMENT" },
+      metadata: { jobId, hirerId, workerId, type: "FINAL_PAYMENT", referralCreditAppliedCents, referralDiscountCents },
     });
 
-    // Create payment record
-    const payment = await prisma.payment.create({
-      data: {
-        jobId,
-        amount,
-        platformFee: 0,
-        workerAmount, // full payment to worker
-        depositRefund: 0,
-        hirerId,
-        workerId,
-        stripePaymentId: paymentIntent.id,
-        status: "PENDING",
-      },
+    const payment = await prisma.$transaction(async (tx) => {
+      if (referralCreditAppliedCents || referralDiscountCents) {
+        await tx.userProfile.update({
+          where: { userId: hirerId },
+          data: {
+            ...(referralCreditAppliedCents ? { platformCreditCents: { decrement: referralCreditAppliedCents } } : {}),
+            ...(referralDiscountCents ? { postingDiscountCount: { decrement: 1 } } : {}),
+          },
+        });
+      }
+      return tx.payment.create({
+        data: {
+          jobId,
+          amount: chargedAmountCents / 100,
+          platformFee: platformFeeAfterRewardsCents / 100,
+          workerAmount: workerAmountCents / 100,
+          depositRefund: 0,
+          referralCreditAppliedCents,
+          referralDiscountCents,
+          hirerId,
+          workerId,
+          stripePaymentId: paymentIntent.id,
+          status: "PENDING",
+        },
+      });
     });
 
     res.json({
@@ -286,6 +306,10 @@ async function confirmFinalPayment(req, res) {
       return res.status(404).json({ error: "Payment not found" });
     }
 
+    if (payment.hirerId !== req.user.id) {
+      return res.status(403).json({ error: "not_authorized", message: "Only the poster can confirm this payment." });
+    }
+
     if (payment.status !== "PENDING") {
       return res.status(400).json({
         error: "invalid_payment_status",
@@ -293,16 +317,13 @@ async function confirmFinalPayment(req, res) {
       });
     }
 
-    // Fetch the payment record details
-    const jobPayment = await prisma.payment.findUnique({
-      where: { id: paymentId },
-    });
-
     // Mark payment as paid
     const updatedPayment = await prisma.payment.update({
       where: { id: paymentId },
       data: { status: "PAID" },
     });
+
+    await awardReferralRewardsForJob(updatedPayment.jobId);
 
     // Deposit refund logic removed as per revised business logic (0% platform fee, fee handling on application)
     // No additional transfer needed.
@@ -376,6 +397,10 @@ async function markJobPaidInCash(req, res) {
     const hirerId = job.hirerId;
     const amount = job.price;
 
+    if (workerId !== req.user.id) {
+      return res.status(403).json({ error: "not_authorized", message: "Only the assigned worker can mark a cash payment." });
+    }
+
     // Create a PAID payment record
     const payment = await prisma.payment.create({
       data: {
@@ -397,6 +422,8 @@ async function markJobPaidInCash(req, res) {
         data: { status: "COMPLETED" },
       });
     }
+
+    await awardReferralRewardsForJob(jobId);
 
     res.json({ message: "Job marked as paid in cash", payment });
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 const Register = () => {
@@ -10,6 +10,8 @@ const Register = () => {
   const [role] = useState("MEMBER"); // Default role (hidden from user)
   const [error, setError] = useState("");
   const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const location = useLocation();
+  const [referralCode] = useState(() => new URLSearchParams(location.search).get("ref") || "");
   const { register } = useAuth();
   const navigate = useNavigate();
 
@@ -37,7 +39,7 @@ const Register = () => {
     }
 
     try {
-      await register(name, email, password, role, phone);
+      await register(name, email, password, role, phone, referralCode);
       navigate("/dashboard");
     } catch (err) {
       // Display server error message if available
@@ -60,6 +62,12 @@ const Register = () => {
       <div className="max-w-md w-full bg-slate-900/50 backdrop-blur-xl rounded-3xl p-8 border border-slate-700/50 shadow-2xl relative z-10 animate-fade-in text-center">
         <h2 className="text-3xl font-bold text-white mb-2">Create Account</h2>
         <p className="text-slate-400 mb-8">Join the Wurkzi community today</p>
+
+        {referralCode && (
+          <div className="mb-6 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">
+            Referral code <span className="font-bold">{referralCode}</span> will be applied when you join.
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="text-left">

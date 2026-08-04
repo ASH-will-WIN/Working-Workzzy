@@ -1,7 +1,16 @@
 const { supabase, prisma } = require("../../db");
+const { randomBytes } = require("crypto");
+
+async function generateReferralCode() {
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    const referralCode = `WRK-${randomBytes(4).toString("hex").toUpperCase()}`;
+    if (!(await prisma.userProfile.findUnique({ where: { referralCode } }))) return referralCode;
+  }
+  throw new Error("Could not generate a referral code");
+}
 // Register a new user
 const registerUser = async (req, res) => {
-  const { email, password, name, role, phone } = req.body;
+  const { email, password, name, role, phone, referralCode } = req.body;
 
   // Validate required fields
   if (!phone) {
@@ -15,6 +24,12 @@ const registerUser = async (req, res) => {
   }
 
   try {
+    let referrerProfile = null;
+    if (referralCode?.trim()) {
+      referrerProfile = await prisma.userProfile.findUnique({ where: { referralCode: referralCode.trim().toUpperCase() } });
+      if (!referrerProfile) return res.status(400).json({ error: "That referral code is invalid." });
+    }
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -37,11 +52,11 @@ const registerUser = async (req, res) => {
         phone,
       });
       try {
-        await prisma.userProfile.create({
-          data: {
-            userId: data.user.id,
-            phone: phone,
-          },
+        await prisma.$transaction(async (tx) => {
+          await tx.userProfile.create({
+            data: { userId: data.user.id, phone, referralCode: await generateReferralCode(), referredById: referrerProfile?.userId || null },
+          });
+          if (referrerProfile) await tx.referral.create({ data: { referrerId: referrerProfile.userId, referredId: data.user.id } });
         });
         console.log("Successfully saved user profile with phone number");
       } catch (profileError) {

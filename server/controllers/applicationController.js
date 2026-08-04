@@ -65,18 +65,13 @@ async function createApplication(req, res) {
     }
 
 
-    // Create $5 deposit PaymentIntent
-    // CRITICAL FIX: Use 'metadata' (not 'meta') for Stripe API
-    const depositIntent = await stripeClient.paymentIntents.create({
-      amount: 500, // $5.00
+    const profile = await prisma.userProfile.findUnique({ where: { userId: workerId } });
+    const depositCreditAppliedCents = profile?.platformCreditCents >= 500 ? 500 : 0;
+    const depositIntent = depositCreditAppliedCents ? null : await stripeClient.paymentIntents.create({
+      amount: 500,
       currency: "usd",
-      capture_method: "manual", // Authorize but don't capture yet
-      metadata: {
-        // CORRECTED: metadata (not meta)
-        jobId,
-        applicationId: "temp", // Will update after creating application
-        type: "DEPOSIT",
-      },
+      capture_method: "manual",
+      metadata: { jobId, applicationId: "temp", type: "DEPOSIT" },
     });
 
     // Create application record
@@ -85,21 +80,23 @@ async function createApplication(req, res) {
         jobId,
         workerId,
         message,
-        depositId: depositIntent.id,
+        depositId: depositIntent?.id || null,
         depositStatus: DepositStatus.AUTHORIZED,
+        depositCreditAppliedCents,
         status: ApplicationStatus.APPLIED,
       },
     });
 
-    // Update metadata with actual application ID
-    // CRITICAL FIX: Use 'metadata' (not 'meta') for Stripe API
-    await stripeClient.paymentIntents.update(depositIntent.id, {
-      metadata: { applicationId: application.id },
-    });
+    if (depositCreditAppliedCents) {
+      await prisma.userProfile.update({ where: { userId: workerId }, data: { platformCreditCents: { decrement: depositCreditAppliedCents } } });
+    } else {
+      await stripeClient.paymentIntents.update(depositIntent.id, { metadata: { applicationId: application.id } });
+    }
 
     res.status(201).json({
       application,
-      clientSecret: depositIntent.client_secret, // <-- ADD THIS SECRET KEY
+      clientSecret: depositIntent?.client_secret || null,
+      usedReferralCredit: Boolean(depositCreditAppliedCents),
     });
   } catch (error) {
     console.error("Application Creation Error:", error.message);
@@ -219,7 +216,7 @@ async function acceptApplication(req, res) {
 
     // Capture the $5 deposit
     try {
-      await stripeClient.paymentIntents.capture(application.depositId);
+      if (application.depositId) await stripeClient.paymentIntents.capture(application.depositId);
     } catch (stripeError) {
       console.error("Stripe Capture Error:", stripeError.message);
       return res.status(500).json({
@@ -278,7 +275,10 @@ async function rejectApplication(req, res) {
     }
 
     // Cancel the deposit (refund the $5)
-    await stripeClient.paymentIntents.cancel(application.depositId);
+    if (application.depositId) await stripeClient.paymentIntents.cancel(application.depositId);
+    if (application.depositCreditAppliedCents) {
+      await prisma.userProfile.update({ where: { userId: application.workerId }, data: { platformCreditCents: { increment: application.depositCreditAppliedCents } } });
+    }
 
     // Update application status
     const updatedApplication = await prisma.jobApplication.update({
@@ -332,11 +332,15 @@ async function withdrawApplication(req, res) {
 
     // Cancel the deposit (refund the $5)
     try {
-      await stripeClient.paymentIntents.cancel(application.depositId);
+      if (application.depositId) await stripeClient.paymentIntents.cancel(application.depositId);
     } catch (stripeError) {
       // If payment intent is already cancelled or captured, handle it
       console.error("Stripe Cancellation Error:", stripeError.message);
       // We still want to update the DB if it was already cancelled or refund it if possible
+    }
+
+    if (application.depositCreditAppliedCents) {
+      await prisma.userProfile.update({ where: { userId: workerId }, data: { platformCreditCents: { increment: application.depositCreditAppliedCents } } });
     }
 
     // Update application status

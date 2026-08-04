@@ -47,6 +47,8 @@ model Payment {
   jobId         String         @map("job_id")
   job           Job            @relation(fields: [jobId], references: [id])
   stripePaymentId  String?        @map("stripe_payment_id")
+  referralCreditAppliedCents Int  @default(0) @map("referral_credit_applied_cents")
+  referralDiscountCents Int       @default(0) @map("referral_discount_cents")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   @@map("payments")
@@ -76,6 +78,7 @@ model JobApplication {
   status        ApplicationStatus @default(APPLIED)
   depositId     String?        @map("deposit_id")
   depositStatus DepositStatus  @default(AUTHORIZED)
+  depositCreditAppliedCents Int @default(0) @map("deposit_credit_applied_cents")
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   @@map("job_applications")
@@ -108,12 +111,42 @@ model Message {
 }
 
 model UserProfile {
-  id        String   @id @default(cuid())
-  userId    String   @unique @map("user_id")
-  phone     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                   String   @id @default(cuid())
+  userId               String   @unique @map("user_id")
+  phone                String?
+  referralCode         String   @unique @map("referral_code")
+  referredById         String?  @map("referred_by_id")
+  platformCreditCents  Int      @default(0) @map("platform_credit_cents")
+  postingDiscountCount Int      @default(0) @map("posting_discount_count")
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
   @@map("user_profiles")
+}
+
+model Referral {
+  id                      String    @id @default(cuid())
+  referrerId              String    @map("referrer_id")
+  referredId              String    @unique @map("referred_id")
+  workerRewardGrantedAt   DateTime? @map("worker_reward_granted_at")
+  neighborRewardGrantedAt DateTime? @map("neighbor_reward_granted_at")
+  createdAt               DateTime  @default(now()) @map("created_at")
+
+  @@index([referrerId])
+  @@map("referrals")
+}
+
+model ReferralReward {
+  id          String             @id @default(cuid())
+  referralId  String             @map("referral_id")
+  recipientId String             @map("recipient_id")
+  jobId       String             @map("job_id")
+  type        ReferralRewardType
+  amountCents Int                @default(0) @map("amount_cents")
+  createdAt   DateTime           @default(now()) @map("created_at")
+
+  @@unique([referralId, recipientId, type])
+  @@index([recipientId])
+  @@map("referral_rewards")
 }
 
 enum DepositStatus {
@@ -156,6 +189,11 @@ model Report {
   updatedAt   DateTime  @updatedAt
 
   @@map("reports")
+}
+
+enum ReferralRewardType {
+  WORKER_CREDIT
+  NEIGHBOR_POSTING_DISCOUNT
 }
 
 model Review {

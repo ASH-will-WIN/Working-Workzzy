@@ -1,8 +1,7 @@
-# Graph Report - Working-Workzzy  (2026-07-28)
+# Graph Report - .  (2026-08-03)
 
 ## Corpus Check
-- 130 files · ~212,186 words
-- Verdict: corpus is large enough that graph structure adds value.
+- cluster-only mode — file stats not available
 
 ## Summary
 - 738 nodes · 964 edges · 54 communities (46 shown, 8 thin omitted)
@@ -10,7 +9,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `93e68d66`
+- Built from commit: `f3006024`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

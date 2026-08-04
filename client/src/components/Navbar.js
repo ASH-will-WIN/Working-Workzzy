@@ -123,6 +123,13 @@ const Navbar = () => {
                   </Link>
                 )}
 
+                <Link
+                  to="/referrals"
+                  className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/referrals') ? 'text-white' : 'text-slate-400'}`}
+                >
+                  Refer & Earn
+                </Link>
+
                 <Link to="/messages" className="relative group p-2 rounded-full hover:bg-slate-800 transition-colors text-slate-400 hover:text-white">
                   <UnreadMessagesBadge />
                   <span className="sr-only">Messages</span>
@@ -265,6 +272,13 @@ const Navbar = () => {
                     Post Job
                   </Link>
                 )}
+                <Link
+                  to="/referrals"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/referrals') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Refer & Earn
+                </Link>
                 <Link
                   to="/messages"
                   className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/messages') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
