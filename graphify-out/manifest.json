@@ -55,9 +55,9 @@
     "semantic_hash": "89be60895176466398d53bd4a693d9f6"
   },
   "client/src/App.js": {
-    "mtime": 1785801840.584758,
-    "ast_hash": "417a6e38b7bbfed50bfe0cc4910e980a",
-    "semantic_hash": "417a6e38b7bbfed50bfe0cc4910e980a"
+    "mtime": 1785805879.845008,
+    "ast_hash": "5054fbba0b7f5b7aa22f38000a0478cd",
+    "semantic_hash": "5054fbba0b7f5b7aa22f38000a0478cd"
   },
   "client/src/App.test.js": {
     "mtime": 1785800592.9996119,
@@ -160,9 +160,9 @@
     "semantic_hash": "0d8c9fc844d634c77fda8d848a9f57d2"
   },
   "client/src/components/Navbar.js": {
-    "mtime": 1785801840.5852492,
-    "ast_hash": "ccd0f00d26e0a6e0306da270bc7ee5b7",
-    "semantic_hash": "ccd0f00d26e0a6e0306da270bc7ee5b7"
+    "mtime": 1785805879.9266796,
+    "ast_hash": "f1f14ba33d71f96d55336ab614359bf5",
+    "semantic_hash": "f1f14ba33d71f96d55336ab614359bf5"
   },
   "client/src/components/PaymentStatusIndicator.js": {
     "mtime": 1785800593.0013542,
@@ -365,9 +365,9 @@
     "semantic_hash": "932480deb53342e241315ba237f9fc6a"
   },
   "server/controllers/paymentController.js": {
-    "mtime": 1785801840.5823443,
-    "ast_hash": "e25515155e4d5c96f85203284122c03f",
-    "semantic_hash": "e25515155e4d5c96f85203284122c03f"
+    "mtime": 1785805792.776601,
+    "ast_hash": "225a05df405eb45f6bef9e5ed9de6428",
+    "semantic_hash": "225a05df405eb45f6bef9e5ed9de6428"
   },
   "server/controllers/reportController.js": {
     "mtime": 1785800593.008847,
@@ -390,9 +390,9 @@
     "semantic_hash": "23091c3f4e030ea7da074a988ecd7cd0"
   },
   "server/index.js": {
-    "mtime": 1785801646.374426,
-    "ast_hash": "4e2dbcd53dab22307d037037498818fb",
-    "semantic_hash": "4e2dbcd53dab22307d037037498818fb"
+    "mtime": 1785805792.6962543,
+    "ast_hash": "6421a517015b93cedf9ddc2458a1090d",
+    "semantic_hash": "6421a517015b93cedf9ddc2458a1090d"
   },
   "server/middleware/auth.js": {
     "mtime": 1785800593.0092616,
@@ -765,9 +765,9 @@
     "semantic_hash": "da8c8b543b300ec85a81f8986dc68f14"
   },
   "client/src/pages/Referrals.js": {
-    "mtime": 1785801855.0825477,
-    "ast_hash": "0b7510beefb2acdf19e5ad2fad8cb736",
-    "semantic_hash": "0b7510beefb2acdf19e5ad2fad8cb736"
+    "mtime": 1785805880.009346,
+    "ast_hash": "1a7fde05c849401594445f5e2da29a7a",
+    "semantic_hash": "1a7fde05c849401594445f5e2da29a7a"
   },
   "server/controllers/referralController.js": {
     "mtime": 1785801646.373778,
@@ -788,5 +788,40 @@
     "mtime": 1785801646.3734968,
     "ast_hash": "d6f24c8b5bccbcd707c76a1c1aeddb89",
     "semantic_hash": "d6f24c8b5bccbcd707c76a1c1aeddb89"
+  },
+  "client/src/api/leaderboardApi.js": {
+    "mtime": 1785805879.6811423,
+    "ast_hash": "3eb0fe412e0735591600edca5e178987",
+    "semantic_hash": "3eb0fe412e0735591600edca5e178987"
+  },
+  "client/src/pages/Leaderboard.js": {
+    "mtime": 1785805879.7615037,
+    "ast_hash": "d8211037877a1a6433c53f9059babfb6",
+    "semantic_hash": "d8211037877a1a6433c53f9059babfb6"
+  },
+  "server/controllers/leaderboardController.js": {
+    "mtime": 1785805792.5354815,
+    "ast_hash": "a8f70f59b2863d6734e4c1c9242c6fc1",
+    "semantic_hash": "a8f70f59b2863d6734e4c1c9242c6fc1"
+  },
+  "server/prisma/migrations/20260803010000_add_leaderboard_system/migration.sql": {
+    "mtime": 1785805734.5298944,
+    "ast_hash": "9939b4527e16f7b4411dc72e3e4d6c13",
+    "semantic_hash": "9939b4527e16f7b4411dc72e3e4d6c13"
+  },
+  "server/routes/leaderboard.js": {
+    "mtime": 1785805792.615813,
+    "ast_hash": "b7b8f5ef5851c91c8c4e46aaa448e67e",
+    "semantic_hash": "b7b8f5ef5851c91c8c4e46aaa448e67e"
+  },
+  "server/services/leaderboardService.js": {
+    "mtime": 1785805792.4549413,
+    "ast_hash": "eeee66fcd9154d222c002c56fcb31e3d",
+    "semantic_hash": "eeee66fcd9154d222c002c56fcb31e3d"
+  },
+  "docs/leaderboard-decisions.md": {
+    "mtime": 1785805880.1449206,
+    "ast_hash": "f43844a93fc3038df570fbf3ca1ae020",
+    "semantic_hash": "f43844a93fc3038df570fbf3ca1ae020"
   }
 }

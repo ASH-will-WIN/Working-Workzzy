@@ -23,6 +23,7 @@ import Footer from "./components/Footer"; // Added import for Footer
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Referrals from "./pages/Referrals";
+import Leaderboard from "./pages/Leaderboard";
 import Staging from "./pages/Staging";
 import "./App.css";
 
@@ -122,6 +123,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Referrals />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <ProtectedRoute>
+                <Leaderboard />
               </ProtectedRoute>
             }
           />

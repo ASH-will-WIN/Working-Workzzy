@@ -30,6 +30,7 @@ const Referrals = () => {
         <p className="text-sm font-bold uppercase tracking-[0.2em] text-wurkzi-400">Community rewards</p>
         <h1 className="mt-2 text-3xl font-bold sm:text-4xl">Refer neighbors. Earn together.</h1>
         <p className="mt-3 text-slate-400">There is no referral limit—share your link whenever someone could use Wurkzi.</p>
+        <p className="mt-2 text-sm text-violet-300">During an active Community Challenge, each successful referral also earns your leaderboard entry 10 points.</p>
       </div>
 
       <section className="rounded-2xl border border-slate-700 bg-slate-900 p-5 shadow-xl sm:p-7">

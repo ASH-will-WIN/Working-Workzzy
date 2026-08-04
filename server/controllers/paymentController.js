@@ -1,5 +1,6 @@
 const { prisma, stripeClient } = require("../db");
 const { awardReferralRewardsForJob } = require("../services/referralService");
+const { awardLeaderboardPointsForJob } = require("../services/leaderboardService");
 
 const PLATFORM_FEE_RATE = 0.1;
 
@@ -323,7 +324,7 @@ async function confirmFinalPayment(req, res) {
       data: { status: "PAID" },
     });
 
-    await awardReferralRewardsForJob(updatedPayment.jobId);
+    await awardPostPaymentRewards(updatedPayment.jobId);
 
     // Deposit refund logic removed as per revised business logic (0% platform fee, fee handling on application)
     // No additional transfer needed.
@@ -423,7 +424,7 @@ async function markJobPaidInCash(req, res) {
       });
     }
 
-    await awardReferralRewardsForJob(jobId);
+    await awardPostPaymentRewards(jobId);
 
     res.json({ message: "Job marked as paid in cash", payment });
 
@@ -433,6 +434,15 @@ async function markJobPaidInCash(req, res) {
       error: "cash_payment_failed",
       message: error.message,
     });
+  }
+}
+
+async function awardPostPaymentRewards(jobId) {
+  try {
+    await Promise.all([awardReferralRewardsForJob(jobId), awardLeaderboardPointsForJob(jobId)]);
+  } catch (error) {
+    // Payment completion must remain successful if a non-financial reward retry fails.
+    console.error("Post-payment reward processing failed:", error.message);
   }
 }
 

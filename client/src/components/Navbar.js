@@ -130,6 +130,13 @@ const Navbar = () => {
                   Refer & Earn
                 </Link>
 
+                <Link
+                  to="/leaderboard"
+                  className={`text-sm font-medium transition-colors duration-200 hover:text-white ${isActive('/leaderboard') ? 'text-white' : 'text-slate-400'}`}
+                >
+                  Leaderboard
+                </Link>
+
                 <Link to="/messages" className="relative group p-2 rounded-full hover:bg-slate-800 transition-colors text-slate-400 hover:text-white">
                   <UnreadMessagesBadge />
                   <span className="sr-only">Messages</span>
@@ -278,6 +285,13 @@ const Navbar = () => {
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Refer & Earn
+                </Link>
+                <Link
+                  to="/leaderboard"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/leaderboard') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Leaderboard
                 </Link>
                 <Link
                   to="/messages"
