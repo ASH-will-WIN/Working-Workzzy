@@ -9,7 +9,7 @@ import {
 } from "../api/applicationApi";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { sendMessage } from "../api/messageApi";
+import { createConversation } from "../api/messageApi";
 import StatusBadge from "../components/StatusBadge";
 import ImageGallery from "../components/ImageGallery";
 import { getReviewsForJob, createReview } from "../api/reviewApi";
@@ -51,19 +51,15 @@ const JobDetail = () => {
     setChatError("");
 
     try {
-      // Send initial message with jobId and receiverId
-      const receiverId = job.hirerId;
-      const response = await sendMessage({
+      const conversation = await createConversation({
+        participantId: job.hirerId,
         jobId: job.id,
-        receiverId,
-        content: "Started chat about job: " + job.title,
       });
 
       // Navigate to messages with conversation state
       navigate("/messages", {
         state: {
-          conversationId: response.conversationId,
-          focusNew: true,
+          conversationId: conversation.id,
         },
       });
     } catch (error) {

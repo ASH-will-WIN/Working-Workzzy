@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { getUnreadCount } from '../api/messageApi';
+import { connectMessageRealtime, disconnectMessageRealtime } from '../api/messageRealtime';
+import { useAuth } from '../context/AuthContext';
 
 const UnreadMessagesBadge = () => {
   const [unreadCount, setUnreadCount] = useState(0);
+  const { token } = useAuth();
 
   useEffect(() => {
     const fetchUnreadCount = async () => {
@@ -15,14 +18,18 @@ const UnreadMessagesBadge = () => {
       }
     };
 
-    // Fetch immediately
     fetchUnreadCount();
-
-    // Set up polling for real-time updates
-    const interval = setInterval(fetchUnreadCount, 30000); // Check every 30 seconds
-
-    return () => clearInterval(interval);
-  }, []);
+    const socket = connectMessageRealtime(token);
+    socket?.on('message:new', fetchUnreadCount);
+    socket?.on('conversation:read', fetchUnreadCount);
+    socket?.on('conversation:blocked', fetchUnreadCount);
+    return () => {
+      socket?.off('message:new', fetchUnreadCount);
+      socket?.off('conversation:read', fetchUnreadCount);
+      socket?.off('conversation:blocked', fetchUnreadCount);
+      disconnectMessageRealtime();
+    };
+  }, [token]);
 
   if (unreadCount === 0) {
     return null;

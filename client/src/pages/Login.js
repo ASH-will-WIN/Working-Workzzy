@@ -14,7 +14,7 @@ const Login = () => {
     setError("");
     try {
       await login(email, password);
-      navigate("/dashboard");
+      navigate("/jobs/new");
     } catch (err) {
       setError("Failed to log in. Please check your credentials.");
       console.error(err);

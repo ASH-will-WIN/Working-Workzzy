@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getJobConversation } from "../api/messageApi";
+import { createConversation } from "../api/messageApi";
 import { useAuth } from "../context/AuthContext";
 
 const StartConversation = ({
@@ -14,19 +14,20 @@ const StartConversation = ({
   const { user } = useAuth();
 
   const handleStartConversation = async () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
     if (!otherUserId || otherUserId === user.id) return;
 
     setLoading(true);
     try {
-      // Get or create conversation for this job
-      const conversation = await getJobConversation(jobId, otherUserId);
+      const conversation = await createConversation({ participantId: otherUserId, jobId });
 
       // Navigate to messages page with the conversation
       navigate("/messages", {
         state: {
-          conversationId: conversation.conversationId,
-          otherUserId,
-          jobId,
+          conversationId: conversation.id,
         },
       });
     } catch (error) {
@@ -58,7 +59,7 @@ const StartConversation = ({
     </svg>
   );
 
-  if (!otherUserId || otherUserId === user.id) {
+  if (!otherUserId || otherUserId === user?.id) {
     return null;
   }
 

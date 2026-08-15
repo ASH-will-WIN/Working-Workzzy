@@ -1,370 +1,333 @@
-const { prisma } = require("../db"); // Make sure to import prisma
-const { getUserPhoneNumber, sendSMS } = require("../services/smsService");
+const { createClient } = require("@supabase/supabase-js");
+const { randomBytes } = require("crypto");
+const { prisma } = require("../db");
 
-// Send a new message
-const sendMessage = async (req, res) => {
-  try {
-    const { content, imageUrl, receiverId, jobId } = req.body;
-    const senderId = req.user.id;
+const MESSAGE_IMAGE_BUCKET = "message-images";
+const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
+const MAX_IMAGE_BYTES = 5 * 1024 * 1024;
+const MESSAGE_LIMIT = 2000;
+const PAGE_SIZE = 40;
 
-    if ((!content && !imageUrl) || !receiverId) {
-      return res
-        .status(400)
-        .json({ error: "A message or image and receiver ID are required" });
-    }
-
-    // Generate conversation ID (consistent regardless of who sends first)
-    const conversationId =
-      [senderId, receiverId].sort().join("-") + (jobId ? `-job-${jobId}` : "");
-
-    // If jobId is provided, validate the users can message about this job
-    // If jobId is provided, validate the users can message about this job
-    if (jobId) {
-      const job = await prisma.job.findUnique({
-        where: { id: jobId },
-        include: {
-          applications: true, // Fetch all applications to check status
-        },
-      });
-
-      if (!job) {
-        return res.status(404).json({ error: "Job not found" });
-      }
-
-      // 1. Block if job is completed or cancelled
-      if (["COMPLETED", "CANCELLED"].includes(job.status)) {
-        return res.status(403).json({
-          error: "Messaging is disabled for completed or cancelled jobs",
-        });
-      }
-
-      // 2. Block if the sender is a worker who has withdrawn
-      // Find sender's application if they are not the hirer
-      if (job.hirerId !== senderId) {
-        const senderApp = job.applications.find(
-          (app) => app.workerId === senderId
-        );
-        if (senderApp && senderApp.status === "WITHDRAWN") {
-          return res.status(403).json({
-            error: "You cannot message about a job you have withdrawn from",
-          });
-        }
-      }
-
-      // Check if receiver has withdrawn
-      if (job.hirerId !== receiverId) {
-        const receiverApp = job.applications.find(
-          (app) => app.workerId === receiverId
-        );
-        if (receiverApp && receiverApp.status === "WITHDRAWN") {
-          return res.status(403).json({
-            error: "You cannot message a worker who has withdrawn from the job",
-          });
-        }
-      }
-
-      const isSenderHirer = job.hirerId === senderId;
-      const isReceiverHirer = job.hirerId === receiverId;
-
-      // For pending jobs, allow any user to message the hirer
-      if (job.status === "PENDING") {
-        if (!(isReceiverHirer || isSenderHirer)) {
-          return res.status(403).json({
-            error: "For pending jobs, you can only message the job hirer",
-          });
-        }
-      }
-      // For non-pending jobs, use the original logic
-      else {
-        // Re-implementing authorization check with the new `applications` array
-        const isSenderValidWorker = job.applications.some(
-          (app) => app.workerId === senderId && app.status === "ACCEPTED"
-        );
-        const isReceiverValidWorker = job.applications.some(
-          (app) => app.workerId === receiverId && app.status === "ACCEPTED"
-        );
-
-        const isSenderAuthorized = isSenderHirer || isSenderValidWorker;
-        const isReceiverAuthorized = isReceiverHirer || isReceiverValidWorker;
-
-        if (!isSenderAuthorized || !isReceiverAuthorized) {
-          return res.status(403).json({
-            error: "Not authorized to message about this job",
-          });
-        }
-      }
-    }
-
-    const message = await prisma.message.create({
-      data: {
-        content: content || "",
-        imageUrl: imageUrl || null,
-        senderId,
-        receiverId,
-        jobId: jobId || null,
-        conversationId,
-        isRead: false,
-      },
-    });
-
-    req.app.get("io")?.to(receiverId).to(senderId).emit("message:new", message);
-
-    // Send SMS notification to receiver if they have a phone number
-    try {
-      const receiverPhone = await getUserPhoneNumber(receiverId, prisma);
-      if (receiverPhone) {
-        const senderName = req.user.user_metadata?.name || "Someone";
-        const smsPreview = content || "📷 Sent a photo";
-        const smsContent = `New message from ${senderName}: ${smsPreview.substring(
-          0,
-          100
-        )}${smsPreview.length > 100 ? "..." : ""}`;
-        await sendSMS(receiverPhone, smsContent);
-      }
-    } catch (smsError) {
-      console.error("Error sending SMS notification:", smsError);
-      // Don't fail the message send if SMS fails
-    }
-
-    res.status(201).json(message);
-  } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ error: "Failed to send message" });
+function messageStorage() {
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!serviceRoleKey) {
+    const error = new Error("Message image uploads are not configured");
+    error.status = 503;
+    throw error;
   }
-};
+  return createClient(process.env.SUPABASE_URL, serviceRoleKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+  }).storage.from(MESSAGE_IMAGE_BUCKET);
+}
 
-// Get all conversations for a user
-const getConversations = async (req, res) => {
-  try {
-    const userId = req.user.id;
+function canonicalParticipants(firstId, secondId) {
+  if (!firstId || !secondId || firstId === secondId) {
+    const error = new Error("Choose another Wurkzi member");
+    error.status = 400;
+    throw error;
+  }
+  return [firstId, secondId].sort();
+}
 
-    // FIX: Use prisma instead of db
-    // Get all unique conversations for the user
-    const conversations = await prisma.message.findMany({
-      where: {
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-      orderBy: [
-        { conversationId: "asc" },
-        { createdAt: "desc" }
+function conversationKey(participantOneId, participantTwoId, jobId) {
+  return jobId
+    ? `job:${jobId}:${participantOneId}:${participantTwoId}`
+    : `direct:${participantOneId}:${participantTwoId}`;
+}
+
+function decodeImage(dataUrl) {
+  if (typeof dataUrl !== "string") return null;
+  const match = dataUrl.match(/^data:(image\/(?:jpeg|png|gif|webp));base64,([A-Za-z0-9+/=]+)$/);
+  if (!match) return null;
+  return { contentType: match[1], bytes: Buffer.from(match[2], "base64") };
+}
+
+async function signedUrl(bucket, path) {
+  if (!path) return null;
+  const { data, error } = await bucket.createSignedUrl(path, 60 * 60);
+  if (error) throw error;
+  return data.signedUrl;
+}
+
+async function getBlockedIds(userId) {
+  const blocks = await prisma.userBlock.findMany({
+    where: { OR: [{ blockerId: userId }, { blockedId: userId }] },
+    select: { blockerId: true, blockedId: true },
+  });
+  return new Set(blocks.map((block) => block.blockerId === userId ? block.blockedId : block.blockerId));
+}
+
+async function assertNotBlocked(userId, otherUserId) {
+  const block = await prisma.userBlock.findFirst({
+    where: {
+      OR: [
+        { blockerId: userId, blockedId: otherUserId },
+        { blockerId: otherUserId, blockedId: userId },
       ],
-      distinct: ["conversationId"],
-    });
-
-    // Get the latest message and unread count for each conversation
-    const conversationDetails = await Promise.all(
-      conversations.map(async (conv) => {
-        // If there is a jobId, check if the conversation should be hidden
-        if (conv.jobId) {
-          const job = await prisma.job.findUnique({
-            where: { id: conv.jobId },
-            include: { applications: true }
-          });
-
-          // If job doesn't exist (maybe deleted), or is completed/cancelled, hide it
-          if (!job || ["COMPLETED", "CANCELLED"].includes(job.status)) {
-            return null;
-          }
-
-          // If user is a worker and has withdrawn, hide it
-          if (job.hirerId !== userId) {
-            const userApp = job.applications.find(app => app.workerId === userId);
-            if (userApp && userApp.status === "WITHDRAWN") {
-              return null;
-            }
-          }
-        }
-
-        // FIX: Use prisma instead of db
-        const latestMessage = await prisma.message.findFirst({
-          where: { conversationId: conv.conversationId },
-          orderBy: { createdAt: "desc" },
-        });
-
-        // FIX: Use prisma instead of db
-        const unreadCount = await prisma.message.count({
-          where: {
-            conversationId: conv.conversationId,
-            receiverId: userId,
-            isRead: false,
-          },
-        });
-
-        // Get the other participant's ID
-        const otherParticipantId =
-          latestMessage.senderId === userId
-            ? latestMessage.receiverId
-            : latestMessage.senderId;
-
-        return {
-          conversationId: conv.conversationId,
-          otherParticipantId,
-          jobId: conv.jobId,
-          latestMessage: latestMessage.content || "📷 Photo",
-          latestMessageTime: latestMessage.createdAt,
-          unreadCount,
-        };
-      })
-    );
-
-    // Filter out nulls (hidden conversations)
-    const filteredConversations = conversationDetails.filter(c => c !== null);
-
-    res.json(filteredConversations);
-  } catch (error) {
-    console.error("Error getting conversations:", error);
-    res.status(500).json({ error: "Failed to get conversations" });
+    },
+  });
+  if (block) {
+    const error = new Error("Messaging is unavailable for this member");
+    error.status = 403;
+    throw error;
   }
-};
+}
 
-// Get messages in a specific conversation
-const getConversationMessages = async (req, res) => {
-  try {
-    const { conversationId } = req.params;
-    const userId = req.user.id;
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 50;
-    const offset = (page - 1) * limit;
-
-    // Verify user is part of this conversation
-    // FIX: Use prisma instead of db
-    const userInConversation = await prisma.message.findFirst({
-      where: {
-        conversationId,
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
-    });
-
-    if (!userInConversation) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to view this conversation" });
-    }
-
-    // FIX: Use prisma instead of db
-    const messages = await prisma.message.findMany({
-      where: { conversationId },
-      orderBy: { createdAt: "asc" },
-      skip: offset,
-      take: limit,
-    });
-
-    // FIX: Use prisma instead of db
-    const totalMessages = await prisma.message.count({
-      where: { conversationId },
-    });
-
-    res.json({
-      messages,
-      pagination: {
-        page,
-        limit,
-        total: totalMessages,
-        hasMore: offset + limit < totalMessages,
-      },
-    });
-  } catch (error) {
-    console.error("Error getting conversation messages:", error);
-    res.status(500).json({ error: "Failed to get messages" });
+async function assertJobAuthorization(jobId, participantOneId, participantTwoId) {
+  if (!jobId) return null;
+  const job = await prisma.job.findUnique({
+    where: { id: jobId },
+    include: { applications: { select: { workerId: true, status: true } } },
+  });
+  if (!job) {
+    const error = new Error("Job not found");
+    error.status = 404;
+    throw error;
   }
-};
 
-// Mark message as read
-const markMessageAsRead = async (req, res) => {
-  try {
-    const { messageId } = req.params;
-    const userId = req.user.id;
+  const isAuthorized = (userId) => {
+    if (job.hirerId === userId) return true;
+    const application = job.applications.find((item) => item.workerId === userId);
+    return Boolean(application && application.status !== "WITHDRAWN");
+  };
 
-    // Verify the user is the receiver of this message
-    // FIX: Use prisma instead of db
-    const message = await prisma.message.findUnique({
-      where: { id: messageId },
-    });
-
-    if (!message) {
-      return res.status(404).json({ error: "Message not found" });
+  if (job.status === "PENDING") {
+    if (job.hirerId !== participantOneId && job.hirerId !== participantTwoId) {
+      const error = new Error("You can only message the hirer about this job");
+      error.status = 403;
+      throw error;
     }
-
-    if (message.receiverId !== userId) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to mark this message as read" });
-    }
-
-    // FIX: Use prisma instead of db
-    const updatedMessage = await prisma.message.update({
-      where: { id: messageId },
-      data: { isRead: true },
-    });
-
-    res.json(updatedMessage);
-  } catch (error) {
-    console.error("Error marking message as read:", error);
-    res.status(500).json({ error: "Failed to mark message as read" });
+  } else if (!isAuthorized(participantOneId) || !isAuthorized(participantTwoId)) {
+    const error = new Error("Not authorized to message about this job");
+    error.status = 403;
+    throw error;
   }
-};
+  return job;
+}
 
-// Mark all messages in a conversation as read
-const markConversationAsRead = async (req, res) => {
+function getOtherParticipant(conversation, userId) {
+  return conversation.participantOneId === userId
+    ? conversation.participantTwoId
+    : conversation.participantOneId;
+}
+
+async function getConversationForMember(conversationId, userId) {
+  const conversation = await prisma.conversation.findUnique({
+    where: { id: conversationId },
+    include: { job: { select: { id: true, title: true, status: true } } },
+  });
+  if (!conversation || (conversation.participantOneId !== userId && conversation.participantTwoId !== userId)) {
+    const error = new Error("Conversation not found");
+    error.status = 404;
+    throw error;
+  }
+  const otherUserId = getOtherParticipant(conversation, userId);
+  await assertNotBlocked(userId, otherUserId);
+  return { conversation, otherUserId };
+}
+
+async function participantSummaries(userIds) {
+  const profiles = await prisma.userProfile.findMany({
+    where: { userId: { in: [...new Set(userIds)] } },
+    select: { userId: true, displayName: true, city: true, avatarPath: true },
+  });
+  const byUserId = new Map(profiles.map((profile) => [profile.userId, profile]));
+  const storage = profiles.some((profile) => profile.avatarPath) && process.env.SUPABASE_SERVICE_ROLE_KEY
+    ? createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { autoRefreshToken: false, persistSession: false },
+    }).storage.from("avatars")
+    : null;
+
+  return new Map(await Promise.all(userIds.map(async (userId) => {
+    const profile = byUserId.get(userId);
+    let avatarUrl = null;
+    if (profile?.avatarPath && storage) {
+      try {
+        avatarUrl = await signedUrl(storage, profile.avatarPath);
+      } catch (error) {
+        console.warn("Could not sign conversation avatar:", error.message);
+      }
+    }
+    return [userId, {
+      userId,
+      displayName: profile?.displayName || "Wurkzi member",
+      city: profile?.city || null,
+      avatarUrl,
+    }];
+  })));
+}
+
+async function serializeMessage(message) {
+  let imageUrl = null;
+  if (message.imagePath) imageUrl = await signedUrl(messageStorage(), message.imagePath);
+  return { ...message, imageUrl, imagePath: undefined };
+}
+
+async function createConversation(req, res) {
   try {
-    const { conversationId } = req.params;
-    const userId = req.user.id;
+    const participantId = req.body.participantId || req.body.otherUserId;
+    const jobId = req.body.jobId || null;
+    const [participantOneId, participantTwoId] = canonicalParticipants(req.user.id, participantId);
+    const participant = await prisma.userProfile.findUnique({ where: { userId: participantId }, select: { userId: true } });
+    if (!participant) {
+      const error = new Error("Wurkzi member not found");
+      error.status = 404;
+      throw error;
+    }
+    await assertNotBlocked(req.user.id, participantId);
+    await assertJobAuthorization(jobId, participantOneId, participantTwoId);
 
-    // Verify user is part of this conversation
-    // FIX: Use prisma instead of db
-    const userInConversation = await prisma.message.findFirst({
-      where: {
-        conversationId,
-        OR: [{ senderId: userId }, { receiverId: userId }],
-      },
+    const key = conversationKey(participantOneId, participantTwoId, jobId);
+    const conversation = await prisma.conversation.upsert({
+      where: { conversationKey: key },
+      create: { conversationKey: key, participantOneId, participantTwoId, jobId },
+      update: {},
+      include: { job: { select: { id: true, title: true, status: true } } },
     });
+    res.status(201).json({ conversation });
+  } catch (error) {
+    console.error("Create conversation error:", error.message);
+    res.status(error.status || 500).json({ error: "conversation_create_failed", message: error.message });
+  }
+}
 
-    if (!userInConversation) {
-      return res
-        .status(403)
-        .json({ error: "Not authorized to access this conversation" });
+async function getConversations(req, res) {
+  try {
+    const blockedIds = await getBlockedIds(req.user.id);
+    const conversations = (await prisma.conversation.findMany({
+      where: { OR: [{ participantOneId: req.user.id }, { participantTwoId: req.user.id }] },
+      orderBy: [{ lastMessageAt: "desc" }, { id: "desc" }],
+      take: 100,
+      include: {
+        job: { select: { id: true, title: true, status: true } },
+        messages: { orderBy: [{ createdAt: "desc" }, { id: "desc" }], take: 1 },
+        _count: { select: { messages: { where: { senderId: { not: req.user.id }, isRead: false } } } },
+      },
+    })).filter((conversation) => !blockedIds.has(getOtherParticipant(conversation, req.user.id)));
+
+    const people = await participantSummaries(conversations.map((conversation) => getOtherParticipant(conversation, req.user.id)));
+    const serialized = await Promise.all(conversations.map(async (conversation) => {
+      const latest = conversation.messages[0];
+      return {
+        id: conversation.id,
+        participant: people.get(getOtherParticipant(conversation, req.user.id)),
+        job: conversation.job,
+        lastMessageAt: conversation.lastMessageAt,
+        unreadCount: conversation._count.messages,
+        latestMessage: latest ? {
+          content: latest.content,
+          hasImage: Boolean(latest.imagePath),
+          createdAt: latest.createdAt,
+          senderId: latest.senderId,
+        } : null,
+      };
+    }));
+    res.json({ conversations: serialized });
+  } catch (error) {
+    console.error("Get conversations error:", error.message);
+    res.status(error.status || 500).json({ error: "conversation_list_failed", message: error.message });
+  }
+}
+
+async function getConversationMessages(req, res) {
+  try {
+    const { conversation } = await getConversationForMember(req.params.conversationId, req.user.id);
+    const cursor = typeof req.query.cursor === "string" ? req.query.cursor : undefined;
+    const rows = await prisma.message.findMany({
+      where: { conversationId: conversation.id },
+      orderBy: [{ createdAt: "desc" }, { id: "desc" }],
+      take: PAGE_SIZE + 1,
+      ...(cursor && { cursor: { id: cursor }, skip: 1 }),
+    });
+    const hasMore = rows.length > PAGE_SIZE;
+    const page = rows.slice(0, PAGE_SIZE);
+    const messages = await Promise.all(page.reverse().map(serializeMessage));
+    res.json({ conversation, messages, nextCursor: hasMore ? page[page.length - 1]?.id : null });
+  } catch (error) {
+    console.error("Get conversation messages error:", error.message);
+    res.status(error.status || 500).json({ error: "message_list_failed", message: error.message });
+  }
+}
+
+async function sendMessage(req, res) {
+  let uploadedPath = null;
+  try {
+    const content = typeof req.body.content === "string" ? req.body.content.trim() : "";
+    if (content.length > MESSAGE_LIMIT) {
+      return res.status(400).json({ error: "message_too_long", message: `Messages can be up to ${MESSAGE_LIMIT} characters.` });
+    }
+    const image = req.body.imageDataUrl ? decodeImage(req.body.imageDataUrl) : null;
+    if (req.body.imageDataUrl && (!image || !IMAGE_TYPES.has(image.contentType) || image.bytes.length > MAX_IMAGE_BYTES)) {
+      return res.status(400).json({ error: "invalid_image", message: "Use a JPEG, PNG, GIF, or WebP image up to 5 MB." });
+    }
+    if (!content && !image) {
+      return res.status(400).json({ error: "message_required", message: "Write a message or attach a photo." });
     }
 
-    // Mark all messages where the user is the receiver as read
-    // FIX: Use prisma instead of db
+    const { conversation, otherUserId } = await getConversationForMember(req.params.conversationId, req.user.id);
+    await assertJobAuthorization(conversation.jobId, conversation.participantOneId, conversation.participantTwoId);
+
+    if (image) {
+      const extension = image.contentType.split("/")[1] === "jpeg" ? "jpg" : image.contentType.split("/")[1];
+      uploadedPath = `${conversation.id}/${randomBytes(16).toString("hex")}.${extension}`;
+      const { error: uploadError } = await messageStorage().upload(uploadedPath, image.bytes, {
+        contentType: image.contentType,
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (uploadError) throw uploadError;
+    }
+
+    const message = await prisma.$transaction(async (tx) => {
+      const created = await tx.message.create({
+        data: { content, imagePath: uploadedPath, senderId: req.user.id, conversationId: conversation.id },
+      });
+      await tx.conversation.update({ where: { id: conversation.id }, data: { lastMessageAt: created.createdAt } });
+      return created;
+    });
+    const serialized = await serializeMessage(message);
+    req.app.get("io")?.to(req.user.id).to(otherUserId).emit("message:new", { conversationId: conversation.id, message: serialized });
+    res.status(201).json({ message: serialized });
+  } catch (error) {
+    if (uploadedPath) {
+      try { await messageStorage().remove([uploadedPath]); } catch (cleanupError) { console.error("Message image cleanup error:", cleanupError.message); }
+    }
+    console.error("Send message error:", error.message);
+    res.status(error.status || 500).json({ error: "message_send_failed", message: error.message });
+  }
+}
+
+async function markConversationAsRead(req, res) {
+  try {
+    const { conversation } = await getConversationForMember(req.params.conversationId, req.user.id);
     await prisma.message.updateMany({
-      where: {
-        conversationId,
-        receiverId: userId,
-        isRead: false,
-      },
+      where: { conversationId: conversation.id, senderId: { not: req.user.id }, isRead: false },
       data: { isRead: true },
     });
-
-    res.json({ message: "Conversation marked as read" });
+    const otherUserId = getOtherParticipant(conversation, req.user.id);
+    req.app.get("io")?.to(otherUserId).emit("conversation:read", { conversationId: conversation.id, readerId: req.user.id });
+    res.json({ ok: true });
   } catch (error) {
-    console.error("Error marking conversation as read:", error);
-    res.status(500).json({ error: "Failed to mark conversation as read" });
+    console.error("Mark conversation read error:", error.message);
+    res.status(error.status || 500).json({ error: "conversation_read_failed", message: error.message });
   }
-};
+}
 
-// Get unread message count
-const getUnreadCount = async (req, res) => {
+async function getUnreadCount(req, res) {
   try {
-    const userId = req.user.id;
+    const blockedIds = await getBlockedIds(req.user.id);
+    const conversations = (await prisma.conversation.findMany({
+      where: { OR: [{ participantOneId: req.user.id }, { participantTwoId: req.user.id }] },
+      select: { id: true, participantOneId: true, participantTwoId: true },
+    })).filter((conversation) => !blockedIds.has(getOtherParticipant(conversation, req.user.id)));
     const count = await prisma.message.count({
-      where: {
-        receiverId: userId,
-        isRead: false,
-      },
+      where: { conversationId: { in: conversations.map((conversation) => conversation.id) }, senderId: { not: req.user.id }, isRead: false },
     });
     res.json({ count });
   } catch (error) {
-    console.error("Error getting unread count:", error);
-    res.status(500).json({ error: "Failed to get unread count" });
+    console.error("Unread count error:", error.message);
+    res.status(500).json({ error: "unread_count_failed", message: error.message });
   }
-};
+}
 
-module.exports = {
-  sendMessage,
-  getConversations,
-  getConversationMessages,
-  markMessageAsRead,
-  markConversationAsRead,
-  getUnreadCount,
-};
+module.exports = { createConversation, getConversations, getConversationMessages, sendMessage, markConversationAsRead, getUnreadCount };

@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
       try {
         await prisma.$transaction(async (tx) => {
           await tx.userProfile.create({
-            data: { userId: data.user.id, phone, referralCode: await generateReferralCode(), referredById: referrerProfile?.userId || null },
+            data: { userId: data.user.id, phone, displayName: typeof name === "string" && name.trim() ? name.trim() : null, referralCode: await generateReferralCode(), referredById: referrerProfile?.userId || null },
           });
           if (referrerProfile) await tx.referral.create({ data: { referrerId: referrerProfile.userId, referredId: data.user.id } });
         });
@@ -176,12 +176,9 @@ const deleteAccount = async (req, res) => {
       // Delete User Profile
       await tx.userProfile.deleteMany({ where: { userId } });
 
-      // Delete Messages (sent or received)
-      await tx.message.deleteMany({
-        where: {
-          OR: [{ senderId: userId }, { receiverId: userId }]
-        }
-      });
+      // Deleting a conversation also deletes its messages.
+      await tx.conversation.deleteMany({ where: { OR: [{ participantOneId: userId }, { participantTwoId: userId }] } });
+      await tx.userBlock.deleteMany({ where: { OR: [{ blockerId: userId }, { blockedId: userId }] } });
 
       // Handle Jobs as Hirer
       // First delete applications and images for those jobs
@@ -192,7 +189,6 @@ const deleteAccount = async (req, res) => {
         await tx.jobImage.deleteMany({ where: { jobId: { in: hirerJobIds } } });
         await tx.jobApplication.deleteMany({ where: { jobId: { in: hirerJobIds } } });
         await tx.payment.deleteMany({ where: { jobId: { in: hirerJobIds } } }); // Delete payments related to their jobs
-        await tx.message.deleteMany({ where: { jobId: { in: hirerJobIds } } }); // Delete job-specific messages
         await tx.job.deleteMany({ where: { id: { in: hirerJobIds } } });
       }
 

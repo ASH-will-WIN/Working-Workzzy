@@ -22,6 +22,8 @@ const reportRoutes = require("./routes/report");
 const reviewRoutes = require("./routes/review");
 const referralRoutes = require("./routes/referral");
 const leaderboardRoutes = require("./routes/leaderboard");
+const profileRoutes = require("./routes/profile");
+const blockRoutes = require("./routes/block");
 
 // Webhook routes (must be before express.json middleware)
 app.use("/api/webhooks", webhookRoutes);
@@ -100,9 +102,11 @@ app.use("/api/reports", reportRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/referrals", referralRoutes);
 app.use("/api/leaderboards", leaderboardRoutes);
+app.use("/api/profile", profileRoutes);
+app.use("/api/blocks", blockRoutes);
 
 app.get("/", (req, res) => {
-  res.send("Workzzy API is running");
+  res.send("Wurkzi API is running");
 });
 
 // Remove static file serving if we are just an API

@@ -1,63 +1,43 @@
 import { apiClient } from "./apiClient";
 
-// Create a new conversation
-export const createConversation = async (otherUserId) => {
-  const response = await apiClient.post("/messages/conversations", {
-    otherUserId,
+export const createConversation = async ({ participantId, jobId = null }) => {
+  const response = await apiClient.post("/messages/conversations", { participantId, jobId });
+  return response.data.conversation;
+};
+
+export const getConversations = async () => {
+  const response = await apiClient.get("/messages/conversations");
+  return response.data.conversations || [];
+};
+
+export const getConversationMessages = async (conversationId, cursor = null) => {
+  const response = await apiClient.get(`/messages/conversations/${conversationId}/messages`, {
+    params: cursor ? { cursor } : {},
   });
   return response.data;
 };
 
-// Send a new message
-export const sendMessage = async (messageData) => {
-  const response = await apiClient.post("/messages", messageData);
-  return response.data;
+export const sendMessage = async (conversationId, { content, imageDataUrl = null }) => {
+  const response = await apiClient.post(`/messages/conversations/${conversationId}/messages`, {
+    content,
+    imageDataUrl,
+  });
+  return response.data.message;
 };
 
-// Get all conversations for the current user
-export const getConversations = async () => {
-  const response = await apiClient.get("/messages/conversations");
-  return response.data;
-};
-
-// Get messages in a specific conversation
-export const getConversationMessages = async (
-  conversationId,
-  page = 1,
-  limit = 50
-) => {
-  const response = await apiClient.get(
-    `/messages/conversation/${conversationId}`,
-    {
-      params: { page, limit },
-    }
-  );
-  return response.data;
-};
-
-// Mark a specific message as read
-export const markMessageAsRead = async (messageId) => {
-  const response = await apiClient.put(`/messages/${messageId}/read`);
-  return response.data;
-};
-
-// Mark all messages in a conversation as read
 export const markConversationAsRead = async (conversationId) => {
-  const response = await apiClient.put(
-    `/messages/conversation/${conversationId}/read`
-  );
+  await apiClient.post(`/messages/conversations/${conversationId}/read`);
+};
+
+export const getUnreadCount = async () => {
+  const response = await apiClient.get("/messages/unread-count");
   return response.data;
 };
 
-// Get unread message count (lightweight)
-export const getUnreadCount = async () => {
-  try {
-    const response = await apiClient.get("/messages/unread-count");
-    return response.data;
-  } catch (error) {
-    console.error("Failed to get unread count:", error);
-    return { count: 0 };
-  }
+export const blockUser = async (userId) => {
+  await apiClient.post(`/blocks/${userId}`);
 };
 
-// Job-specific conversation API removed to simplify core messaging
+export const unblockUser = async (userId) => {
+  await apiClient.delete(`/blocks/${userId}`);
+};

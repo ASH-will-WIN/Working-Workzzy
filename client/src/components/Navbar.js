@@ -5,7 +5,7 @@ import logo from "../assets/logo.png";
 import UnreadMessagesBadge from "./UnreadMessagesBadge";
 
 const Navbar = () => {
-  const { isAuthenticated, logout, user } = useAuth();
+  const { isAuthenticated, logout, user, profile } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -37,6 +37,9 @@ const Navbar = () => {
   };
 
   const getUserInitials = () => {
+    if (profile?.displayName) {
+      return profile.displayName.substring(0, 2).toUpperCase();
+    }
     if (user?.email) {
       return user.email.substring(0, 2).toUpperCase();
     }
@@ -151,11 +154,18 @@ const Navbar = () => {
                       {getUserRole()}
                     </span>
                   </div>
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all">
-                    <div className="h-full w-full rounded-full bg-slate-900 flex items-center justify-center text-xs font-bold text-white">
-                      {getUserInitials()}
-                    </div>
-                  </div>
+                  <Link to="/profile" className="h-8 w-8 rounded-full bg-gradient-to-r from-wurkzi-600 to-purple-600 p-[2px] hover:shadow-lg hover:shadow-wurkzi-500/20 transition-all" title="Your profile">
+                    {profile?.avatarUrl ? (
+                      <img src={profile.avatarUrl} alt="Your profile" className="h-full w-full rounded-full object-cover" />
+                    ) : (
+                      <div className="h-full w-full rounded-full bg-slate-900 flex items-center justify-center text-xs font-bold text-white">
+                        {getUserInitials()}
+                      </div>
+                    )}
+                  </Link>
+                  <Link to="/profile" className="text-sm font-medium text-slate-400 hover:text-white transition-colors">
+                    Profile
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="text-sm font-medium text-slate-400 hover:text-white transition-colors"
@@ -300,6 +310,13 @@ const Navbar = () => {
                 >
                   Messages
                 </Link>
+                <Link
+                  to="/profile"
+                  className={`block px-3 py-2 rounded-md text-base font-medium ${isActive('/profile') ? 'text-white bg-wurkzi-600' : 'text-slate-400 hover:text-white hover:bg-slate-800'}`}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Profile
+                </Link>
               </>
             )}
           </div>
@@ -309,12 +326,16 @@ const Navbar = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <div className="flex-shrink-0">
-                      <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-slate-700">
-                        {getUserInitials()}
-                      </div>
+                      {profile?.avatarUrl ? (
+                        <img src={profile.avatarUrl} alt="Your profile" className="h-10 w-10 rounded-full border border-slate-700 object-cover" />
+                      ) : (
+                        <div className="h-10 w-10 rounded-full bg-slate-800 flex items-center justify-center text-white font-bold border border-slate-700">
+                          {getUserInitials()}
+                        </div>
+                      )}
                     </div>
                     <div className="ml-3">
-                      <div className="text-base font-medium text-white">{user?.email}</div>
+                      <div className="text-base font-medium text-white">{profile?.displayName || user?.email}</div>
                       <div className="text-sm font-medium text-slate-500 capitalize">{getUserRole()} Account</div>
                     </div>
                   </div>

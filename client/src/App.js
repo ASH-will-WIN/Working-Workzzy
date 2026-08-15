@@ -25,6 +25,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Referrals from "./pages/Referrals";
 import Leaderboard from "./pages/Leaderboard";
 import Staging from "./pages/Staging";
+import Profile from "./pages/Profile";
 import "./App.css";
 
 function App() {
@@ -115,6 +116,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <Messages />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Profile />
               </ProtectedRoute>
             }
           />

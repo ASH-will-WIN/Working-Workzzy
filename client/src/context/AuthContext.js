@@ -1,6 +1,7 @@
-import React, { createContext, useState, useEffect, useContext } from "react";
+import React, { createContext, useState, useEffect, useContext, useCallback } from "react";
 import { loginUser, registerUser } from "../api/authApi";
 import { apiClient } from "../api/apiClient";
+import { getMyProfile } from "../api/profileApi";
 
 const AuthContext = createContext(null);
 
@@ -8,6 +9,13 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [loading, setLoading] = useState(true);
+  const [profile, setProfile] = useState(null);
+
+  const refreshProfile = useCallback(async () => {
+    const nextProfile = await getMyProfile();
+    setProfile(nextProfile);
+    return nextProfile;
+  }, []);
 
   useEffect(() => {
     if (token) {
@@ -18,9 +26,13 @@ export const AuthProvider = ({ children }) => {
       if (storedUser) {
         setUser(storedUser);
       }
+      refreshProfile().catch((error) => {
+        console.error("Failed to load profile:", error);
+        setProfile(null);
+      });
     }
     setLoading(false);
-  }, [token]);
+  }, [token, refreshProfile]);
 
   const login = async (email, password) => {
     const { user, session } = await loginUser({ email, password });
@@ -31,6 +43,7 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
+    await refreshProfile();
 
     // Note: Onboarding status will be checked on Dashboard load
   };
@@ -51,6 +64,7 @@ export const AuthProvider = ({ children }) => {
     apiClient.defaults.headers.common[
       "Authorization"
     ] = `Bearer ${session.access_token}`;
+    await refreshProfile();
 
     // Note: Onboarding status will be checked on Dashboard load
   };
@@ -60,15 +74,18 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem("user");
     setToken(null);
     setUser(null);
+    setProfile(null);
     delete apiClient.defaults.headers.common["Authorization"];
   };
 
   const value = {
     user,
+    profile,
     token,
     login,
     register,
     logout,
+    refreshProfile,
     isAuthenticated: !!token,
   };
 
