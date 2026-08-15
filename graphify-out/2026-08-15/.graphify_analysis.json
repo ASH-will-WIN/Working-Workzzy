@@ -1,6 +1,67 @@
 {
   "communities": {
     "0": [
+      "client_src_api_connectapi",
+      "client_src_api_connectapi_connectapi",
+      "client_src_api_connectapi_createstripeaccountlink",
+      "client_src_api_connectapi_getstripeaccount",
+      "client_src_api_connectapi_refreshstripestatus",
+      "client_src_api_leaderboardapi",
+      "client_src_api_leaderboardapi_enrollinleaderboard",
+      "client_src_api_leaderboardapi_getactiveleaderboard",
+      "client_src_api_leaderboardapi_getmyleaderboardstatus",
+      "client_src_api_referralapi",
+      "client_src_api_referralapi_getmyreferralsummary",
+      "client_src_app",
+      "client_src_app_app",
+      "client_src_app_test",
+      "client_src_components_footer",
+      "client_src_components_footer_footer",
+      "client_src_pages_about",
+      "client_src_pages_about_about",
+      "client_src_pages_about_revealonscroll",
+      "client_src_pages_connectrefresh",
+      "client_src_pages_connectrefresh_connectrefresh",
+      "client_src_pages_connectreturn",
+      "client_src_pages_connectreturn_connectreturn",
+      "client_src_pages_home",
+      "client_src_pages_home_home",
+      "client_src_pages_home_nativewelcome",
+      "client_src_pages_home_revealonscroll",
+      "client_src_pages_howitworks",
+      "client_src_pages_howitworks_howitworks",
+      "client_src_pages_howitworks_revealonscroll",
+      "client_src_pages_leaderboard",
+      "client_src_pages_leaderboard_audiences",
+      "client_src_pages_leaderboard_formatcountdown",
+      "client_src_pages_leaderboard_leaderboard",
+      "client_src_pages_login",
+      "client_src_pages_login_login",
+      "client_src_pages_messages",
+      "client_src_pages_messages_messages",
+      "client_src_pages_mission",
+      "client_src_pages_mission_mission",
+      "client_src_pages_mission_revealonscroll",
+      "client_src_pages_onboarding",
+      "client_src_pages_onboarding_onboarding",
+      "client_src_pages_privacy",
+      "client_src_pages_privacy_privacy",
+      "client_src_pages_referrals",
+      "client_src_pages_referrals_referrals",
+      "client_src_pages_register",
+      "client_src_pages_register_register",
+      "client_src_pages_staging",
+      "client_src_pages_staging_cases",
+      "client_src_pages_staging_faqs",
+      "client_src_pages_staging_photographerpartners",
+      "client_src_pages_staging_staging",
+      "client_src_pages_staging_testimonials",
+      "client_src_pages_support",
+      "client_src_pages_support_support",
+      "client_src_pages_terms",
+      "client_src_pages_terms_terms"
+    ],
+    "1": [
       "client_src_api_apiclient",
       "client_src_api_apiclient_apiclient",
       "client_src_api_applicationapi",
@@ -60,7 +121,7 @@
       "client_src_pages_jobslist",
       "client_src_pages_jobslist_jobslist"
     ],
-    "1": [
+    "2": [
       "server_controllers_leaderboardcontroller",
       "server_controllers_leaderboardcontroller_audiences",
       "server_controllers_leaderboardcontroller_enroll",
@@ -106,7 +167,7 @@
       "server_services_referralservice_isfirstpaidjob",
       "server_services_referralservice_prisma"
     ],
-    "2": [
+    "3": [
       "client_package",
       "client_package_browserslist",
       "client_package_browserslist_development",
@@ -150,7 +211,7 @@
       "ref_react_app",
       "ref_react_app_jest"
     ],
-    "3": [
+    "4": [
       "cors",
       "dotenv",
       "express",
@@ -191,7 +252,7 @@
       "socket_io",
       "supabase_supabase_js"
     ],
-    "4": [
+    "5": [
       "axios",
       "browser_image_compression",
       "capacitor_cli",
@@ -228,7 +289,7 @@
       "testing_library_user_event",
       "web_vitals"
     ],
-    "5": [
+    "6": [
       "client_src_api_messageapi",
       "client_src_api_messageapi_blockuser",
       "client_src_api_messageapi_createconversation",
@@ -255,13 +316,15 @@
       "client_src_components_messagecenter_sameday",
       "client_src_components_navbar",
       "client_src_components_navbar_navbar",
+      "client_src_components_protectedroute",
+      "client_src_components_protectedroute_protectedroute",
       "client_src_components_startconversation",
       "client_src_components_startconversation_startconversation",
       "client_src_components_unreadmessagesbadge",
       "client_src_components_unreadmessagesbadge_unreadmessagesbadge",
       "client_src_context_authcontext_useauth"
     ],
-    "6": [
+    "7": [
       "server_index",
       "server_index_allowedorigins",
       "server_index_app",
@@ -287,32 +350,32 @@
       "server_index_supabase",
       "server_index_webhookroutes"
     ],
-    "7": [
-      "client_src_app",
-      "client_src_app_app",
-      "client_src_app_test",
-      "client_src_components_footer",
-      "client_src_components_footer_footer",
-      "client_src_components_protectedroute",
-      "client_src_components_protectedroute_protectedroute",
-      "client_src_pages_howitworks",
-      "client_src_pages_howitworks_howitworks",
-      "client_src_pages_howitworks_revealonscroll",
-      "client_src_pages_messages",
-      "client_src_pages_messages_messages",
-      "client_src_pages_mission",
-      "client_src_pages_mission_mission",
-      "client_src_pages_mission_revealonscroll",
-      "client_src_pages_privacy",
-      "client_src_pages_privacy_privacy",
-      "client_src_pages_register",
-      "client_src_pages_register_register",
-      "client_src_pages_support",
-      "client_src_pages_support_support",
-      "client_src_pages_terms",
-      "client_src_pages_terms_terms"
-    ],
     "8": [
+      "client_src_api_authapi",
+      "client_src_api_authapi_deleteaccount",
+      "client_src_api_authapi_forgotpassword",
+      "client_src_api_authapi_loginuser",
+      "client_src_api_authapi_registeruser",
+      "client_src_api_authapi_resetpassword",
+      "client_src_api_profileapi",
+      "client_src_api_profileapi_allowed_types",
+      "client_src_api_profileapi_deletemyavatar",
+      "client_src_api_profileapi_getmyprofile",
+      "client_src_api_profileapi_updatemyprofile",
+      "client_src_api_profileapi_uploadmyavatar",
+      "client_src_context_authcontext",
+      "client_src_context_authcontext_authcontext",
+      "client_src_context_authcontext_authprovider",
+      "client_src_index",
+      "client_src_index_root",
+      "client_src_pages_forgotpassword",
+      "client_src_pages_forgotpassword_forgotpassword",
+      "client_src_pages_profile",
+      "client_src_pages_profile_profile",
+      "client_src_pages_resetpassword",
+      "client_src_pages_resetpassword_resetpassword"
+    ],
+    "9": [
       "server_controllers_messagecontroller",
       "server_controllers_messagecontroller_assertjobauthorization",
       "server_controllers_messagecontroller_assertnotblocked",
@@ -337,7 +400,7 @@
       "server_controllers_messagecontroller_serializemessage",
       "server_controllers_messagecontroller_signedurl"
     ],
-    "9": [
+    "10": [
       "any",
       "bool",
       "capacitor",
@@ -359,7 +422,7 @@
       "url",
       "void"
     ],
-    "10": [
+    "11": [
       "server_controllers_profilecontroller",
       "server_controllers_profilecontroller_avatar_types",
       "server_controllers_profilecontroller_cleantext",
@@ -376,7 +439,23 @@
       "server_controllers_profilecontroller_updatemyprofile",
       "server_controllers_profilecontroller_uploadavatar"
     ],
-    "11": [
+    "12": [
+      "server_controllers_connectcontroller",
+      "server_controllers_connectcontroller_createaccount",
+      "server_controllers_connectcontroller_getstatus",
+      "server_controllers_connectcontroller_prisma_stripeclient",
+      "server_controllers_connectcontroller_refreshstatus",
+      "server_controllers_connectcontroller_syncaccountstatus",
+      "server_controllers_webhookcontroller",
+      "server_controllers_webhookcontroller_handleaccountdeauthorized",
+      "server_controllers_webhookcontroller_handleaccountupdated",
+      "server_controllers_webhookcontroller_handlecapabilityupdated",
+      "server_controllers_webhookcontroller_handlestripewebhook",
+      "server_controllers_webhookcontroller_prisma_stripeclient",
+      "server_controllers_webhookcontroller_syncaccountstatus",
+      "server_db_stripeclient"
+    ],
+    "13": [
       "server_controllers_jobcontroller",
       "server_controllers_jobcontroller_acceptjob",
       "server_controllers_jobcontroller_addjobimage",
@@ -392,34 +471,6 @@
       "server_controllers_jobcontroller_startjob",
       "server_controllers_jobcontroller_updatejob"
     ],
-    "12": [
-      "server_controllers_connectcontroller",
-      "server_controllers_connectcontroller_createaccount",
-      "server_controllers_connectcontroller_getstatus",
-      "server_controllers_connectcontroller_prisma_stripeclient",
-      "server_controllers_connectcontroller_refreshstatus",
-      "server_controllers_connectcontroller_syncaccountstatus",
-      "server_controllers_webhookcontroller",
-      "server_controllers_webhookcontroller_handleaccountdeauthorized",
-      "server_controllers_webhookcontroller_handleaccountupdated",
-      "server_controllers_webhookcontroller_handlecapabilityupdated",
-      "server_controllers_webhookcontroller_handlestripewebhook",
-      "server_controllers_webhookcontroller_prisma_stripeclient",
-      "server_controllers_webhookcontroller_syncaccountstatus"
-    ],
-    "13": [
-      "client_src_api_connectapi",
-      "client_src_api_connectapi_connectapi",
-      "client_src_api_connectapi_createstripeaccountlink",
-      "client_src_api_connectapi_getstripeaccount",
-      "client_src_api_connectapi_refreshstripestatus",
-      "client_src_pages_connectrefresh",
-      "client_src_pages_connectrefresh_connectrefresh",
-      "client_src_pages_connectreturn",
-      "client_src_pages_connectreturn_connectreturn",
-      "client_src_pages_onboarding",
-      "client_src_pages_onboarding_onboarding"
-    ],
     "14": [
       "server_controllers_reportcontroller",
       "server_controllers_reportcontroller_createreport",
@@ -434,16 +485,15 @@
       "server_db_stripe"
     ],
     "15": [
-      "client_src_api_authapi_loginuser",
-      "client_src_api_authapi_registeruser",
-      "client_src_api_profileapi_getmyprofile",
-      "client_src_context_authcontext",
-      "client_src_context_authcontext_authcontext",
-      "client_src_context_authcontext_authprovider",
-      "client_src_index",
-      "client_src_index_root",
-      "client_src_pages_login",
-      "client_src_pages_login_login"
+      "server_controllers_applicationcontroller",
+      "server_controllers_applicationcontroller_acceptapplication",
+      "server_controllers_applicationcontroller_createapplication",
+      "server_controllers_applicationcontroller_getapplications",
+      "server_controllers_applicationcontroller_getjobapplications",
+      "server_controllers_applicationcontroller_prisma_jobstatus_applicationstatus_depositstatus_supabase_stripeclient",
+      "server_controllers_applicationcontroller_rejectapplication",
+      "server_controllers_applicationcontroller_withdrawapplication",
+      "server_db_supabase"
     ],
     "16": [
       "server_controllers_auth_authcontroller",
@@ -454,21 +504,9 @@
       "server_controllers_auth_authcontroller_randombytes",
       "server_controllers_auth_authcontroller_registeruser",
       "server_controllers_auth_authcontroller_resetpassword",
-      "server_controllers_auth_authcontroller_supabase_prisma",
-      "server_db_supabase"
+      "server_controllers_auth_authcontroller_supabase_prisma"
     ],
     "17": [
-      "server_controllers_applicationcontroller",
-      "server_controllers_applicationcontroller_acceptapplication",
-      "server_controllers_applicationcontroller_createapplication",
-      "server_controllers_applicationcontroller_getapplications",
-      "server_controllers_applicationcontroller_getjobapplications",
-      "server_controllers_applicationcontroller_prisma_jobstatus_applicationstatus_depositstatus_supabase_stripeclient",
-      "server_controllers_applicationcontroller_rejectapplication",
-      "server_controllers_applicationcontroller_withdrawapplication",
-      "server_db_stripeclient"
-    ],
-    "18": [
       "server_controllers_blockcontroller",
       "server_controllers_blockcontroller_blockuser",
       "server_controllers_blockcontroller_prisma",
@@ -479,7 +517,7 @@
       "server_routes_block_express",
       "server_routes_block_router"
     ],
-    "19": [
+    "18": [
       "client_public_manifest",
       "client_public_manifest_background_color",
       "client_public_manifest_display",
@@ -489,27 +527,7 @@
       "client_public_manifest_start_url",
       "client_public_manifest_theme_color"
     ],
-    "20": [
-      "client_src_api_authapi",
-      "client_src_api_authapi_deleteaccount",
-      "client_src_api_authapi_forgotpassword",
-      "client_src_api_authapi_resetpassword",
-      "client_src_pages_forgotpassword",
-      "client_src_pages_forgotpassword_forgotpassword",
-      "client_src_pages_resetpassword",
-      "client_src_pages_resetpassword_resetpassword"
-    ],
-    "21": [
-      "client_src_api_leaderboardapi",
-      "client_src_api_leaderboardapi_enrollinleaderboard",
-      "client_src_api_leaderboardapi_getactiveleaderboard",
-      "client_src_api_leaderboardapi_getmyleaderboardstatus",
-      "client_src_pages_leaderboard",
-      "client_src_pages_leaderboard_audiences",
-      "client_src_pages_leaderboard_formatcountdown",
-      "client_src_pages_leaderboard_leaderboard"
-    ],
-    "22": [
+    "19": [
       "server_controllers_referralcontroller",
       "server_controllers_referralcontroller_getmyreferralsummary",
       "server_controllers_referralcontroller_prisma",
@@ -519,7 +537,7 @@
       "server_routes_referral_getmyreferralsummary",
       "server_routes_referral_router"
     ],
-    "23": [
+    "20": [
       "server_middleware_auth",
       "server_middleware_auth_authmiddleware",
       "server_middleware_auth_supabase",
@@ -529,7 +547,7 @@
       "server_routes_report_reportcontroller",
       "server_routes_report_router"
     ],
-    "24": [
+    "21": [
       "server_services_smsservice",
       "server_services_smsservice_getuserphonenumber",
       "server_services_smsservice_sendsms",
@@ -539,229 +557,195 @@
       "server_test_sms_sendsms_getuserphonenumber",
       "server_test_sms_testsms"
     ],
-    "25": [
-      "client_src_api_profileapi",
-      "client_src_api_profileapi_allowed_types",
-      "client_src_api_profileapi_deletemyavatar",
-      "client_src_api_profileapi_updatemyprofile",
-      "client_src_api_profileapi_uploadmyavatar",
-      "client_src_pages_profile",
-      "client_src_pages_profile_profile"
-    ],
-    "26": [
-      "client_src_pages_staging",
-      "client_src_pages_staging_cases",
-      "client_src_pages_staging_faqs",
-      "client_src_pages_staging_photographerpartners",
-      "client_src_pages_staging_staging",
-      "client_src_pages_staging_testimonials"
-    ],
-    "27": [
+    "22": [
       "server_routes_application",
       "server_routes_application_applicationcontroller",
       "server_routes_application_authmiddleware",
       "server_routes_application_express",
       "server_routes_application_router"
     ],
-    "28": [
+    "23": [
       "server_routes_auth",
       "server_routes_auth_authcontroller",
       "server_routes_auth_authmiddleware",
       "server_routes_auth_express",
       "server_routes_auth_router"
     ],
-    "29": [
+    "24": [
       "server_routes_connect",
       "server_routes_connect_authmiddleware",
       "server_routes_connect_connectcontroller",
       "server_routes_connect_express",
       "server_routes_connect_router"
     ],
-    "30": [
+    "25": [
       "server_routes_job",
       "server_routes_job_authmiddleware",
       "server_routes_job_express",
       "server_routes_job_jobcontroller",
       "server_routes_job_router"
     ],
-    "31": [
+    "26": [
       "server_routes_message",
       "server_routes_message_auth",
       "server_routes_message_controller",
       "server_routes_message_express",
       "server_routes_message_router"
     ],
-    "32": [
+    "27": [
       "server_routes_payment",
       "server_routes_payment_authmiddleware",
       "server_routes_payment_express",
       "server_routes_payment_paymentcontroller",
       "server_routes_payment_router"
     ],
-    "33": [
+    "28": [
       "server_routes_profile",
       "server_routes_profile_authmiddleware",
       "server_routes_profile_express",
       "server_routes_profile_profilecontroller",
       "server_routes_profile_router"
     ],
-    "34": [
+    "29": [
       "server_routes_review",
       "server_routes_review_authmiddleware",
       "server_routes_review_express",
       "server_routes_review_reviewcontroller",
       "server_routes_review_router"
     ],
-    "35": [
-      "client_src_api_referralapi",
-      "client_src_api_referralapi_getmyreferralsummary",
-      "client_src_pages_referrals",
-      "client_src_pages_referrals_referrals"
-    ],
-    "36": [
-      "client_src_pages_home",
-      "client_src_pages_home_home",
-      "client_src_pages_home_nativewelcome",
-      "client_src_pages_home_revealonscroll"
-    ],
-    "37": [
+    "30": [
       "server_controllers_reviewcontroller",
       "server_controllers_reviewcontroller_createreview",
       "server_controllers_reviewcontroller_getreviewsforjob",
       "server_controllers_reviewcontroller_prisma_jobstatus_applicationstatus"
     ],
-    "38": [
+    "31": [
       "server_routes_webhook",
       "server_routes_webhook_express",
       "server_routes_webhook_router",
       "server_routes_webhook_webhookcontroller"
     ],
-    "39": [
-      "client_src_pages_about",
-      "client_src_pages_about_about",
-      "client_src_pages_about_revealonscroll"
-    ],
-    "40": [
+    "32": [
       "server_test_basic_stripe",
       "server_test_basic_stripe_stripe",
       "server_test_basic_stripe_testautorepairkey"
     ],
-    "41": [
+    "33": [
       "server_test_connection",
       "server_test_connection_prismaclient",
       "server_test_connection_testconnection"
     ],
-    "42": [
+    "34": [
       "server_test_stripe_live",
       "server_test_stripe_live_stripe",
       "server_test_stripe_live_testlivekey"
     ],
-    "43": [
+    "35": [
       "client_capacitor_config",
       "client_capacitor_config_config"
     ],
-    "44": [
+    "36": [
       "client_ios_app_capapp_spm_package",
       "packagedescription"
     ],
-    "45": [
+    "37": [
       "client_src_reportwebvitals",
       "client_src_reportwebvitals_reportwebvitals"
     ],
-    "46": [
+    "38": [
       "client_tailwind_config",
       "client_tailwind_config_sfl"
     ],
-    "47": [
+    "39": [
       "server_verify_stripe_key",
       "server_verify_stripe_key_issues"
     ],
-    "48": [
+    "40": [
       "tailwind_config",
       "tailwind_config_sfl"
     ],
-    "49": [
+    "41": [
       "test_workflow_sh__entry",
       "test_workflow_sh_test_workflow"
     ],
-    "50": [
+    "42": [
       "visibility_test",
       "visibility_test_register_user"
     ],
-    "51": [
+    "43": [
       "cash_payment_test"
     ],
-    "52": [
+    "44": [
       "client_ios_app_capapp_spm_sources_capapp_spm_capapp_spm"
     ],
-    "53": [
+    "45": [
       "client_postcss_config"
     ],
-    "54": [
+    "46": [
       "client_src_setuptests"
     ],
-    "55": [
+    "47": [
       "complete_test"
     ],
-    "56": [
+    "48": [
       "debug_payment"
     ],
-    "57": [
+    "49": [
       "postcss_config"
     ],
-    "58": [
+    "50": [
       "price_test"
     ],
-    "59": [
+    "51": [
       "server_diagnostic_hex"
     ],
-    "60": [
+    "52": [
       "test_workflow_ps1_test_workflow"
     ]
   },
   "cohesion": {
-    "0": 0.08469449485783424,
-    "1": 0.07188160676532769,
-    "2": 0.04878048780487805,
-    "3": 0.05398110661268556,
-    "4": 0.06050420168067227,
-    "5": 0.15053763440860216,
-    "6": 0.08333333333333333,
-    "7": 0.1225296442687747,
-    "8": 0.17786561264822134,
-    "9": 0.12631578947368421,
-    "10": 0.2857142857142857,
-    "11": 0.14285714285714285,
-    "12": 0.2564102564102564,
-    "13": 0.23636363636363636,
+    "0": 0.05201636469900643,
+    "1": 0.08469449485783424,
+    "2": 0.07188160676532769,
+    "3": 0.04878048780487805,
+    "4": 0.05398110661268556,
+    "5": 0.06050420168067227,
+    "6": 0.13825757575757575,
+    "7": 0.08333333333333333,
+    "8": 0.16205533596837945,
+    "9": 0.17786561264822134,
+    "10": 0.12631578947368421,
+    "11": 0.2857142857142857,
+    "12": 0.24175824175824176,
+    "13": 0.14285714285714285,
     "14": 0.18181818181818182,
-    "15": 0.28888888888888886,
-    "16": 0.2222222222222222,
-    "17": 0.2222222222222222,
-    "18": 0.2777777777777778,
-    "19": 0.25,
-    "20": 0.39285714285714285,
-    "21": 0.5,
-    "22": 0.2857142857142857,
-    "23": 0.25,
-    "24": 0.32142857142857145,
-    "25": 0.6190476190476191,
-    "26": 0.3333333333333333,
+    "15": 0.2222222222222222,
+    "16": 0.25,
+    "17": 0.2777777777777778,
+    "18": 0.25,
+    "19": 0.2857142857142857,
+    "20": 0.25,
+    "21": 0.32142857142857145,
+    "22": 0.4,
+    "23": 0.4,
+    "24": 0.4,
+    "25": 0.4,
+    "26": 0.4,
     "27": 0.4,
     "28": 0.4,
     "29": 0.4,
-    "30": 0.4,
-    "31": 0.4,
-    "32": 0.4,
-    "33": 0.4,
-    "34": 0.4,
-    "35": 0.8333333333333334,
-    "36": 0.5,
-    "37": 0.5,
-    "38": 0.5,
-    "39": 0.6666666666666666,
-    "40": 0.6666666666666666,
-    "41": 0.6666666666666666,
+    "30": 0.5,
+    "31": 0.5,
+    "32": 0.6666666666666666,
+    "33": 0.6666666666666666,
+    "34": 1.0,
+    "35": 1.0,
+    "36": 1.0,
+    "37": 1.0,
+    "38": 1.0,
+    "39": 1.0,
+    "40": 1.0,
+    "41": 1.0,
     "42": 1.0,
     "43": 1.0,
     "44": 1.0,
@@ -772,15 +756,7 @@
     "49": 1.0,
     "50": 1.0,
     "51": 1.0,
-    "52": 1.0,
-    "53": 1.0,
-    "54": 1.0,
-    "55": 1.0,
-    "56": 1.0,
-    "57": 1.0,
-    "58": 1.0,
-    "59": 1.0,
-    "60": 1.0
+    "52": 1.0
   },
   "gods": [
     {
@@ -794,13 +770,13 @@
       "degree": 14
     },
     {
-      "id": "client_src_components_messagecenter_messagecenter",
-      "label": "MessageCenter()",
+      "id": "client_src_pages_jobdetail_jobdetail",
+      "label": "JobDetail()",
       "degree": 14
     },
     {
-      "id": "client_src_pages_jobdetail_jobdetail",
-      "label": "JobDetail()",
+      "id": "client_src_components_messagecenter_messagecenter",
+      "label": "MessageCenter()",
       "degree": 14
     },
     {
@@ -835,17 +811,6 @@
     }
   ],
   "surprises": [
-    {
-      "source": "ProtectedRoute()",
-      "target": "useAuth()",
-      "source_files": [
-        "client/src/components/ProtectedRoute.js",
-        "client/src/context/AuthContext.js"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "calls",
-      "why": "bridges separate communities"
-    },
     {
       "source": "CreateJob()",
       "target": "useAuth()",
@@ -884,6 +849,17 @@
       "target": "useAuth()",
       "source_files": [
         "client/src/pages/JobDetail.js",
+        "client/src/context/AuthContext.js"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "calls",
+      "why": "bridges separate communities"
+    },
+    {
+      "source": "JobsList()",
+      "target": "useAuth()",
+      "source_files": [
+        "client/src/pages/JobsList.js",
         "client/src/context/AuthContext.js"
       ],
       "confidence": "EXTRACTED",

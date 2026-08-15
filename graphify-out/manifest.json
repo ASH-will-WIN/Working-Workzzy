@@ -305,9 +305,9 @@
     "semantic_hash": "abd1a105f42c16b1d888b907d4c11f34"
   },
   "client/src/pages/Terms.js": {
-    "mtime": 1786802604.2263074,
-    "ast_hash": "4a15b1d7f7bd259216a9ef9f23e16d3f",
-    "semantic_hash": "4a15b1d7f7bd259216a9ef9f23e16d3f"
+    "mtime": 1786805005.7949474,
+    "ast_hash": "6264e7d50e7fbc3b8fb1a7b0ce0236a2",
+    "semantic_hash": "6264e7d50e7fbc3b8fb1a7b0ce0236a2"
   },
   "client/src/reportWebVitals.js": {
     "mtime": 1786799715.4716222,
@@ -660,9 +660,9 @@
     "semantic_hash": "513b09ffbf59a9984b287786f823ec5a"
   },
   "server/prisma/migrations/20260815010000_rebuild_messaging_conversations/migration.sql": {
-    "mtime": 1786803549.9472253,
-    "ast_hash": "a762b00a0d56842c96c92bded87adc04",
-    "semantic_hash": "a762b00a0d56842c96c92bded87adc04"
+    "mtime": 1786804486.452492,
+    "ast_hash": "931d2f3907e3925256f4b040d8153fed",
+    "semantic_hash": "931d2f3907e3925256f4b040d8153fed"
   },
   "server/routes/block.js": {
     "mtime": 1786803663.5065868,

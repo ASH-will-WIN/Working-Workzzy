@@ -155,9 +155,9 @@
     "semantic_hash": "7be13ad9a4232a5b911a19a1a41a8d85"
   },
   "client/src/components/MessageCenter.js": {
-    "mtime": 1786803836.8238368,
-    "ast_hash": "424f39b4e266c839a9550cebb3b8d2ce",
-    "semantic_hash": "424f39b4e266c839a9550cebb3b8d2ce"
+    "mtime": 1786803921.235944,
+    "ast_hash": "7b3ecf0bd10045022ceecb3ff7fc59da",
+    "semantic_hash": "7b3ecf0bd10045022ceecb3ff7fc59da"
   },
   "client/src/components/Navbar.js": {
     "mtime": 1786800926.219713,
@@ -175,9 +175,9 @@
     "semantic_hash": "c90bbd2ddb990758eeb7258d2dbc14cd"
   },
   "client/src/components/StartConversation.js": {
-    "mtime": 1786803700.0767472,
-    "ast_hash": "edaafa6010952e3edd5af17697cadc2f",
-    "semantic_hash": "edaafa6010952e3edd5af17697cadc2f"
+    "mtime": 1786804027.6883698,
+    "ast_hash": "66adfb3524aacc8fdb152afe775e57c8",
+    "semantic_hash": "66adfb3524aacc8fdb152afe775e57c8"
   },
   "client/src/components/StatusBadge.js": {
     "mtime": 1786799715.4687848,
@@ -360,9 +360,9 @@
     "semantic_hash": "344708b59c49ac7d5bd0feb36e81dc0e"
   },
   "server/controllers/auth/authController.js": {
-    "mtime": 1786799715.4797568,
-    "ast_hash": "310e23846dee400d04ba25d0b06fd5da",
-    "semantic_hash": "310e23846dee400d04ba25d0b06fd5da"
+    "mtime": 1786803944.0862424,
+    "ast_hash": "2a035c6ee6d0497820ae68df39398e68",
+    "semantic_hash": "2a035c6ee6d0497820ae68df39398e68"
   },
   "server/controllers/connectController.js": {
     "mtime": 1786799715.47988,
@@ -380,9 +380,9 @@
     "semantic_hash": "a8f70f59b2863d6734e4c1c9242c6fc1"
   },
   "server/controllers/messageController.js": {
-    "mtime": 1786803663.3462322,
-    "ast_hash": "7b1d1153654081a412524fee44b12a82",
-    "semantic_hash": "7b1d1153654081a412524fee44b12a82"
+    "mtime": 1786803944.047855,
+    "ast_hash": "f48d1d5ff88b3d587962b20615f2dcce",
+    "semantic_hash": "f48d1d5ff88b3d587962b20615f2dcce"
   },
   "server/controllers/paymentController.js": {
     "mtime": 1786799715.480315,

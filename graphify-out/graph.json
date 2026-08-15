@@ -5744,27 +5744,6 @@
       "id": "client_src_pages_jobdetail_jobdetail"
     },
     {
-      "label": "Terms.js",
-      "file_type": "code",
-      "source_file": "client/src/pages/Terms.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "terms.js",
-      "id": "client_src_pages_terms"
-    },
-    {
-      "label": "terms",
-      "file_type": "code",
-      "source_file": "client/src/pages/Terms.js",
-      "source_location": "L3",
-      "_callable": true,
-      "_origin": "ast",
-      "community": 0,
-      "norm_label": "terms",
-      "id": "client_src_pages_terms_terms"
-    },
-    {
       "label": "blockController.js",
       "file_type": "code",
       "source_file": "server/controllers/blockController.js",
@@ -6193,9 +6172,9 @@
       "source_file": "client/src/components/MessageCenter.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "client_src_components_messagecenter",
       "community": 6,
-      "norm_label": "messagecenter.js"
+      "norm_label": "messagecenter.js",
+      "id": "client_src_components_messagecenter"
     },
     {
       "label": "IMAGE_TYPES",
@@ -6203,9 +6182,9 @@
       "source_file": "client/src/components/MessageCenter.js",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_image_types",
       "community": 6,
-      "norm_label": "image_types"
+      "norm_label": "image_types",
+      "id": "client_src_components_messagecenter_image_types"
     },
     {
       "label": "initials()",
@@ -6214,9 +6193,9 @@
       "source_location": "L18",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_initials",
       "community": 6,
-      "norm_label": "initials()"
+      "norm_label": "initials()",
+      "id": "client_src_components_messagecenter_initials"
     },
     {
       "label": "formatTime()",
@@ -6225,9 +6204,9 @@
       "source_location": "L19",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_formattime",
       "community": 6,
-      "norm_label": "formattime()"
+      "norm_label": "formattime()",
+      "id": "client_src_components_messagecenter_formattime"
     },
     {
       "label": "formatListTime()",
@@ -6236,9 +6215,9 @@
       "source_location": "L20",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_formatlisttime",
       "community": 6,
-      "norm_label": "formatlisttime()"
+      "norm_label": "formatlisttime()",
+      "id": "client_src_components_messagecenter_formatlisttime"
     },
     {
       "label": "formatDay()",
@@ -6247,9 +6226,9 @@
       "source_location": "L28",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_formatday",
       "community": 6,
-      "norm_label": "formatday()"
+      "norm_label": "formatday()",
+      "id": "client_src_components_messagecenter_formatday"
     },
     {
       "label": "sameDay()",
@@ -6258,9 +6237,9 @@
       "source_location": "L37",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_sameday",
       "community": 6,
-      "norm_label": "sameday()"
+      "norm_label": "sameday()",
+      "id": "client_src_components_messagecenter_sameday"
     },
     {
       "label": "Avatar()",
@@ -6269,9 +6248,9 @@
       "source_location": "L39",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_avatar",
       "community": 6,
-      "norm_label": "avatar()"
+      "norm_label": "avatar()",
+      "id": "client_src_components_messagecenter_avatar"
     },
     {
       "label": "ConversationRow()",
@@ -6280,9 +6259,9 @@
       "source_location": "L44",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_conversationrow",
       "community": 6,
-      "norm_label": "conversationrow()"
+      "norm_label": "conversationrow()",
+      "id": "client_src_components_messagecenter_conversationrow"
     },
     {
       "label": "MessageBubble()",
@@ -6291,9 +6270,9 @@
       "source_location": "L73",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_messagebubble",
       "community": 6,
-      "norm_label": "messagebubble()"
+      "norm_label": "messagebubble()",
+      "id": "client_src_components_messagecenter_messagebubble"
     },
     {
       "label": "fileToDataUrl()",
@@ -6302,9 +6281,9 @@
       "source_location": "L93",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_filetodataurl",
       "community": 6,
-      "norm_label": "filetodataurl()"
+      "norm_label": "filetodataurl()",
+      "id": "client_src_components_messagecenter_filetodataurl"
     },
     {
       "label": "MessageCenter()",
@@ -6313,9 +6292,9 @@
       "source_location": "L100",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_messagecenter_messagecenter",
       "community": 6,
-      "norm_label": "messagecenter()"
+      "norm_label": "messagecenter()",
+      "id": "client_src_components_messagecenter_messagecenter"
     },
     {
       "label": "StartConversation.js",
@@ -6323,9 +6302,9 @@
       "source_file": "client/src/components/StartConversation.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "client_src_components_startconversation",
       "community": 6,
-      "norm_label": "startconversation.js"
+      "norm_label": "startconversation.js",
+      "id": "client_src_components_startconversation"
     },
     {
       "label": "StartConversation()",
@@ -6334,9 +6313,9 @@
       "source_location": "L6",
       "_callable": true,
       "_origin": "ast",
-      "id": "client_src_components_startconversation_startconversation",
       "community": 6,
-      "norm_label": "startconversation()"
+      "norm_label": "startconversation()",
+      "id": "client_src_components_startconversation_startconversation"
     },
     {
       "label": "authController.js",
@@ -6344,9 +6323,9 @@
       "source_file": "server/controllers/auth/authController.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller",
       "community": 16,
-      "norm_label": "authcontroller.js"
+      "norm_label": "authcontroller.js",
+      "id": "server_controllers_auth_authcontroller"
     },
     {
       "label": "{ supabase, prisma }",
@@ -6354,9 +6333,9 @@
       "source_file": "server/controllers/auth/authController.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_supabase_prisma",
       "community": 16,
-      "norm_label": "{ supabase, prisma }"
+      "norm_label": "{ supabase, prisma }",
+      "id": "server_controllers_auth_authcontroller_supabase_prisma"
     },
     {
       "label": "{ randomBytes }",
@@ -6364,9 +6343,9 @@
       "source_file": "server/controllers/auth/authController.js",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_randombytes",
       "community": 16,
-      "norm_label": "{ randombytes }"
+      "norm_label": "{ randombytes }",
+      "id": "server_controllers_auth_authcontroller_randombytes"
     },
     {
       "label": "generateReferralCode()",
@@ -6375,9 +6354,9 @@
       "source_location": "L4",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_generatereferralcode",
       "community": 16,
-      "norm_label": "generatereferralcode()"
+      "norm_label": "generatereferralcode()",
+      "id": "server_controllers_auth_authcontroller_generatereferralcode"
     },
     {
       "label": "registerUser()",
@@ -6386,9 +6365,9 @@
       "source_location": "L12",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_registeruser",
       "community": 16,
-      "norm_label": "registeruser()"
+      "norm_label": "registeruser()",
+      "id": "server_controllers_auth_authcontroller_registeruser"
     },
     {
       "label": "loginUser()",
@@ -6397,9 +6376,9 @@
       "source_location": "L81",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_loginuser",
       "community": 16,
-      "norm_label": "loginuser()"
+      "norm_label": "loginuser()",
+      "id": "server_controllers_auth_authcontroller_loginuser"
     },
     {
       "label": "forgotPassword()",
@@ -6408,9 +6387,9 @@
       "source_location": "L101",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_forgotpassword",
       "community": 16,
-      "norm_label": "forgotpassword()"
+      "norm_label": "forgotpassword()",
+      "id": "server_controllers_auth_authcontroller_forgotpassword"
     },
     {
       "label": "resetPassword()",
@@ -6419,9 +6398,9 @@
       "source_location": "L126",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_resetpassword",
       "community": 16,
-      "norm_label": "resetpassword()"
+      "norm_label": "resetpassword()",
+      "id": "server_controllers_auth_authcontroller_resetpassword"
     },
     {
       "label": "deleteAccount()",
@@ -6430,9 +6409,9 @@
       "source_location": "L163",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_auth_authcontroller_deleteaccount",
       "community": 16,
-      "norm_label": "deleteaccount()"
+      "norm_label": "deleteaccount()",
+      "id": "server_controllers_auth_authcontroller_deleteaccount"
     },
     {
       "label": "messageController.js",
@@ -6440,9 +6419,9 @@
       "source_file": "server/controllers/messageController.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller",
       "community": 9,
-      "norm_label": "messagecontroller.js"
+      "norm_label": "messagecontroller.js",
+      "id": "server_controllers_messagecontroller"
     },
     {
       "label": "{ createClient }",
@@ -6450,9 +6429,9 @@
       "source_file": "server/controllers/messageController.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_createclient",
       "community": 9,
-      "norm_label": "{ createclient }"
+      "norm_label": "{ createclient }",
+      "id": "server_controllers_messagecontroller_createclient"
     },
     {
       "label": "{ randomBytes }",
@@ -6460,9 +6439,9 @@
       "source_file": "server/controllers/messageController.js",
       "source_location": "L2",
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_randombytes",
       "community": 9,
-      "norm_label": "{ randombytes }"
+      "norm_label": "{ randombytes }",
+      "id": "server_controllers_messagecontroller_randombytes"
     },
     {
       "label": "{ prisma }",
@@ -6470,9 +6449,9 @@
       "source_file": "server/controllers/messageController.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_prisma",
       "community": 9,
-      "norm_label": "{ prisma }"
+      "norm_label": "{ prisma }",
+      "id": "server_controllers_messagecontroller_prisma"
     },
     {
       "label": "IMAGE_TYPES",
@@ -6480,9 +6459,9 @@
       "source_file": "server/controllers/messageController.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_image_types",
       "community": 9,
-      "norm_label": "image_types"
+      "norm_label": "image_types",
+      "id": "server_controllers_messagecontroller_image_types"
     },
     {
       "label": "messageStorage()",
@@ -6491,9 +6470,9 @@
       "source_location": "L11",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_messagestorage",
       "community": 9,
-      "norm_label": "messagestorage()"
+      "norm_label": "messagestorage()",
+      "id": "server_controllers_messagecontroller_messagestorage"
     },
     {
       "label": "canonicalParticipants()",
@@ -6502,9 +6481,9 @@
       "source_location": "L23",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_canonicalparticipants",
       "community": 9,
-      "norm_label": "canonicalparticipants()"
+      "norm_label": "canonicalparticipants()",
+      "id": "server_controllers_messagecontroller_canonicalparticipants"
     },
     {
       "label": "conversationKey()",
@@ -6513,9 +6492,9 @@
       "source_location": "L32",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_conversationkey",
       "community": 9,
-      "norm_label": "conversationkey()"
+      "norm_label": "conversationkey()",
+      "id": "server_controllers_messagecontroller_conversationkey"
     },
     {
       "label": "decodeImage()",
@@ -6524,9 +6503,9 @@
       "source_location": "L38",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_decodeimage",
       "community": 9,
-      "norm_label": "decodeimage()"
+      "norm_label": "decodeimage()",
+      "id": "server_controllers_messagecontroller_decodeimage"
     },
     {
       "label": "signedUrl()",
@@ -6535,9 +6514,9 @@
       "source_location": "L45",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_signedurl",
       "community": 9,
-      "norm_label": "signedurl()"
+      "norm_label": "signedurl()",
+      "id": "server_controllers_messagecontroller_signedurl"
     },
     {
       "label": "getBlockedIds()",
@@ -6546,9 +6525,9 @@
       "source_location": "L52",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getblockedids",
       "community": 9,
-      "norm_label": "getblockedids()"
+      "norm_label": "getblockedids()",
+      "id": "server_controllers_messagecontroller_getblockedids"
     },
     {
       "label": "assertNotBlocked()",
@@ -6557,9 +6536,9 @@
       "source_location": "L60",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_assertnotblocked",
       "community": 9,
-      "norm_label": "assertnotblocked()"
+      "norm_label": "assertnotblocked()",
+      "id": "server_controllers_messagecontroller_assertnotblocked"
     },
     {
       "label": "assertJobAuthorization()",
@@ -6568,9 +6547,9 @@
       "source_location": "L76",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_assertjobauthorization",
       "community": 9,
-      "norm_label": "assertjobauthorization()"
+      "norm_label": "assertjobauthorization()",
+      "id": "server_controllers_messagecontroller_assertjobauthorization"
     },
     {
       "label": "getOtherParticipant()",
@@ -6579,9 +6558,9 @@
       "source_location": "L108",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getotherparticipant",
       "community": 9,
-      "norm_label": "getotherparticipant()"
+      "norm_label": "getotherparticipant()",
+      "id": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "label": "getConversationForMember()",
@@ -6590,9 +6569,9 @@
       "source_location": "L114",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getconversationformember",
       "community": 9,
-      "norm_label": "getconversationformember()"
+      "norm_label": "getconversationformember()",
+      "id": "server_controllers_messagecontroller_getconversationformember"
     },
     {
       "label": "participantSummaries()",
@@ -6601,9 +6580,9 @@
       "source_location": "L129",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_participantsummaries",
       "community": 9,
-      "norm_label": "participantsummaries()"
+      "norm_label": "participantsummaries()",
+      "id": "server_controllers_messagecontroller_participantsummaries"
     },
     {
       "label": "serializeMessage()",
@@ -6612,9 +6591,9 @@
       "source_location": "L160",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_serializemessage",
       "community": 9,
-      "norm_label": "serializemessage()"
+      "norm_label": "serializemessage()",
+      "id": "server_controllers_messagecontroller_serializemessage"
     },
     {
       "label": "createConversation()",
@@ -6623,9 +6602,9 @@
       "source_location": "L166",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_createconversation",
       "community": 9,
-      "norm_label": "createconversation()"
+      "norm_label": "createconversation()",
+      "id": "server_controllers_messagecontroller_createconversation"
     },
     {
       "label": "getConversations()",
@@ -6634,9 +6613,9 @@
       "source_location": "L194",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getconversations",
       "community": 9,
-      "norm_label": "getconversations()"
+      "norm_label": "getconversations()",
+      "id": "server_controllers_messagecontroller_getconversations"
     },
     {
       "label": "getConversationMessages()",
@@ -6645,9 +6624,9 @@
       "source_location": "L232",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getconversationmessages",
       "community": 9,
-      "norm_label": "getconversationmessages()"
+      "norm_label": "getconversationmessages()",
+      "id": "server_controllers_messagecontroller_getconversationmessages"
     },
     {
       "label": "sendMessage()",
@@ -6656,9 +6635,9 @@
       "source_location": "L252",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_sendmessage",
       "community": 9,
-      "norm_label": "sendmessage()"
+      "norm_label": "sendmessage()",
+      "id": "server_controllers_messagecontroller_sendmessage"
     },
     {
       "label": "markConversationAsRead()",
@@ -6667,9 +6646,9 @@
       "source_location": "L300",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_markconversationasread",
       "community": 9,
-      "norm_label": "markconversationasread()"
+      "norm_label": "markconversationasread()",
+      "id": "server_controllers_messagecontroller_markconversationasread"
     },
     {
       "label": "getUnreadCount()",
@@ -6678,9 +6657,30 @@
       "source_location": "L316",
       "_callable": true,
       "_origin": "ast",
-      "id": "server_controllers_messagecontroller_getunreadcount",
       "community": 9,
-      "norm_label": "getunreadcount()"
+      "norm_label": "getunreadcount()",
+      "id": "server_controllers_messagecontroller_getunreadcount"
+    },
+    {
+      "label": "Terms.js",
+      "file_type": "code",
+      "source_file": "client/src/pages/Terms.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "client_src_pages_terms",
+      "community": 0,
+      "norm_label": "terms.js"
+    },
+    {
+      "label": "terms",
+      "file_type": "code",
+      "source_file": "client/src/pages/Terms.js",
+      "source_location": "L3",
+      "_callable": true,
+      "_origin": "ast",
+      "id": "client_src_pages_terms_terms",
+      "community": 0,
+      "norm_label": "terms"
     }
   ],
   "links": [
@@ -11040,9 +11040,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_context_authcontext",
-      "confidence_score": 1.0
+      "target": "client_src_context_authcontext"
     },
     {
       "relation": "imports_from",
@@ -11052,9 +11052,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_startconversation",
-      "target": "client_src_context_authcontext",
-      "confidence_score": 1.0
+      "target": "client_src_context_authcontext"
     },
     {
       "relation": "imports_from",
@@ -11229,9 +11229,9 @@
       "source_location": "L13",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_context_authcontext_useauth",
-      "confidence_score": 1.0
+      "target": "client_src_context_authcontext_useauth"
     },
     {
       "relation": "calls",
@@ -11253,9 +11253,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_startconversation",
-      "target": "client_src_context_authcontext_useauth",
-      "confidence_score": 1.0
+      "target": "client_src_context_authcontext_useauth"
     },
     {
       "relation": "calls",
@@ -14045,9 +14045,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_db",
-      "confidence_score": 1.0
+      "target": "server_db"
     },
     {
       "relation": "imports_from",
@@ -14069,9 +14069,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_db",
-      "confidence_score": 1.0
+      "target": "server_db"
     },
     {
       "relation": "contains",
@@ -15830,9 +15830,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi"
     },
     {
       "relation": "imports_from",
@@ -15842,9 +15842,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_startconversation",
-      "target": "client_src_api_messageapi",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi"
     },
     {
       "relation": "imports_from",
@@ -15878,9 +15878,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_createconversation",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_createconversation"
     },
     {
       "relation": "calls",
@@ -15902,9 +15902,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_startconversation",
-      "target": "client_src_api_messageapi_createconversation",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_createconversation"
     },
     {
       "relation": "calls",
@@ -15950,9 +15950,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_getconversations",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_getconversations"
     },
     {
       "relation": "calls",
@@ -15974,9 +15974,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_getconversationmessages",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_getconversationmessages"
     },
     {
       "relation": "calls",
@@ -15998,9 +15998,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_sendmessage",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_sendmessage"
     },
     {
       "relation": "calls",
@@ -16022,9 +16022,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_markconversationasread",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_markconversationasread"
     },
     {
       "relation": "calls",
@@ -16070,9 +16070,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messageapi_blockuser",
-      "confidence_score": 1.0
+      "target": "client_src_api_messageapi_blockuser"
     },
     {
       "relation": "calls",
@@ -16116,9 +16116,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messagerealtime",
-      "confidence_score": 1.0
+      "target": "client_src_api_messagerealtime"
     },
     {
       "relation": "imports_from",
@@ -16140,9 +16140,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messagerealtime_connectmessagerealtime",
-      "confidence_score": 1.0
+      "target": "client_src_api_messagerealtime_connectmessagerealtime"
     },
     {
       "relation": "calls",
@@ -16188,9 +16188,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_api_messagerealtime_disconnectmessagerealtime",
-      "confidence_score": 1.0
+      "target": "client_src_api_messagerealtime_disconnectmessagerealtime"
     },
     {
       "relation": "calls",
@@ -16260,17 +16260,6 @@
       "confidence_score": 1.0,
       "source": "client_src_pages_jobdetail",
       "target": "client_src_pages_jobdetail_stripepromise"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "client/src/pages/Terms.js",
-      "source_location": "L67",
-      "weight": 1.0,
-      "_origin": "ast",
-      "confidence_score": 1.0,
-      "source": "client_src_pages_terms",
-      "target": "client_src_pages_terms_terms"
     },
     {
       "relation": "indirect_call",
@@ -16761,9 +16750,9 @@
       "source_location": "L39",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_avatar",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_avatar"
     },
     {
       "relation": "contains",
@@ -16772,9 +16761,9 @@
       "source_location": "L44",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_conversationrow",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_conversationrow"
     },
     {
       "relation": "contains",
@@ -16783,9 +16772,9 @@
       "source_location": "L93",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_filetodataurl",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_filetodataurl"
     },
     {
       "relation": "contains",
@@ -16794,9 +16783,9 @@
       "source_location": "L28",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_formatday",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formatday"
     },
     {
       "relation": "contains",
@@ -16805,9 +16794,9 @@
       "source_location": "L20",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_formatlisttime",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formatlisttime"
     },
     {
       "relation": "contains",
@@ -16816,9 +16805,9 @@
       "source_location": "L19",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_formattime",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formattime"
     },
     {
       "relation": "contains",
@@ -16827,9 +16816,9 @@
       "source_location": "L15",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_image_types",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_image_types"
     },
     {
       "relation": "contains",
@@ -16838,9 +16827,9 @@
       "source_location": "L18",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_initials",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_initials"
     },
     {
       "relation": "contains",
@@ -16849,9 +16838,9 @@
       "source_location": "L73",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_messagebubble",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_messagebubble"
     },
     {
       "relation": "contains",
@@ -16860,9 +16849,9 @@
       "source_location": "L100",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_messagecenter",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_messagecenter"
     },
     {
       "relation": "contains",
@@ -16871,9 +16860,9 @@
       "source_location": "L37",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter",
-      "target": "client_src_components_messagecenter_sameday",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_sameday"
     },
     {
       "relation": "calls",
@@ -16883,9 +16872,9 @@
       "source_location": "L41",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_avatar",
-      "target": "client_src_components_messagecenter_initials",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_initials"
     },
     {
       "relation": "calls",
@@ -16895,9 +16884,9 @@
       "source_location": "L25",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_formatlisttime",
-      "target": "client_src_components_messagecenter_formattime",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formattime"
     },
     {
       "relation": "calls",
@@ -16907,9 +16896,9 @@
       "source_location": "L84",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_messagebubble",
-      "target": "client_src_components_messagecenter_formattime",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formattime"
     },
     {
       "relation": "calls",
@@ -16919,9 +16908,9 @@
       "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_conversationrow",
-      "target": "client_src_components_messagecenter_formatlisttime",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formatlisttime"
     },
     {
       "relation": "calls",
@@ -16931,9 +16920,9 @@
       "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_messagebubble",
-      "target": "client_src_components_messagecenter_formatday",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_formatday"
     },
     {
       "relation": "calls",
@@ -16943,9 +16932,9 @@
       "source_location": "L323",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_messagecenter",
-      "target": "client_src_components_messagecenter_sameday",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_sameday"
     },
     {
       "relation": "calls",
@@ -16955,9 +16944,9 @@
       "source_location": "L250",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_messagecenter_messagecenter",
-      "target": "client_src_components_messagecenter_filetodataurl",
-      "confidence_score": 1.0
+      "target": "client_src_components_messagecenter_filetodataurl"
     },
     {
       "relation": "contains",
@@ -16966,9 +16955,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "client_src_components_startconversation",
-      "target": "client_src_components_startconversation_startconversation",
-      "confidence_score": 1.0
+      "target": "client_src_components_startconversation_startconversation"
     },
     {
       "relation": "indirect_call",
@@ -16978,9 +16967,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_deleteaccount",
-      "confidence_score": 0.5
+      "target": "server_controllers_auth_authcontroller_deleteaccount"
     },
     {
       "relation": "indirect_call",
@@ -16990,9 +16979,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_forgotpassword",
-      "confidence_score": 0.5
+      "target": "server_controllers_auth_authcontroller_forgotpassword"
     },
     {
       "relation": "contains",
@@ -17001,9 +16990,9 @@
       "source_location": "L4",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_generatereferralcode",
-      "confidence_score": 1.0
+      "target": "server_controllers_auth_authcontroller_generatereferralcode"
     },
     {
       "relation": "indirect_call",
@@ -17013,9 +17002,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_loginuser",
-      "confidence_score": 0.5
+      "target": "server_controllers_auth_authcontroller_loginuser"
     },
     {
       "relation": "contains",
@@ -17024,9 +17013,9 @@
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_randombytes",
-      "confidence_score": 1.0
+      "target": "server_controllers_auth_authcontroller_randombytes"
     },
     {
       "relation": "indirect_call",
@@ -17036,9 +17025,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_registeruser",
-      "confidence_score": 0.5
+      "target": "server_controllers_auth_authcontroller_registeruser"
     },
     {
       "relation": "indirect_call",
@@ -17048,9 +17037,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_resetpassword",
-      "confidence_score": 0.5
+      "target": "server_controllers_auth_authcontroller_resetpassword"
     },
     {
       "relation": "contains",
@@ -17059,9 +17048,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_auth_authcontroller",
-      "target": "server_controllers_auth_authcontroller_supabase_prisma",
-      "confidence_score": 1.0
+      "target": "server_controllers_auth_authcontroller_supabase_prisma"
     },
     {
       "relation": "calls",
@@ -17071,9 +17060,9 @@
       "source_location": "L57",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_auth_authcontroller_registeruser",
-      "target": "server_controllers_auth_authcontroller_generatereferralcode",
-      "confidence_score": 1.0
+      "target": "server_controllers_auth_authcontroller_generatereferralcode"
     },
     {
       "relation": "contains",
@@ -17082,9 +17071,9 @@
       "source_location": "L76",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_assertjobauthorization",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertjobauthorization"
     },
     {
       "relation": "contains",
@@ -17093,9 +17082,9 @@
       "source_location": "L60",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_assertnotblocked",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertnotblocked"
     },
     {
       "relation": "contains",
@@ -17104,9 +17093,9 @@
       "source_location": "L23",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_canonicalparticipants",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_canonicalparticipants"
     },
     {
       "relation": "contains",
@@ -17115,9 +17104,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_conversationkey",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_conversationkey"
     },
     {
       "relation": "contains",
@@ -17126,9 +17115,9 @@
       "source_location": "L1",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_createclient",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_createclient"
     },
     {
       "relation": "indirect_call",
@@ -17138,9 +17127,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_createconversation",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_createconversation"
     },
     {
       "relation": "contains",
@@ -17149,9 +17138,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_decodeimage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_decodeimage"
     },
     {
       "relation": "contains",
@@ -17160,9 +17149,9 @@
       "source_location": "L52",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getblockedids",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getblockedids"
     },
     {
       "relation": "contains",
@@ -17171,9 +17160,9 @@
       "source_location": "L114",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getconversationformember",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getconversationformember"
     },
     {
       "relation": "indirect_call",
@@ -17183,9 +17172,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getconversationmessages",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_getconversationmessages"
     },
     {
       "relation": "indirect_call",
@@ -17195,9 +17184,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getconversations",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_getconversations"
     },
     {
       "relation": "contains",
@@ -17206,9 +17195,9 @@
       "source_location": "L108",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getotherparticipant",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "relation": "indirect_call",
@@ -17218,9 +17207,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_getunreadcount",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_getunreadcount"
     },
     {
       "relation": "contains",
@@ -17229,9 +17218,9 @@
       "source_location": "L6",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_image_types",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_image_types"
     },
     {
       "relation": "indirect_call",
@@ -17241,9 +17230,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_markconversationasread",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_markconversationasread"
     },
     {
       "relation": "contains",
@@ -17252,9 +17241,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_messagestorage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_messagestorage"
     },
     {
       "relation": "contains",
@@ -17263,9 +17252,9 @@
       "source_location": "L129",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_participantsummaries",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_participantsummaries"
     },
     {
       "relation": "contains",
@@ -17274,9 +17263,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_prisma",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_prisma"
     },
     {
       "relation": "contains",
@@ -17285,9 +17274,9 @@
       "source_location": "L2",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_randombytes",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_randombytes"
     },
     {
       "relation": "indirect_call",
@@ -17297,9 +17286,9 @@
       "weight": 1.0,
       "_origin": "ast",
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_sendmessage",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_sendmessage"
     },
     {
       "relation": "contains",
@@ -17308,9 +17297,9 @@
       "source_location": "L160",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_serializemessage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_serializemessage"
     },
     {
       "relation": "contains",
@@ -17319,9 +17308,9 @@
       "source_location": "L45",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller",
-      "target": "server_controllers_messagecontroller_signedurl",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_signedurl"
     },
     {
       "relation": "calls",
@@ -17331,9 +17320,9 @@
       "source_location": "L273",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_sendmessage",
-      "target": "server_controllers_messagecontroller_messagestorage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_messagestorage"
     },
     {
       "relation": "calls",
@@ -17343,9 +17332,9 @@
       "source_location": "L162",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_serializemessage",
-      "target": "server_controllers_messagecontroller_messagestorage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_messagestorage"
     },
     {
       "relation": "calls",
@@ -17355,9 +17344,9 @@
       "source_location": "L170",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_createconversation",
-      "target": "server_controllers_messagecontroller_canonicalparticipants",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_canonicalparticipants"
     },
     {
       "relation": "calls",
@@ -17367,9 +17356,9 @@
       "source_location": "L180",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_createconversation",
-      "target": "server_controllers_messagecontroller_conversationkey",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_conversationkey"
     },
     {
       "relation": "calls",
@@ -17379,9 +17368,9 @@
       "source_location": "L259",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_sendmessage",
-      "target": "server_controllers_messagecontroller_decodeimage",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_decodeimage"
     },
     {
       "relation": "calls",
@@ -17391,9 +17380,9 @@
       "source_location": "L146",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_participantsummaries",
-      "target": "server_controllers_messagecontroller_signedurl",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_signedurl"
     },
     {
       "relation": "calls",
@@ -17403,9 +17392,9 @@
       "source_location": "L162",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_serializemessage",
-      "target": "server_controllers_messagecontroller_signedurl",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_signedurl"
     },
     {
       "relation": "calls",
@@ -17415,9 +17404,9 @@
       "source_location": "L196",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversations",
-      "target": "server_controllers_messagecontroller_getblockedids",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getblockedids"
     },
     {
       "relation": "calls",
@@ -17427,9 +17416,9 @@
       "source_location": "L318",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getunreadcount",
-      "target": "server_controllers_messagecontroller_getblockedids",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getblockedids"
     },
     {
       "relation": "calls",
@@ -17439,9 +17428,9 @@
       "source_location": "L177",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_createconversation",
-      "target": "server_controllers_messagecontroller_assertnotblocked",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertnotblocked"
     },
     {
       "relation": "calls",
@@ -17451,9 +17440,9 @@
       "source_location": "L125",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversationformember",
-      "target": "server_controllers_messagecontroller_assertnotblocked",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertnotblocked"
     },
     {
       "relation": "calls",
@@ -17463,9 +17452,9 @@
       "source_location": "L178",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_createconversation",
-      "target": "server_controllers_messagecontroller_assertjobauthorization",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertjobauthorization"
     },
     {
       "relation": "calls",
@@ -17475,9 +17464,9 @@
       "source_location": "L268",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_sendmessage",
-      "target": "server_controllers_messagecontroller_assertjobauthorization",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_assertjobauthorization"
     },
     {
       "relation": "calls",
@@ -17487,9 +17476,9 @@
       "source_location": "L124",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversationformember",
-      "target": "server_controllers_messagecontroller_getotherparticipant",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "relation": "calls",
@@ -17499,9 +17488,9 @@
       "source_location": "L206",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversations",
-      "target": "server_controllers_messagecontroller_getotherparticipant",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "relation": "calls",
@@ -17511,9 +17500,9 @@
       "source_location": "L322",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getunreadcount",
-      "target": "server_controllers_messagecontroller_getotherparticipant",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "relation": "calls",
@@ -17523,9 +17512,9 @@
       "source_location": "L307",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_markconversationasread",
-      "target": "server_controllers_messagecontroller_getotherparticipant",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getotherparticipant"
     },
     {
       "relation": "calls",
@@ -17535,9 +17524,9 @@
       "source_location": "L234",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversationmessages",
-      "target": "server_controllers_messagecontroller_getconversationformember",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getconversationformember"
     },
     {
       "relation": "calls",
@@ -17547,9 +17536,9 @@
       "source_location": "L302",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_markconversationasread",
-      "target": "server_controllers_messagecontroller_getconversationformember",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getconversationformember"
     },
     {
       "relation": "calls",
@@ -17559,9 +17548,9 @@
       "source_location": "L267",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_sendmessage",
-      "target": "server_controllers_messagecontroller_getconversationformember",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_getconversationformember"
     },
     {
       "relation": "calls",
@@ -17571,9 +17560,9 @@
       "source_location": "L208",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_getconversations",
-      "target": "server_controllers_messagecontroller_participantsummaries",
-      "confidence_score": 1.0
+      "target": "server_controllers_messagecontroller_participantsummaries"
     },
     {
       "relation": "indirect_call",
@@ -17583,9 +17572,9 @@
       "source_location": "L244",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 0.5,
       "source": "server_controllers_messagecontroller_getconversationmessages",
-      "target": "server_controllers_messagecontroller_serializemessage",
-      "confidence_score": 0.5
+      "target": "server_controllers_messagecontroller_serializemessage"
     },
     {
       "relation": "calls",
@@ -17595,11 +17584,22 @@
       "source_location": "L288",
       "weight": 1.0,
       "_origin": "ast",
+      "confidence_score": 1.0,
       "source": "server_controllers_messagecontroller_sendmessage",
-      "target": "server_controllers_messagecontroller_serializemessage",
+      "target": "server_controllers_messagecontroller_serializemessage"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "client/src/pages/Terms.js",
+      "source_location": "L67",
+      "weight": 1.0,
+      "_origin": "ast",
+      "source": "client_src_pages_terms",
+      "target": "client_src_pages_terms_terms",
       "confidence_score": 1.0
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "4698c0516fee9ef59c427dd5475a155649fb20fc"
+  "built_at_commit": "c073deab83d9e2bb6760654965997f674a5e905b"
 }
