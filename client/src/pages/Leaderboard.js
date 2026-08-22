@@ -68,7 +68,7 @@ const Leaderboard = () => {
           <div className="flex gap-2 border-b border-slate-700 pb-4">
             {AUDIENCES.map((item) => <button key={item} onClick={() => setAudience(item)} className={`rounded-lg px-4 py-2 text-sm font-bold transition ${audience === item ? "bg-violet-600 text-white" : "text-slate-400 hover:bg-slate-800 hover:text-white"}`}>{item === "STUDENT" ? "Students" : "Neighbors"}</button>)}
           </div>
-          <div className="mt-5 flex items-start justify-between gap-4"><div><h2 className="text-xl font-bold">{audience === "STUDENT" ? "Student leaderboard" : "Neighbor leaderboard"}</h2><p className="mt-1 text-sm leading-6 text-slate-400">{board?.prize}</p></div><span className="text-2xl">🏆</span></div>
+          <div className="mt-5 flex items-start justify-between gap-4"><div><h2 className="text-xl font-bold">{audience === "STUDENT" ? "Student leaderboard" : "Neighbor leaderboard"}</h2>{audience === "STUDENT" && <p className="mt-1 text-sm leading-6 text-slate-400">{board?.prize}</p>}</div><span className="text-2xl">🏆</span></div>
           <ol className="mt-5 space-y-2">
             {board?.entries?.length ? board.entries.map((entry) => <li key={`${entry.rank}-${entry.nickname}`} className="flex items-center gap-4 rounded-xl bg-slate-800/70 px-4 py-3"><span className="w-7 text-center font-black text-violet-300">{entry.rank}</span><span className="min-w-0 flex-1 truncate font-semibold">{entry.nickname}</span><span className="font-bold text-emerald-300">{entry.points} pts</span></li>) : <li className="rounded-xl border border-dashed border-slate-700 p-6 text-center text-sm text-slate-400">No one is on this board yet. Be the first to join.</li>}
           </ol>
