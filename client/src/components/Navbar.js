@@ -10,7 +10,6 @@ const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const isMessagesPage = location.pathname === "/messages";
 
   // Handle scroll effect
   useEffect(() => {
@@ -52,7 +51,7 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${isMessagesPage ? "hidden md:block" : ""} ${scrolled
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled
         ? "bg-slate-950/80 backdrop-blur-md border-b border-slate-800 shadow-lg shadow-black/10"
         : "bg-transparent border-transparent"
         }`}

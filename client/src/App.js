@@ -31,7 +31,6 @@ import "./App.css";
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  const isMessagesPage = location.pathname === "/messages";
   const isStagingPath = location.pathname === "/staging" || location.pathname.startsWith("/staging/");
   const isStagingHost = window.location.hostname === "staging.wurkzi.com";
   const isStaging = isStagingPath || isStagingHost;
@@ -49,7 +48,7 @@ function App() {
   return (
     <div className={isStaging ? "App" : "App flex flex-col min-h-screen bg-slate-950"}>
       {!isStaging && <Navbar />}
-      <main className={isStaging ? "" : `flex-grow ${isMessagesPage ? "pt-0 md:pt-20" : "pt-20"}`}>
+      <main className={isStaging ? "" : "flex-grow pt-20"}>
         {isStaging ? (
           <Routes>
             <Route path="*" element={<Staging />} />
